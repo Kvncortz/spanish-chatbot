@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Spanish Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #28a745;
+            color: white;
+            margin-right: auto;
+        }
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .voice-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .start-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .start-btn:hover {
+            background-color: #218838;
+        }
+        .stop-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .stop-btn:hover {
+            background-color: #c82333;
+        }
+        .voice-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .status {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-weight: bold;
+        }
+        .recording {
+            color: #dc3545;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .text-input-area {
+            display: none;
+            margin-top: 20px;
+        }
+        .text-input-area.active {
+            display: block;
+        }
+        #messageInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        #sendButton {
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+        .toggle-mode {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .toggle-mode button {
+            background: none;
+            border: none;
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ Voice Spanish Chatbot</h1>
+            <p>Practica español con voz o texto</p>
+        </div>
+        
+        <div class="status" id="status">Conectando...</div>
+        
+        <div class="voice-controls">
+            <button id="startVoiceBtn" class="voice-btn start-btn">🎤 Start Voice</button>
+            <button id="stopVoiceBtn" class="voice-btn stop-btn" disabled>⏹️ Stop</button>
+        </div>
+        
+        <div class="toggle-mode">
+            <button id="toggleMode">Switch to Text Mode</button>
+        </div>
+        
+        <div class="chat-box" id="chatBox"></div>
+        
+        <div class="text-input-area" id="textInputArea">
+            <input type="text" id="messageInput" placeholder="Escribe tu mensaje en español...">
+            <button id="sendButton">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const status = document.getElementById('status');
+        const startVoiceBtn = document.getElementById('startVoiceBtn');
+        const stopVoiceBtn = document.getElementById('stopVoiceBtn');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const textInputArea = document.getElementById('textInputArea');
+        const toggleMode = document.getElementById('toggleMode');
+        
+        let ws;
+        let recognition;
+        let isVoiceMode = true;
+        let isRecording = false;
+        
+        // Initialize WebSocket
+        function connect() {
+            ws = new WebSocket('ws://' + window.location.host + '/ws');
+            
+            ws.onopen = function() {
+                status.textContent = 'Conectado - ¡Hola!';
+                startVoiceBtn.disabled = false;
+            };
+            
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.type === 'message') {
+                    addMessage(data.content, data.sender);
+                } else if (data.type === 'error') {
+                    status.textContent = 'Error: ' + data.content;
+                    addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'bot');
+                }
+            };
+            
+            ws.onclose = function() {
+                status.textContent = 'Desconectado. Recargando...';
+                startVoiceBtn.disabled = true;
+                stopVoiceBtn.disabled = true;
+                setTimeout(connect, 3000);
+            };
+            
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+                status.textContent = 'Error de conexión. Intentando reconectar...';
+            };
+        }
+        
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'es-ES'; // Spanish recognition
+                
+                recognition.onstart = function() {
+                    isRecording = true;
+                    status.textContent = 'Escuchando...';
+                    status.classList.add('recording');
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    console.log('Recognized:', transcript);
+                    
+                    addMessage(transcript, 'user');
+                    
+                    // Send to server
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: 'message',
+                            content: transcript
+                        }));
+                    }
+                    
+                    // Stop recording after getting result
+                    stopRecording();
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    status.textContent = 'Error de reconocimiento: ' + event.error;
+                    stopRecording();
+                };
+                
+                recognition.onend = function() {
+                    stopRecording();
+                };
+            } else {
+                status.textContent = 'Tu navegador no soporta reconocimiento de voz';
+                startVoiceBtn.disabled = true;
+            }
+        }
+        
+        function startRecording() {
+            if (recognition && !isRecording) {
+                recognition.start();
+                startVoiceBtn.disabled = true;
+                stopVoiceBtn.disabled = false;
+            }
+        }
+        
+        function stopRecording() {
+            if (recognition && isRecording) {
+                recognition.stop();
+                isRecording = false;
+                status.textContent = 'Procesando...';
+                status.classList.remove('recording');
+                startVoiceBtn.disabled = false;
+                stopVoiceBtn.disabled = true;
+            }
+        }
+        
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function sendTextMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                addMessage(message, 'user');
+                ws.send(JSON.stringify({
+                    type: 'message',
+                    content: message
+                }));
+                messageInput.value = '';
+            }
+        }
+        
+        function toggleMode() {
+            isVoiceMode = !isVoiceMode;
+            
+            if (isVoiceMode) {
+                document.querySelector('.voice-controls').style.display = 'flex';
+                textInputArea.classList.remove('active');
+                toggleMode.textContent = 'Switch to Text Mode';
+            } else {
+                document.querySelector('.voice-controls').style.display = 'none';
+                textInputArea.classList.add('active');
+                toggleMode.textContent = 'Switch to Voice Mode';
+                messageInput.focus();
+            }
+        }
+        
+        // Event listeners
+        startVoiceBtn.addEventListener('click', startRecording);
+        stopVoiceBtn.addEventListener('click', stopRecording);
+        sendButton.addEventListener('click', sendTextMessage);
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendTextMessage();
+            }
+        });
+        toggleMode.addEventListener('click', toggleMode);
+        
+        // Initialize
+        connect();
+        initSpeechRecognition();
+    </script>
+</body>
+</html>

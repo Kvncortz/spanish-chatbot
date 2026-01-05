@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Chatbot - Simple</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .level-selector {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .level-selector h3 {
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+        
+        .level-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .level-btn {
+            padding: 12px 24px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .level-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+        
+        .level-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .status {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            color: #0369a1;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid #bae6fd;
+        }
+        
+        .status.connected {
+            background: #f0fdf4;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+        
+        .chat-box {
+            height: 450px;
+            overflow-y: auto;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            scroll-behavior: smooth;
+        }
+        
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-box::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        .chat-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .message {
+            margin: 15px 0;
+            padding: 15px 20px;
+            border-radius: 18px;
+            max-width: 75%;
+            word-wrap: break-word;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .bot-message {
+            background: white;
+            color: #334155;
+            margin-right: auto;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        #messageInput {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        #messageInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        #messageInput::placeholder {
+            color: #94a3b8;
+        }
+        
+        #sendButton {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        #sendButton:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        #sendButton:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        #sendButton:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .level-buttons {
+                flex-direction: column;
+            }
+            
+            .level-btn {
+                width: 100%;
+            }
+            
+            .input-area {
+                flex-direction: column;
+            }
+            
+            #sendButton {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ Spanish Chatbot</h1>
+            <p>Practica español con un bot amigable</p>
+            
+            <div class="level-selector">
+                <h3>Selecciona tu nivel:</h3>
+                <div class="level-buttons">
+                    <button class="level-btn" data-level="beginner">Principiante 🌱</button>
+                    <button class="level-btn active" data-level="intermediate">Intermedio 🌿</button>
+                    <button class="level-btn" data-level="advanced">Avanzado 🌳</button>
+                </div>
+            </div>
+        </div>
+        
+                
+        <div class="chat-box" id="chatBox"></div>
+        
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Escribe tu mensaje en español..." disabled>
+            <button id="sendButton" disabled>Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        
+        let ws;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+        let currentLevel = 'intermediate';
+        let isConnecting = false;
+        
+        // Level selection
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                currentLevel = this.dataset.level;
+                
+                // Clear chat and disable inputs during transition
+                chatBox.innerHTML = '';
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+                
+                // Force close existing connection and prevent any further messages
+                if (ws) {
+                    ws.onopen = null;
+                    ws.onmessage = null;
+                    ws.onclose = null;
+                    ws.onerror = null;
+                    ws.close();
+                    ws = null;
+                }
+                
+                // Reset connection state
+                isConnecting = false;
+                reconnectAttempts = 0;
+                
+                // Add longer delay to ensure clean connection
+                setTimeout(() => {
+                    connect();
+                }, 300);
+            });
+        });
+        
+        function connect() {
+            if (isConnecting) {
+                console.log('Already connecting, skipping...');
+                return;
+            }
+            
+            isConnecting = true;
+            console.log(`Connecting to WebSocket with level: ${currentLevel}`);
+            ws = new WebSocket('ws://' + window.location.host + '/ws/' + currentLevel);
+            
+            ws.onopen = function() {
+                console.log('WebSocket connection established');
+                isConnecting = false; // Reset connection flag
+                reconnectAttempts = 0; // Reset reconnect attempts on successful connection
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+            };
+            
+            ws.onmessage = function(event) {
+                console.log('Message received:', event.data);
+                const message = event.data;
+                if (message.startsWith('bot:')) {
+                    addMessage(message.substring(4), 'bot');
+                } else if (message.startsWith('Error:')) {
+                    addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'bot');
+                } else {
+                    console.log('Unhandled message format:', message);
+                }
+            };
+            
+            ws.onclose = function(event) {
+                console.log('WebSocket connection closed:', event);
+                isConnecting = false; // Reset connection flag
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+                
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 15000); // Exponential backoff, max 15s
+                    console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttempts}/${maxReconnectAttempts})`);
+                    setTimeout(connect, delay);
+                }
+            };
+            
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+                isConnecting = false; // Reset connection flag
+            };
+        }
+        
+        function addMessage(text, sender) {
+            console.log(`Adding ${sender} message:`, text);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                console.log('Sending message:', message);
+                addMessage(message, 'user');
+                ws.send(`user:${message}`);
+                messageInput.value = '';
+                messageInput.focus();
+            } else {
+                console.error('Cannot send message - WebSocket not connected');
+                connect(); // Try to reconnect
+            }
+        }
+        
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Connect when page loads
+        connect();
+    </script>
+</body>
+</html>
