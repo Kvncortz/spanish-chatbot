@@ -13,65 +13,42 @@
         }
         
         body {
+            margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
         
-        .container {
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            height: 90vh;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 900px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
+        .chat-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            color: white;
+            padding: 20px;
+            text-align: center;
         }
         
-        .header p {
-            color: #64748b;
-            font-size: 1.1rem;
-            font-weight: 400;
+        .chat-header h1 {
+            margin: 0 0 15px 0;
+            font-size: 24px;
+            font-weight: 600;
         }
         
         .level-selector {
-            background: #f8fafc;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .level-selector h3 {
-            color: #334155;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 15px;
-        }
-        
-        .level-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
@@ -79,221 +56,299 @@
         }
         
         .level-btn {
-            padding: 12px 24px;
-            border: 2px solid #e2e8f0;
-            background: white;
-            color: #64748b;
-            border-radius: 12px;
+            padding: 8px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 25px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-size: 14px;
             font-weight: 500;
-            position: relative;
-            overflow: hidden;
         }
         
         .level-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: #667eea;
         }
         
         .level-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .status {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 12px 20px;
-            background: #f0f9ff;
-            border-radius: 10px;
-            color: #0369a1;
-            font-weight: 500;
-            font-size: 0.95rem;
-            border: 1px solid #bae6fd;
-        }
-        
-        .status.connected {
-            background: #f0fdf4;
-            color: #166534;
-            border-color: #bbf7d0;
+            background: white;
+            color: #667eea;
+            border-color: white;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
         }
         
         .chat-box {
-            height: 450px;
-            overflow-y: auto;
+            flex: 1;
             padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 15px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            scroll-behavior: smooth;
-        }
-        
-        .chat-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .chat-box::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 3px;
-        }
-        
-        .chat-box::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-        
-        .chat-box::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .message {
-            margin: 15px 0;
-            padding: 15px 20px;
+            max-width: 70%;
+            padding: 12px 16px;
             border-radius: 18px;
-            max-width: 75%;
             word-wrap: break-word;
-            animation: fadeInUp 0.3s ease-out;
+            animation: fadeIn 0.3s ease;
         }
         
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .voice-message {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 12px;
+            min-width: 200px;
+        }
+        
+        .voice-message.user-voice {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .voice-message.bot-voice {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .play-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .voice-message.user-voice .play-button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+        }
+        
+        .voice-message.bot-voice .play-button {
+            background: #667eea;
+            color: white;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .play-button.playing {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .waveform {
+            flex: 1;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .waveform-bar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-message.user-voice .waveform-bar {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .voice-message.bot-voice .waveform-bar {
+            background: rgba(102, 126, 234, 0.6);
+        }
+        
+        .waveform-bar.active {
+            background: #667eea;
+            animation: wave 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { height: 20%; }
+            50% { height: 80%; }
+        }
+        
+        .duration {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .voice-message.bot-voice .duration {
+            color: rgba(0, 0, 0, 0.6);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .user-message {
+            align-self: flex-end;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            margin-left: auto;
-            text-align: left;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border-radius: 18px 18px 4px 18px;
         }
         
         .bot-message {
+            align-self: flex-start;
             background: white;
-            color: #334155;
-            margin-right: auto;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
         
         .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .input-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
         }
         
         #messageInput {
             flex: 1;
-            padding: 16px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-family: inherit;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            outline: none;
+            font-size: 15px;
             transition: all 0.3s ease;
-            background: white;
         }
         
         #messageInput:focus {
-            outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        #messageInput::placeholder {
-            color: #94a3b8;
+        #sendButton, #voiceButton {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         #sendButton {
-            padding: 16px 32px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         #sendButton:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
         
-        #sendButton:active:not(:disabled) {
-            transform: translateY(0);
+        #voiceButton {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #e9ecef;
         }
         
-        #sendButton:disabled {
+        #voiceButton:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        #voiceButton.recording {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+        
+        button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
         
-        @media (max-width: 640px) {
-            .container {
-                padding: 25px;
-                margin: 10px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .level-buttons {
-                flex-direction: column;
-            }
-            
-            .level-btn {
-                width: 100%;
-            }
-            
-            .input-area {
-                flex-direction: column;
-            }
-            
-            #sendButton {
-                width: 100%;
-            }
+        /* Scrollbar styling */
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .chat-box::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+        
+        .mode-content.active {
+            display: block;
+        }
+        
+        .voice-instructions {
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
+    <div class="chat-container">
+        <div class="chat-header">
             <h1>🎙️ Spanish Chatbot</h1>
-            <p>Practica español con un bot amigable</p>
-            
             <div class="level-selector">
-                <h3>Selecciona tu nivel:</h3>
-                <div class="level-buttons">
-                    <button class="level-btn" data-level="beginner">Principiante 🌱</button>
-                    <button class="level-btn active" data-level="intermediate">Intermedio 🌿</button>
-                    <button class="level-btn" data-level="advanced">Avanzado 🌳</button>
-                </div>
+                <button class="level-btn" data-level="beginner">Principiante</button>
+                <button class="level-btn active" data-level="intermediate">Intermedio</button>
+                <button class="level-btn" data-level="advanced">Avanzado</button>
             </div>
         </div>
         
-                
         <div class="chat-box" id="chatBox"></div>
         
         <div class="input-area">
-            <input type="text" id="messageInput" placeholder="Escribe tu mensaje en español..." disabled>
-            <button id="sendButton" disabled>Enviar</button>
+            <div class="input-row">
+                <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." disabled>
+                <button id="sendButton" disabled>Enviar</button>
+                <button id="voiceButton" disabled>🎤</button>
+            </div>
         </div>
     </div>
 
@@ -301,12 +356,16 @@
         const chatBox = document.getElementById('chatBox');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
+        const voiceButton = document.getElementById('voiceButton');
         
         let ws;
         let reconnectAttempts = 0;
         const maxReconnectAttempts = 5;
         let currentLevel = 'intermediate';
         let isConnecting = false;
+        let mediaRecorder;
+        let audioChunks;
+        let isRecording = false;
         
         // Level selection
         document.querySelectorAll('.level-btn').forEach(btn => {
@@ -321,6 +380,7 @@
                 chatBox.innerHTML = '';
                 messageInput.disabled = true;
                 sendButton.disabled = true;
+                voiceButton.disabled = true;
                 
                 // Force close existing connection and prevent any further messages
                 if (ws) {
@@ -359,18 +419,31 @@
                 reconnectAttempts = 0; // Reset reconnect attempts on successful connection
                 messageInput.disabled = false;
                 sendButton.disabled = false;
+                voiceButton.disabled = false;
                 messageInput.focus();
             };
             
             ws.onmessage = function(event) {
                 console.log('Message received:', event.data);
-                const message = event.data;
-                if (message.startsWith('bot:')) {
-                    addMessage(message.substring(4), 'bot');
-                } else if (message.startsWith('Error:')) {
-                    addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'bot');
-                } else {
-                    console.log('Unhandled message format:', message);
+                
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === 'voice_response') {
+                        handleVoiceResponse(data);
+                    } else if (data.type === 'error') {
+                        addMessage(data.content, 'bot');
+                    }
+                } catch (e) {
+                    // Handle legacy text format
+                    const message = event.data;
+                    if (message.startsWith('bot:')) {
+                        addMessage(message.substring(4), 'bot');
+                    } else if (message.startsWith('Error:')) {
+                        addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'bot');
+                    } else {
+                        console.log('Unhandled message format:', message);
+                    }
                 }
             };
             
@@ -379,6 +452,7 @@
                 isConnecting = false; // Reset connection flag
                 messageInput.disabled = true;
                 sendButton.disabled = true;
+                voiceButton.disabled = true;
                 
                 if (reconnectAttempts < maxReconnectAttempts) {
                     reconnectAttempts++;
@@ -394,13 +468,254 @@
             };
         }
         
-        function addMessage(text, sender) {
-            console.log(`Adding ${sender} message:`, text);
+        function addMessage(content, sender, audioData = null, isVoiceTranscript = false) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
-            messageDiv.textContent = text;
+            
+            if (audioData && sender === 'bot') {
+                // Create voice message for bot responses (waveform only, text hidden)
+                messageDiv.className = `message bot-message`;
+                const messageId = 'bot-' + Date.now();
+                messageDiv.innerHTML = `
+                    <div class="voice-message bot-voice" id="${messageId}">
+                        <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
+                            ▶️
+                        </button>
+                        <div class="waveform">
+                            ${generateWaveformBars()}
+                        </div>
+                        <span class="duration">Cargando...</span>
+                    </div>
+                    <button class="transcript-btn" onclick="toggleTranscript(this)" style="
+                        margin-top: 8px;
+                        padding: 4px 8px;
+                        background: rgba(102, 126, 234, 0.1);
+                        border: 1px solid rgba(102, 126, 234, 0.3);
+                        border-radius: 12px;
+                        color: #667eea;
+                        font-size: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">📝 Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(102, 126, 234, 0.05); border-radius: 8px; font-size: 13px; color: #666; font-style: italic;">${content}</div>
+                `;
+                
+                // Pre-load audio to get duration immediately
+                preloadAudioDuration(audioData, messageId);
+                
+            } else if (audioData && sender === 'user') {
+                // Create voice message for user (waveform only, text hidden)
+                messageDiv.className = `message user-message`;
+                const messageId = 'user-' + Date.now();
+                messageDiv.innerHTML = `
+                    <div class="voice-message user-voice" id="${messageId}">
+                        <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
+                            ▶️
+                        </button>
+                        <div class="waveform">
+                            ${generateWaveformBars()}
+                        </div>
+                        <span class="duration">Cargando...</span>
+                    </div>
+                    <button class="transcript-btn" onclick="toggleTranscript(this)" style="
+                        margin-top: 8px;
+                        padding: 4px 8px;
+                        background: rgba(255, 255, 255, 0.2);
+                        border: 1px solid rgba(255, 255, 255, 0.3);
+                        border-radius: 12px;
+                        color: white;
+                        font-size: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">📝 Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 13px; color: rgba(255, 255, 255, 0.9); font-style: italic;">${content}</div>
+                `;
+                
+                // Pre-load audio to get duration immediately
+                preloadAudioDuration(audioData, messageId);
+                
+            } else {
+                // Regular text message
+                messageDiv.textContent = content;
+            }
+            
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // Pre-load audio duration without playing
+        function preloadAudioDuration(audioBase64, messageId) {
+            try {
+                const audioBytes = atob(audioBase64);
+                const audioArray = new Uint8Array(audioBytes.length);
+                for (let i = 0; i < audioBytes.length; i++) {
+                    audioArray[i] = audioBytes.charCodeAt(i);
+                }
+                
+                const audioBlob = new Blob([audioArray], { type: 'audio/mpeg' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                const tempAudio = new Audio(audioUrl);
+                
+                tempAudio.addEventListener('loadedmetadata', () => {
+                    const durationElement = document.querySelector(`#${messageId} .duration`);
+                    if (durationElement) {
+                        const minutes = Math.floor(tempAudio.duration / 60);
+                        const seconds = Math.floor(tempAudio.duration % 60);
+                        durationElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                    // Clean up the temporary audio and URL
+                    URL.revokeObjectURL(audioUrl);
+                });
+                
+                tempAudio.addEventListener('error', () => {
+                    const durationElement = document.querySelector(`#${messageId} .duration`);
+                    if (durationElement) {
+                        durationElement.textContent = 'Error';
+                    }
+                    URL.revokeObjectURL(audioUrl);
+                });
+                
+            } catch (error) {
+                const durationElement = document.querySelector(`#${messageId} .duration`);
+                if (durationElement) {
+                    durationElement.textContent = 'Error';
+                }
+            }
+        }
+        
+        // Toggle transcript visibility
+        function toggleTranscript(button) {
+            const transcriptDiv = button.nextElementSibling;
+            const isHidden = transcriptDiv.style.display === 'none';
+            
+            if (isHidden) {
+                // Show transcript
+                transcriptDiv.style.display = 'block';
+                button.textContent = '📝 Ocultar transcripción';
+                button.style.background = 'rgba(102, 126, 234, 0.2)';
+            } else {
+                // Hide transcript
+                transcriptDiv.style.display = 'none';
+                button.textContent = '📝 Mostrar transcripción';
+                button.style.background = 'rgba(102, 126, 234, 0.1)';
+            }
+        }
+        
+        // Generate waveform bars
+        function generateWaveformBars() {
+            let bars = '';
+            for (let i = 0; i < 20; i++) {
+                const height = Math.random() * 60 + 20;
+                bars += `<div class="waveform-bar" style="height: ${height}%"></div>`;
+            }
+            return bars;
+        }
+        
+        // Voice playback functionality
+        let currentAudio = null;
+        
+        function toggleVoicePlayback(button, audioBase64) {
+            const voiceMessage = button.closest('.voice-message');
+            const waveformBars = voiceMessage.querySelectorAll('.waveform-bar');
+            const duration = voiceMessage.querySelector('.duration');
+            
+            if (currentAudio && !currentAudio.paused) {
+                // Stop current playback
+                currentAudio.pause();
+                currentAudio = null;
+                button.textContent = '▶️';
+                button.classList.remove('playing');
+                waveformBars.forEach(bar => bar.classList.remove('active'));
+                return;
+            }
+            
+            if (button.textContent === '⏸️') {
+                // Pause current audio
+                currentAudio.pause();
+                button.textContent = '▶️';
+                button.classList.remove('playing');
+                waveformBars.forEach(bar => bar.classList.remove('active'));
+                return;
+            }
+            
+            // Start new playback
+            try {
+                const audioBytes = atob(audioBase64);
+                const audioArray = new Uint8Array(audioBytes.length);
+                for (let i = 0; i < audioBytes.length; i++) {
+                    audioArray[i] = audioBytes.charCodeAt(i);
+                }
+                
+                const audioBlob = new Blob([audioArray], { type: 'audio/mpeg' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                currentAudio = new Audio(audioUrl);
+                
+                // Set up event listeners before playing
+                currentAudio.addEventListener('loadedmetadata', () => {
+                    const minutes = Math.floor(currentAudio.duration / 60);
+                    const seconds = Math.floor(currentAudio.duration % 60);
+                    duration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                });
+                
+                currentAudio.addEventListener('timeupdate', () => {
+                    if (currentAudio.duration) {
+                        const progress = currentAudio.currentTime / currentAudio.duration;
+                        const activeBars = Math.floor(progress * waveformBars.length);
+                        waveformBars.forEach((bar, index) => {
+                            if (index < activeBars) {
+                                bar.classList.add('active');
+                            } else {
+                                bar.classList.remove('active');
+                            }
+                        });
+                        
+                        const minutes = Math.floor(currentAudio.currentTime / 60);
+                        const seconds = Math.floor(currentAudio.currentTime % 60);
+                        duration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                });
+                
+                currentAudio.addEventListener('ended', () => {
+                    button.textContent = '▶️';
+                    button.classList.remove('playing');
+                    waveformBars.forEach(bar => bar.classList.remove('active'));
+                    currentAudio = null;
+                });
+                
+                currentAudio.addEventListener('error', (e) => {
+                    console.error('Audio error:', e);
+                    duration.textContent = 'Error';
+                });
+                
+                // Start playing
+                currentAudio.play().then(() => {
+                    button.textContent = '⏸️';
+                    button.classList.add('playing');
+                    
+                    // Animate waveform during playback
+                    const animateWaveform = () => {
+                        if (currentAudio && !currentAudio.paused) {
+                            waveformBars.forEach(bar => {
+                                if (bar.classList.contains('active')) {
+                                    const height = Math.random() * 60 + 20;
+                                    bar.style.height = `${height}%`;
+                                }
+                            });
+                            requestAnimationFrame(animateWaveform);
+                        }
+                    };
+                    animateWaveform();
+                }).catch(error => {
+                    console.error('Error playing audio:', error);
+                    duration.textContent = 'Error';
+                });
+                
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                duration.textContent = 'Error';
+            }
         }
         
         function sendMessage() {
@@ -410,7 +725,10 @@
             if (ws && ws.readyState === WebSocket.OPEN) {
                 console.log('Sending message:', message);
                 addMessage(message, 'user');
-                ws.send(`user:${message}`);
+                ws.send(JSON.stringify({
+                    type: 'text',
+                    content: message
+                }));
                 messageInput.value = '';
                 messageInput.focus();
             } else {
@@ -425,6 +743,89 @@
                 sendMessage();
             }
         });
+        
+        // Voice functionality
+        voiceButton.addEventListener('click', toggleRecording);
+        
+        async function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                voiceButton.classList.add('recording');
+                voiceButton.innerHTML = '⏹️';
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    voiceButton.classList.remove('recording');
+                    voiceButton.innerHTML = '🎤';
+                    
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioBase64 = await blobToBase64(audioBlob);
+                    
+                    // Send voice message to server
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: 'voice',
+                            audio: audioBase64
+                        }));
+                    }
+                    
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                addMessage('No se pudo acceder al micrófono. Por favor verifica los permisos.', 'bot');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+            }
+        }
+        
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+        
+        // Handle voice responses
+        function handleVoiceResponse(data) {
+            // Show user voice message with waveform and hidden transcript
+            if (data.transcription) {
+                addMessage(data.transcription, 'user', data.audio);
+            }
+            
+            // Show bot's response with voice message and hidden transcript
+            if (data.audio) {
+                addMessage(data.text, 'bot', data.audio);
+            } else {
+                addMessage(data.text, 'bot');
+            }
+        }
         
         // Connect when page loads
         connect();
