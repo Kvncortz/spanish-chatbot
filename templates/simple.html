@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spanish Chatbot - Simple</title>
+    <title>VocaFlow - Spanish Conversation Practice</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -218,75 +218,109 @@
             border-top: 1px solid #e9ecef;
         }
         
-        .input-row {
+        .input-wrapper {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 8px 8px 8px 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
         
         #messageInput {
             flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 25px;
+            border: none;
+            background: transparent;
             outline: none;
             font-size: 15px;
-            transition: all 0.3s ease;
+            color: #2d3748;
+            padding: 8px 4px;
         }
         
-        #messageInput:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        #sendButton, #voiceButton {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #sendButton {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        #sendButton:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        #messageInput::placeholder {
+            color: #a0aec0;
         }
         
         #voiceButton {
-            background: #f8f9fa;
-            color: #667eea;
-            border: 2px solid #e9ecef;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
         
         #voiceButton:hover:not(:disabled) {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-            transform: translateY(-2px);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        #voiceButton:active:not(:disabled) {
+            transform: scale(0.95);
         }
         
         #voiceButton.recording {
-            background: #dc3545;
-            color: white;
-            border-color: #dc3545;
-            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            animation: recordPulse 1.5s ease-in-out infinite;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        #voiceButton .mic-icon {
+            width: 20px;
+            height: 20px;
+            position: relative;
+        }
+        
+        #voiceButton .mic-icon::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #voiceButton .mic-icon::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 3px solid white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #voiceButton.recording .mic-icon::after {
+            animation: recordRipple 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 101, 101, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(245, 101, 101, 0); }
+        }
+        
+        @keyframes recordRipple {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
         }
         
         button:disabled {
@@ -328,26 +362,74 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        
+        .home-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .home-btn-absolute {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-btn-absolute:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
 <body>
+    <a href="/" class="home-btn-absolute">Home</a>
     <div class="chat-container">
         <div class="chat-header">
-            <h1>🎙️ Spanish Chatbot</h1>
-            <div class="level-selector">
-                <button class="level-btn" data-level="beginner">Principiante</button>
-                <button class="level-btn active" data-level="intermediate">Intermedio</button>
-                <button class="level-btn" data-level="advanced">Avanzado</button>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="text-align: center;">
+                    <h1>VocaFlow</h1>
+                    <div class="level-selector">
+                        <button class="level-btn" data-level="beginner">Principiante</button>
+                        <button class="level-btn active" data-level="intermediate">Intermedio</button>
+                        <button class="level-btn" data-level="advanced">Avanzado</button>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="chat-box" id="chatBox"></div>
         
         <div class="input-area">
-            <div class="input-row">
+            <div class="input-wrapper">
                 <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." disabled>
-                <button id="sendButton" disabled>Enviar</button>
-                <button id="voiceButton" disabled>🎤</button>
+                <button id="voiceButton" disabled>
+                    <div class="mic-icon"></div>
+                </button>
             </div>
         </div>
     </div>
@@ -355,7 +437,6 @@
     <script>
         const chatBox = document.getElementById('chatBox');
         const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
         const voiceButton = document.getElementById('voiceButton');
         
         let ws;
@@ -379,7 +460,6 @@
                 // Clear chat and disable inputs during transition
                 chatBox.innerHTML = '';
                 messageInput.disabled = true;
-                sendButton.disabled = true;
                 voiceButton.disabled = true;
                 
                 // Force close existing connection and prevent any further messages
@@ -418,7 +498,6 @@
                 isConnecting = false; // Reset connection flag
                 reconnectAttempts = 0; // Reset reconnect attempts on successful connection
                 messageInput.disabled = false;
-                sendButton.disabled = false;
                 voiceButton.disabled = false;
                 messageInput.focus();
             };
@@ -451,7 +530,6 @@
                 console.log('WebSocket connection closed:', event);
                 isConnecting = false; // Reset connection flag
                 messageInput.disabled = true;
-                sendButton.disabled = true;
                 voiceButton.disabled = true;
                 
                 if (reconnectAttempts < maxReconnectAttempts) {
@@ -737,7 +815,6 @@
             }
         }
         
-        sendButton.addEventListener('click', sendMessage);
         messageInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
@@ -770,7 +847,6 @@
                 
                 mediaRecorder.onstop = async () => {
                     voiceButton.classList.remove('recording');
-                    voiceButton.innerHTML = '🎤';
                     
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const audioBase64 = await blobToBase64(audioBlob);

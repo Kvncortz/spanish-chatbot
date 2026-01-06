@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocaFlow - Teacher Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.025em;
+            position: relative;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .assignment-form {
+            display: grid;
+            gap: 24px;
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+            letter-spacing: -0.025em;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            background: #f8fafc;
+            color: #2d3748;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #a0aec0;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .form-section {
+            padding: 24px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.025em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: #f8fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .assignments-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .assignment-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .assignment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .assignment-card h3 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+        
+        .assignment-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .assignment-description {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .assignment-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 10px;
+            font-weight: 500;
+            letter-spacing: -0.025em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .logs-table {
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .logs-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .logs-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .logs-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f8f9fa;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .logs-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .level-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .level-beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .level-intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .level-advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .voice-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .voice-used {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .voice-not-used {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .transcript-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .transcript-used {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .transcript-not-used {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .modal-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .share-link {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 13px;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+        
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .copy-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .assignment-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .assignment-actions {
+                justify-content: stretch;
+            }
+            
+            .btn-small {
+                flex: 1;
+            }
+        }
+        
+        .home-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .home-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            border-radius: inherit;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .home-btn-absolute {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-btn-absolute:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <a href="/" class="home-btn-absolute">Home</a>
+        <div class="header">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="text-align: center;">
+                    <h1>VocaFlow</h1>
+                    <p>Create assignments, track student progress, and monitor engagement</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('create')">Create Assignment</button>
+            <button class="nav-tab" onclick="switchTab('assignments')">My Assignments</button>
+            <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
+        </div>
+        
+        <!-- Create Assignment Tab -->
+        <div id="create-tab" class="tab-content active">
+            <form class="assignment-form" onsubmit="createAssignment(event)">
+                <div class="form-section">
+                    <div class="form-section-title">Basic Information</div>
+                    <div class="form-group">
+                        <label for="assignmentTitle">Assignment Title</label>
+                        <input type="text" id="assignmentTitle" name="title" required placeholder="e.g., Ordering Food at a Restaurant">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="assignmentLevel">Difficulty Level</label>
+                            <select id="assignmentLevel" name="level" required>
+                                <option value="">Select Level</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assignmentDuration">Duration (minutes)</label>
+                            <input type="number" id="assignmentDuration" name="duration" min="1" max="60" step="1" value="5" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-section-title">Content Details</div>
+                    <div class="form-group">
+                        <label for="assignmentDescription">Assignment Description</label>
+                        <textarea id="assignmentDescription" name="description" required placeholder="Describe what students should practice and accomplish in this assignment..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assignmentInstructions">Student Instructions</label>
+                        <textarea id="assignmentInstructions" name="instructions" required placeholder="Clear instructions for students on how to complete this assignment..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-section-title">Advanced Options</div>
+                    <div class="form-group">
+                        <label for="assignmentPrompt">Custom Prompt (Optional)</label>
+                        <textarea id="assignmentPrompt" name="prompt" placeholder="Override the default system prompt with custom instructions for the AI..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assignmentVocab">Key Vocabulary (Optional)</label>
+                        <textarea id="assignmentVocab" name="vocab" placeholder="Enter important vocabulary words or phrases (comma-separated). These will be tracked in student logs..."></textarea>
+                        <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Example: zapatos, talla, color, precio, comprar, tienda</small>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-self: center;">Create Assignment</button>
+            </form>
+        </div>
+        
+        <!-- My Assignments Tab -->
+        <div id="assignments-tab" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #333;">My Assignments</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-secondary btn-small" id="assignmentsToggleBtn" onclick="toggleAssignmentsSelection()">Select All</button>
+                    <button class="btn btn-secondary btn-small" onclick="deleteSelectedAssignments()" style="background: #dc3545; color: white;">Delete Selected</button>
+                </div>
+            </div>
+            <div class="assignments-list" id="assignmentsList">
+                <!-- Assignments will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Analytics Tab -->
+        <div id="analytics-tab" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #333;">Student Activity Logs</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-secondary btn-small" id="logsToggleBtn" onclick="toggleLogsSelection()">Select All</button>
+                    <button class="btn btn-secondary btn-small" onclick="deleteSelectedLogs()" style="background: #dc3545; color: white;">Delete Selected</button>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalAssignments">0</div>
+                    <div class="stat-label">Total Assignments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalStudents">0</div>
+                    <div class="stat-label">Students Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgCompletion">0%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="voiceUsage">0%</div>
+                    <div class="stat-label">Student Speaking Rate</div>
+                </div>
+            </div>
+            
+            <div class="logs-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAllLogsCheckbox" onchange="toggleAllLogs()" style="width: 16px; height: 16px;"></th>
+                            <th>Student</th>
+                            <th>Assignment</th>
+                            <th>Level</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Messages</th>
+                            <th>Bot Speaking</th>
+                            <th>Student Speaking</th>
+                            <th>Vocabulary Used</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Logs will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Share Assignment Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share Assignment</h2>
+                <p>Share this link with your students</p>
+            </div>
+            <div class="share-link" id="shareLink"></div>
+            <button class="copy-btn" onclick="copyShareLink()">📋 Copy Link</button>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeShareModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Conversation Modal -->
+    <div id="conversationModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Conversation Transcript</h2>
+                <p id="conversationInfo">Loading...</p>
+            </div>
+            <div id="conversationContent" style="max-height: 400px; overflow-y: auto; padding: 20px; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
+                <!-- Conversation will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeConversationModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let assignments = [];
+        let logs = [];
+        
+        // Load data from localStorage
+        function loadData() {
+            const savedAssignments = localStorage.getItem('assignments');
+            const savedLogs = localStorage.getItem('logs');
+            
+            if (savedAssignments) {
+                assignments = JSON.parse(savedAssignments);
+            }
+            
+            if (savedLogs) {
+                logs = JSON.parse(savedLogs);
+            }
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+            localStorage.setItem('logs', JSON.stringify(logs));
+        }
+        
+        // Save active tab to localStorage
+        function saveActiveTab(tabName) {
+            localStorage.setItem('activeTab', tabName);
+        }
+        
+        // Load active tab from localStorage
+        function loadActiveTab() {
+            const savedTab = localStorage.getItem('activeTab');
+            if (savedTab && ['create', 'assignments', 'analytics'].includes(savedTab)) {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to saved tab and content
+                document.querySelector(`[onclick="switchTab('${savedTab}')"]`).classList.add('active');
+                document.getElementById(`${savedTab}-tab`).classList.add('active');
+                
+                // Load tab-specific data
+                if (savedTab === 'assignments') {
+                    loadAssignments();
+                } else if (savedTab === 'analytics') {
+                    loadAnalytics();
+                }
+            }
+        }
+        
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Save active tab to localStorage
+            saveActiveTab(tabName);
+            
+            // Load tab-specific data
+            if (tabName === 'assignments') {
+                loadAssignments();
+            } else if (tabName === 'analytics') {
+                loadAnalytics();
+            }
+        }
+        
+        // Create assignment
+        function createAssignment(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const vocabText = formData.get('vocab') || '';
+            const vocabList = vocabText.split(',').map(v => v.trim()).filter(v => v.length > 0);
+            
+            const assignment = {
+                id: Date.now().toString(),
+                title: formData.get('title'),
+                level: formData.get('level'),
+                duration: parseInt(formData.get('duration')),
+                prompt: formData.get('prompt') || '',
+                description: formData.get('description'),
+                instructions: formData.get('instructions'),
+                vocab: vocabList,
+                createdAt: new Date().toISOString(),
+                studentCount: 0,
+                completionCount: 0
+            };
+            
+            assignments.push(assignment);
+            saveData();
+            
+            // Reset form
+            event.target.reset();
+            
+            // Show success message
+            alert('Assignment created successfully!');
+            
+            // Switch to assignments tab
+            document.querySelector('[onclick="switchTab(\'assignments\')"]').click();
+        }
+        
+        // Recalculate assignment statistics from logs
+        function recalculateAssignmentStats() {
+            assignments.forEach(assignment => {
+                // Get all logs for this assignment
+                const assignmentLogs = logs.filter(log => log.assignmentId === assignment.id);
+                
+                // Count unique students
+                const uniqueStudents = new Set(assignmentLogs.map(log => log.studentName));
+                assignment.studentCount = uniqueStudents.size;
+                
+                // Count completed sessions
+                assignment.completionCount = assignmentLogs.filter(log => log.completed).length;
+            });
+            
+            saveData();
+        }
+        
+        // Load assignments
+        function loadAssignments() {
+            // Recalculate stats before loading to ensure consistency
+            recalculateAssignmentStats();
+            
+            const container = document.getElementById('assignmentsList');
+            
+            if (assignments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No assignments yet</h3>
+                        <p>Create your first assignment to get started</p>
+                    </div>
+                `;
+                // Reset toggle button
+                const toggleBtn = document.getElementById('assignmentsToggleBtn');
+                if (toggleBtn) toggleBtn.textContent = 'Select All';
+                return;
+            }
+            
+            container.innerHTML = assignments.map(assignment => {
+                const studentText = assignment.studentCount === 1 ? 'student' : 'students';
+                return `
+                <div class="assignment-card">
+                    <div class="assignment-header">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" class="assignment-checkbox" value="${assignment.id}" style="width: 18px; height: 18px;" onchange="updateAssignmentsToggleBtn()">
+                            <div>
+                                <div class="assignment-title">${assignment.title}</div>
+                                <div class="assignment-meta">
+                                    <span class="level-badge level-${assignment.level}">${assignment.level}</span>
+                                    <span>⏱️ ${assignment.duration} min</span>
+                                    <span>${assignment.studentCount} ${studentText} completed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="assignment-description">${assignment.description}</div>
+                    <div class="assignment-actions">
+                        <button class="btn btn-primary btn-small" onclick="shareAssignment('${assignment.id}')">Share</button>
+                        <button class="btn btn-secondary btn-small" onclick="viewAssignmentLogs('${assignment.id}')">View Logs</button>
+                        <button class="btn btn-secondary btn-small" onclick="editAssignment('${assignment.id}')">Edit</button>
+                        <button class="btn btn-secondary btn-small" onclick="deleteAssignment('${assignment.id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+            
+            // Reset toggle button text
+            const toggleBtn = document.getElementById('assignmentsToggleBtn');
+            if (toggleBtn) toggleBtn.textContent = 'Select All';
+        }
+        
+        // Update assignments toggle button text based on checkbox states
+        function updateAssignmentsToggleBtn() {
+            const button = document.getElementById('assignmentsToggleBtn');
+            const checkboxes = document.querySelectorAll('.assignment-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+            
+            if (allChecked && checkboxes.length > 0) {
+                button.textContent = 'Deselect All';
+            } else {
+                button.textContent = 'Select All';
+            }
+        }
+        
+        // Share assignment
+        function shareAssignment(assignmentId) {
+            const assignment = assignments.find(a => a.id === assignmentId);
+            if (!assignment) return;
+            
+            const shareUrl = `${window.location.origin}/student?assignment=${assignmentId}`;
+            document.getElementById('shareLink').textContent = shareUrl;
+            document.getElementById('shareModal').classList.add('active');
+        }
+        
+        // Copy share link
+        function copyShareLink() {
+            const shareLink = document.getElementById('shareLink').textContent;
+            navigator.clipboard.writeText(shareLink).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+        
+        // Close share modal
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
+        }
+        
+        // View assignment logs
+        function viewAssignmentLogs(assignmentId) {
+            // Switch to analytics tab
+            document.querySelector('[onclick="switchTab(\'analytics\')"]').click();
+            
+            // Wait for tab to switch, then filter logs
+            setTimeout(() => {
+                filterLogsByAssignment(assignmentId);
+            }, 100);
+        }
+        
+        // Filter logs by specific assignment
+        function filterLogsByAssignment(assignmentId) {
+            const assignment = assignments.find(a => a.id === assignmentId);
+            if (!assignment) return;
+            
+            // Filter logs for this assignment only
+            const assignmentLogs = logs.filter(log => log.assignmentId === assignmentId);
+            
+            // Update the logs table with filtered results
+            const container = document.getElementById('logsContainer');
+            if (assignmentLogs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <h3>No student submissions yet</h3>
+                        <p>No students have completed this assignment yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <h3 style="margin-bottom: 20px; color: #333;">Student Submissions for: ${assignment.title}</h3>
+                <div class="logs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllLogsCheckbox" onchange="toggleLogsSelection()"></th>
+                                <th>Student Name</th>
+                                <th>Start Time</th>
+                                <th>Duration</th>
+                                <th>Messages</th>
+                                <th>Voice Used</th>
+                                <th>Vocabulary</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${assignmentLogs.map(log => {
+                                const startTime = new Date(log.startTime).toLocaleString();
+                                const endTime = log.endTime ? new Date(log.endTime).toLocaleString() : 'In Progress';
+                                const duration = log.endTime ? 
+                                    Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) + ' min' : 
+                                    'In Progress';
+                                
+                                const vocabDisplay = log.usedVocab && log.usedVocab.length > 0 ? 
+                                    log.usedVocab.slice(0, 3).join(', ') + (log.usedVocab.length > 3 ? '...' : '') : 
+                                    'None';
+                                
+                                return `
+                                    <tr>
+                                        <td><input type="checkbox" class="log-checkbox" value="${log.assignmentId}-${log.studentName}-${log.startTime}" style="width: 16px; height: 16px;" onchange="updateLogsToggleBtn()"></td>
+                                        <td>${log.studentName}</td>
+                                        <td>${startTime}</td>
+                                        <td>${duration}</td>
+                                        <td>${log.messageCount || 0}</td>
+                                        <td>${log.voiceUsed ? 'Yes' : 'No'}</td>
+                                        <td>${vocabDisplay}</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-small" onclick="viewConversation('${log.assignmentId}', '${log.studentName}', '${log.startTime}')">
+                                                View Conversation
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            // Reset toggle button
+            const toggleBtn = document.getElementById('logsToggleBtn');
+            if (toggleBtn) toggleBtn.textContent = 'Select All';
+        }
+        
+        // Edit assignment
+        function editAssignment(assignmentId) {
+            const assignment = assignments.find(a => a.id === assignmentId);
+            if (!assignment) return;
+            
+            // Switch to create tab and populate form
+            document.querySelector('[onclick="switchTab(\'create\')"]').click();
+            
+            setTimeout(() => {
+                document.getElementById('assignmentTitle').value = assignment.title;
+                document.getElementById('assignmentLevel').value = assignment.level;
+                document.getElementById('assignmentDuration').value = assignment.duration;
+                document.getElementById('assignmentPrompt').value = assignment.prompt;
+                document.getElementById('assignmentDescription').value = assignment.description;
+                document.getElementById('assignmentInstructions').value = assignment.instructions;
+                document.getElementById('assignmentVocab').value = assignment.vocab ? assignment.vocab.join(', ') : '';
+            }, 100);
+        }
+        
+        // Delete assignment
+        function deleteAssignment(assignmentId) {
+            if (confirm('Are you sure you want to delete this assignment?')) {
+                // Delete the assignment
+                assignments = assignments.filter(a => a.id !== assignmentId);
+                
+                // Also delete all logs associated with this assignment
+                logs = logs.filter(log => log.assignmentId !== assignmentId);
+                
+                // Save both assignments and logs
+                saveData();
+                loadAssignments();
+            }
+        }
+        
+        // Load analytics
+        function loadAnalytics() {
+            console.log('Loading analytics...');
+            console.log('Assignments:', assignments.length);
+            console.log('Logs:', logs.length);
+            
+            // Calculate stats
+            const totalAssignments = assignments.length;
+            const totalStudents = logs.reduce((sum, log) => sum + (log.isNewStudent ? 1 : 0), 0);
+            const totalSessions = logs.length;
+            const completedSessions = logs.filter(log => log.completed).length;
+            const avgCompletion = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
+            const voiceUsedSessions = logs.filter(log => log.voiceUsed).length;
+            const voiceUsage = totalSessions > 0 ? Math.round((voiceUsedSessions / totalSessions) * 100) : 0;
+            
+            console.log('Stats calculated:', {
+                totalAssignments,
+                totalStudents,
+                totalSessions,
+                completedSessions,
+                avgCompletion,
+                voiceUsedSessions,
+                voiceUsage
+            });
+            
+            // Update stats
+            const totalAssignmentsEl = document.getElementById('totalAssignments');
+            const totalStudentsEl = document.getElementById('totalStudents');
+            const avgCompletionEl = document.getElementById('avgCompletion');
+            const voiceUsageEl = document.getElementById('voiceUsage');
+            
+            if (totalAssignmentsEl) totalAssignmentsEl.textContent = totalAssignments;
+            if (totalStudentsEl) totalStudentsEl.textContent = totalStudents;
+            if (avgCompletionEl) avgCompletionEl.textContent = avgCompletion + '%';
+            if (voiceUsageEl) voiceUsageEl.textContent = voiceUsage + '%';
+            
+            // Load logs table
+            const tableBody = document.getElementById('logsTableBody');
+            
+            if (!tableBody) {
+                console.error('logsTableBody element not found');
+                return;
+            }
+            
+            if (logs.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="11" style="text-align: center; padding: 40px; color: #666;">
+                            No student activity yet
+                        </td>
+                    </tr>
+                `;
+                // Reset toggle button
+                const toggleBtn = document.getElementById('logsToggleBtn');
+                if (toggleBtn) toggleBtn.textContent = 'Select All';
+                return;
+            }
+            
+            tableBody.innerHTML = logs.slice().reverse().map(log => {
+                const assignment = assignments.find(a => a.id === log.assignmentId);
+                const assignmentTitle = assignment ? assignment.title : 'Unknown Assignment';
+                const assignmentVocab = assignment ? assignment.vocab : [];
+                
+                // Check which vocabulary words were used
+                const usedVocab = log.usedVocab || [];
+                const vocabCount = usedVocab.length;
+                const vocabDisplay = vocabCount > 0 
+                    ? `<span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">${vocabCount} words used</span>`
+                    : '<span style="color: #999; font-size: 12px;">0 words used</span>';
+                
+                return `
+                    <tr>
+                        <td><input type="checkbox" class="log-checkbox" value="${log.assignmentId}-${log.studentName}-${log.startTime}" style="width: 16px; height: 16px;" onchange="updateLogsToggleBtn()"></td>
+                        <td>${log.studentName || 'Anonymous'}</td>
+                        <td>${assignmentTitle}</td>
+                        <td><span class="level-badge level-${log.level}">${log.level}</span></td>
+                        <td>${new Date(log.startTime).toLocaleDateString()}</td>
+                        <td>${log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) + ' min' : 'In Progress'}</td>
+                        <td>${log.messageCount}</td>
+                        <td>
+                            <span class="voice-indicator ${log.voiceUsed ? 'voice-used' : 'voice-not-used'}">
+                                ${log.voiceUsed ? 'Yes' : 'No'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="transcript-indicator ${log.transcriptUsed ? 'transcript-used' : 'transcript-not-used'}">
+                                ${log.transcriptUsed ? 'Yes' : 'No'}
+                            </span>
+                        </td>
+                        <td>${vocabDisplay}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-small" onclick="viewConversation('${log.assignmentId}', '${log.studentName}', '${log.startTime}')">
+                                View Conversation
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Reset toggle button text
+            const toggleBtn = document.getElementById('logsToggleBtn');
+            if (toggleBtn) toggleBtn.textContent = 'Select All';
+        }
+        
+        // Update logs toggle button text based on checkbox states
+        function updateLogsToggleBtn() {
+            const button = document.getElementById('logsToggleBtn');
+            const checkboxes = document.querySelectorAll('.log-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllLogsCheckbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            
+            if (allChecked && checkboxes.length > 0) {
+                button.textContent = 'Deselect All';
+                selectAllCheckbox.checked = true;
+            } else {
+                button.textContent = 'Select All';
+                selectAllCheckbox.checked = false;
+            }
+        }
+        
+        // Initialize
+        loadData();
+        loadActiveTab(); // Load saved tab state
+        
+        // View conversation function
+        function viewConversation(assignmentId, studentName, startTime) {
+            const log = logs.find(l => 
+                l.assignmentId === assignmentId && 
+                l.studentName === studentName && 
+                l.startTime === startTime
+            );
+            
+            if (!log || !log.conversation) {
+                alert('Conversation transcript not available');
+                return;
+            }
+            
+            const assignment = assignments.find(a => a.id === assignmentId);
+            const assignmentTitle = assignment ? assignment.title : 'Unknown Assignment';
+            const assignmentVocab = assignment ? assignment.vocab || [] : [];
+            const usedVocab = log.usedVocab || [];
+            
+            // Update modal info
+            document.getElementById('conversationInfo').textContent = 
+                `${studentName} - ${assignmentTitle} - ${new Date(startTime).toLocaleString()}`;
+            
+            // Function to highlight vocabulary words in text
+            function highlightVocabulary(text) {
+                let highlightedText = text;
+                
+                // Sort vocabulary words by length (longest first) to avoid partial matches
+                const sortedVocab = [...assignmentVocab].sort((a, b) => b.length - a.length);
+                
+                sortedVocab.forEach(vocabWord => {
+                    if (usedVocab.includes(vocabWord)) {
+                        // Create regex for exact word match (case insensitive)
+                        const regex = new RegExp(`\\b${vocabWord}\\b`, 'gi');
+                        highlightedText = highlightedText.replace(regex, 
+                            `<mark style="background: #fff3cd; color: #856404; padding: 2px 4px; border-radius: 3px; font-weight: 600;">${vocabWord}</mark>`
+                        );
+                    }
+                });
+                
+                return highlightedText;
+            }
+            
+            // Display conversation with highlighted vocabulary
+            const conversationContent = document.getElementById('conversationContent');
+            conversationContent.innerHTML = log.conversation.map(msg => {
+                const senderClass = msg.sender === 'user' ? 'user-message' : 'bot-message';
+                const senderLabel = msg.sender === 'user' ? studentName : 'Bot';
+                const timestamp = new Date(msg.timestamp).toLocaleTimeString();
+                
+                // Only highlight vocabulary in student messages, not bot messages
+                const highlightedContent = msg.sender === 'user' ? highlightVocabulary(msg.content) : msg.content;
+                
+                return `
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                            <strong>${senderLabel}</strong> - ${timestamp}
+                        </div>
+                        <div class="${senderClass}" style="padding: 10px; border-radius: 10px; max-width: 80%;">
+                            ${highlightedContent}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Show modal
+            document.getElementById('conversationModal').classList.add('active');
+        }
+        
+        function closeConversationModal() {
+            document.getElementById('conversationModal').classList.remove('active');
+        }
+        
+        // Bulk selection functions
+        function toggleAssignmentsSelection() {
+            const button = document.getElementById('assignmentsToggleBtn');
+            const checkboxes = document.querySelectorAll('.assignment-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            
+            if (allChecked) {
+                // Deselect all
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+                button.textContent = 'Select All';
+            } else {
+                // Select all
+                checkboxes.forEach(checkbox => checkbox.checked = true);
+                button.textContent = 'Deselect All';
+            }
+        }
+        
+        function selectAllAssignments() {
+            const button = document.getElementById('assignmentsToggleBtn');
+            const checkboxes = document.querySelectorAll('.assignment-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+            button.textContent = 'Deselect All';
+        }
+        
+        function deselectAllAssignments() {
+            const button = document.getElementById('assignmentsToggleBtn');
+            const checkboxes = document.querySelectorAll('.assignment-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            button.textContent = 'Select All';
+        }
+        
+        function getSelectedAssignments() {
+            const checkboxes = document.querySelectorAll('.assignment-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        function deleteSelectedAssignments() {
+            const selectedIds = getSelectedAssignments();
+            
+            if (selectedIds.length === 0) {
+                alert('Please select at least one assignment to delete.');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} assignment(s)? This action cannot be undone.`)) {
+                // Remove assignments from array
+                assignments = assignments.filter(a => !selectedIds.includes(a.id));
+                
+                // Also remove associated logs
+                logs = logs.filter(log => !selectedIds.includes(log.assignmentId));
+                
+                // Save data
+                saveData();
+                
+                // Refresh the assignments list
+                loadAssignments();
+                
+                // Update analytics if on that tab
+                if (document.querySelector('.nav-tab.active').textContent.includes('Analytics')) {
+                    loadAnalytics();
+                }
+                
+                alert(`Successfully deleted ${selectedIds.length} assignment(s).`);
+            }
+        }
+        
+        // Log management functions
+        function toggleLogsSelection() {
+            const button = document.getElementById('logsToggleBtn');
+            const logCheckboxes = document.querySelectorAll('.log-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllLogsCheckbox');
+            const allChecked = Array.from(logCheckboxes).every(cb => cb.checked);
+            
+            if (allChecked) {
+                // Deselect all
+                logCheckboxes.forEach(checkbox => checkbox.checked = false);
+                selectAllCheckbox.checked = false;
+                button.textContent = 'Select All';
+            } else {
+                // Select all
+                logCheckboxes.forEach(checkbox => checkbox.checked = true);
+                selectAllCheckbox.checked = true;
+                button.textContent = 'Deselect All';
+            }
+        }
+        
+        function toggleAllLogs() {
+            const selectAllCheckbox = document.getElementById('selectAllLogsCheckbox');
+            const button = document.getElementById('logsToggleBtn');
+            const logCheckboxes = document.querySelectorAll('.log-checkbox');
+            logCheckboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+            
+            // Update button text
+            if (selectAllCheckbox.checked) {
+                button.textContent = 'Deselect All';
+            } else {
+                button.textContent = 'Select All';
+            }
+        }
+        
+        function selectAllLogs() {
+            const button = document.getElementById('logsToggleBtn');
+            const logCheckboxes = document.querySelectorAll('.log-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllLogsCheckbox');
+            logCheckboxes.forEach(checkbox => checkbox.checked = true);
+            selectAllCheckbox.checked = true;
+            button.textContent = 'Deselect All';
+        }
+        
+        function deselectAllLogs() {
+            const button = document.getElementById('logsToggleBtn');
+            const logCheckboxes = document.querySelectorAll('.log-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllLogsCheckbox');
+            logCheckboxes.forEach(checkbox => checkbox.checked = false);
+            selectAllCheckbox.checked = false;
+            button.textContent = 'Select All';
+        }
+        
+        function getSelectedLogs() {
+            const checkboxes = document.querySelectorAll('.log-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        function deleteSelectedLogs() {
+            const selectedLogs = getSelectedLogs();
+            
+            if (selectedLogs.length === 0) {
+                alert('Please select at least one log to delete.');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete ${selectedLogs.length} student log(s)? This action cannot be undone.`)) {
+                // Get the logs that will be deleted to update assignment stats
+                const logsToDelete = logs.filter(log => {
+                    const logKey = `${log.assignmentId}-${log.studentName}-${log.startTime}`;
+                    return selectedLogs.includes(logKey);
+                });
+                
+                // Remove logs from array
+                logs = logs.filter(log => {
+                    const logKey = `${log.assignmentId}-${log.studentName}-${log.startTime}`;
+                    return !selectedLogs.includes(logKey);
+                });
+                
+                // Update assignment statistics for each deleted log
+                logsToDelete.forEach(deletedLog => {
+                    const assignment = assignments.find(a => a.id === deletedLog.assignmentId);
+                    if (assignment) {
+                        // Decrement completion count if the log was completed
+                        if (deletedLog.completed) {
+                            assignment.completionCount = Math.max(0, (assignment.completionCount || 0) - 1);
+                        }
+                        
+                        // Check if this was the only log for this student
+                        const remainingLogsForStudent = logs.filter(log => 
+                            log.assignmentId === deletedLog.assignmentId && 
+                            log.studentName === deletedLog.studentName
+                        );
+                        
+                        // If no more logs for this student, decrement student count
+                        if (remainingLogsForStudent.length === 0) {
+                            assignment.studentCount = Math.max(0, (assignment.studentCount || 0) - 1);
+                        }
+                    }
+                });
+                
+                // Save data
+                saveData();
+                
+                // Refresh the analytics display
+                loadAnalytics();
+                
+                alert(`Successfully deleted ${selectedLogs.length} student log(s).`);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Chatbot - Student Assignment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .assignment-container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .assignment-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+        
+        .assignment-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .assignment-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            opacity: 0.9;
+            flex-wrap: wrap;
+        }
+        
+        .assignment-info {
+            padding: 30px;
+        }
+        
+        .info-section {
+            margin-bottom: 25px;
+        }
+        
+        .info-section h3 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .info-section p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .student-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .start-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .chat-container {
+            display: none;
+            height: 70vh;
+            flex-direction: column;
+        }
+        
+        .chat-container.active {
+            display: flex;
+        }
+        
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .voice-message {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 12px;
+            min-width: 200px;
+        }
+        
+        .voice-message.user-voice {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .voice-message.bot-voice {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .play-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .voice-message.user-voice .play-button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+        }
+        
+        .voice-message.bot-voice .play-button {
+            background: #667eea;
+            color: white;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .play-button.playing {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .waveform {
+            flex: 1;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .waveform-bar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-message.user-voice .waveform-bar {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .voice-message.bot-voice .waveform-bar {
+            background: rgba(102, 126, 234, 0.6);
+        }
+        
+        .waveform-bar.active {
+            background: #667eea;
+            animation: wave 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { height: 20%; }
+            50% { height: 80%; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 8px 8px 8px 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        #messageInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 15px;
+            color: #2d3748;
+            padding: 8px 4px;
+        }
+        
+        #messageInput::placeholder {
+            color: #a0aec0;
+        }
+        
+        #voiceButton {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #voiceButton:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        #voiceButton:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+        
+        #voiceButton.recording {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            animation: recordPulse 1.5s ease-in-out infinite;
+        }
+        
+        #voiceButton .mic-icon {
+            width: 20px;
+            height: 20px;
+            position: relative;
+        }
+        
+        #voiceButton .mic-icon::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #voiceButton .mic-icon::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 3px solid white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #voiceButton.recording .mic-icon::after {
+            animation: recordRipple 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 101, 101, 0.7); }
+            50% { box-shadow: 0 0 0 12px rgba(245, 101, 101, 0); }
+        }
+        
+        @keyframes recordRipple {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+        
+        .timer {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+        
+        .completion-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .duration {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .voice-message.bot-voice .duration {
+            color: rgba(0, 0, 0, 0.6);
+        }
+        
+        /* Scrollbar styling */
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .chat-box::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        
+        .chat-box::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .modal-header h2 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        
+        .modal-header p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .modal-body {
+            text-align: center;
+        }
+        
+        .modal-body p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .modal-actions .btn {
+            padding: 15px 30px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .modal-actions .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .modal-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .modal-actions .btn-secondary {
+            background: #f8fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .modal-actions .btn-secondary:hover {
+            background: white;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .assignment-container {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .assignment-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .chat-container {
+                height: 60vh;
+            }
+        }
+        
+        .home-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .home-btn-absolute {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-btn-absolute:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="home-btn-absolute">Home</a>
+    <div class="assignment-container">
+        <div class="assignment-header">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="text-align: center;">
+                    <h1 id="assignmentTitle">Loading Assignment...</h1>
+                    <div class="assignment-meta">
+                        <span class="level-badge" id="assignmentLevel">Loading...</span>
+                        <span class="duration" id="assignmentDuration">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <!-- Assignment details moved into header -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: white; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Assignment Description</h4>
+                    <p id="assignmentDescription" style="color: rgba(255,255,255,0.9); font-size: 14px; line-height: 1.5; margin: 0;">Loading...</p>
+                </div>
+                <div>
+                    <h4 style="color: white; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Instructions</h4>
+                    <p id="assignmentInstructions" style="color: rgba(255,255,255,0.9); font-size: 14px; line-height: 1.5; margin: 0;">Loading...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="assignment-info">
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            
+            <div class="student-form" id="studentForm">
+                <h3>Student Information</h3>
+                <div class="form-group">
+                    <label for="studentName">Your Name</label>
+                    <input type="text" id="studentName" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="classNumber">Class Number (Optional)</label>
+                    <input type="text" id="classNumber" placeholder="e.g., SPAN-101, Period 2">
+                </div>
+                <button class="start-btn" onclick="showAssignmentIntro()">Continue to Assignment</button>
+            </div>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-box" id="chatBox"></div>
+            
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." disabled>
+                    <button id="voiceButton" disabled>
+                        <div class="mic-icon"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Assignment Intro Modal -->
+    <div id="introModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Assignment Instructions</h2>
+                <p id="introAssignmentTitle">Loading...</p>
+            </div>
+            <div class="modal-body">
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">What you need to do:</h4>
+                    <p id="introInstructions" style="margin: 0; color: #666;">Loading...</p>
+                </div>
+                <div style="background: #e8f4fd; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">Assignment Details:</h4>
+                    <p id="introDescription" style="margin: 0; color: #666;">Loading...</p>
+                </div>
+                <div style="text-align: center; margin: 25px 0;">
+                    <div style="font-size: 14px; color: #666; margin-bottom: 15px;">When you're ready to begin, click below:</div>
+                    <button class="btn btn-primary" onclick="startChatSession()" style="
+                        font-size: 16px; 
+                        font-weight: 600; 
+                        padding: 18px 40px; 
+                        border-radius: 12px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        border: none;
+                        color: white;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)';">
+                        ¡Listo! - Start Conversation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Time's Up Modal -->
+    <div id="timeUpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Time's Up!</h2>
+                <p>Your assignment session has ended</p>
+            </div>
+            <div class="modal-body">
+                <p>Would you like to submit your conversation for grading or try again?</p>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">Session Summary:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
+                        <div>Messages: <strong id="summaryMessages">0</strong></div>
+                        <div>Voice Used: <strong id="summaryVoice">No</strong></div>
+                        <div>Vocabulary: <strong id="summaryVocab">0</strong></div>
+                        <div>Duration: <strong id="summaryDuration">0 min</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="submitAssignment()">Submit Assignment</button>
+                <button class="btn btn-secondary" onclick="tryAgain()">Try Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Submission Confirmation Modal -->
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Assignment Submitted!</h2>
+                <p>Your conversation has been successfully submitted for grading.</p>
+            </div>
+            <div class="modal-body">
+                <p>What would you like to do next?</p>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="goToPractice()" style="
+                        font-size: 14px; 
+                        font-weight: 600; 
+                        padding: 12px 24px; 
+                        border-radius: 8px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        border: none;
+                        color: white;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.transform='translateY(-1px)';" onmouseout="this.style.transform='translateY(0)';">
+                        Practice More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const messageInput = document.getElementById('messageInput');
+        const voiceButton = document.getElementById('voiceButton');
+        const studentForm = document.getElementById('studentForm');
+        const chatContainer = document.getElementById('chatContainer');
+        const timer = document.getElementById('timer');
+        const progressFill = document.getElementById('progressFill');
+        
+        let ws;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+        let currentAssignment = null;
+        let studentName = '';
+        let isConnecting = false;
+        let mediaRecorder;
+        let audioChunks;
+        let isRecording = false;
+        let sessionStartTime = null;
+        let sessionTimer = null;
+        let assignmentTimer = null;
+        let maxDuration = 15 * 60 * 1000; // 15 minutes default
+        let sessionLog = {
+            assignmentId: null,
+            studentName: '',
+            classNumber: '',
+            startTime: null,
+            endTime: null,
+            level: '',
+            messageCount: 0,
+            voiceUsed: false,
+            transcriptUsed: false,
+            completed: false,
+            isNewStudent: false,
+            usedVocab: [],
+            conversation: [] // Store full conversation
+        };
+        
+        let assignmentCompleted = false; // Flag to prevent reconnection
+        
+        // Load assignment from URL parameter
+        function loadAssignment() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const assignmentId = urlParams.get('assignment');
+            
+            if (!assignmentId) {
+                showError('No assignment ID provided. Please use the link from your teacher.');
+                return;
+            }
+            
+            // Load assignments from localStorage (in production, this would be an API call)
+            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+            currentAssignment = assignments.find(a => a.id === assignmentId);
+            
+            if (!currentAssignment) {
+                showError('Assignment not found. Please check the link with your teacher.');
+                return;
+            }
+            
+            // Update UI with assignment details
+            document.getElementById('assignmentTitle').textContent = currentAssignment.title;
+            document.getElementById('assignmentLevel').textContent = currentAssignment.level.charAt(0).toUpperCase() + currentAssignment.level.slice(1);
+            document.getElementById('assignmentDuration').textContent = `⏱️ Duration: ${currentAssignment.duration} min`;
+            document.getElementById('assignmentDescription').textContent = currentAssignment.description;
+            document.getElementById('assignmentInstructions').textContent = currentAssignment.instructions;
+            
+            // Update intro modal
+            document.getElementById('introAssignmentTitle').textContent = currentAssignment.title;
+            document.getElementById('introInstructions').textContent = currentAssignment.instructions;
+            document.getElementById('introDescription').textContent = currentAssignment.description;
+            
+            // Set max duration
+            maxDuration = currentAssignment.duration * 60 * 1000;
+            
+            // Update session log
+            sessionLog.assignmentId = currentAssignment.id;
+            sessionLog.level = currentAssignment.level;
+        }
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            studentForm.style.display = 'none';
+        }
+        
+        function showAssignmentIntro() {
+            studentName = document.getElementById('studentName').value.trim();
+            const classNumber = document.getElementById('classNumber').value.trim();
+            
+            if (!studentName) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            // Update session log
+            sessionLog.studentName = studentName;
+            sessionLog.classNumber = classNumber;
+            
+            // Hide student form and show intro modal
+            studentForm.style.display = 'none';
+            document.getElementById('introModal').classList.add('active');
+        }
+        
+        function startAssignment() {
+            // This function is now called from startChatSession
+            // Update session log with start time
+            sessionLog.startTime = new Date().toISOString();
+            
+            // Check if this is a new student (in production, this would be server-side)
+            const pastLogs = JSON.parse(localStorage.getItem('logs') || '[]');
+            const studentExists = pastLogs.some(log => log.studentName === studentName);
+            sessionLog.isNewStudent = !studentExists;
+            
+            // Don't start chat yet - wait for user to click "Listo"
+        }
+        
+        function startChatSession() {
+            // Start the assignment (sets start time, checks if new student)
+            startAssignment();
+            
+            // Hide intro modal and show chat
+            document.getElementById('introModal').classList.remove('active');
+            chatContainer.classList.add('active');
+            
+            // Start timers
+            startSessionTimer();
+            startAssignmentTimer();
+            
+            // Connect to WebSocket
+            connect();
+        }
+        
+        function startSessionTimer() {
+            sessionStartTime = Date.now();
+            sessionTimer = setInterval(() => {
+                const elapsed = Date.now() - sessionStartTime;
+                const minutes = Math.floor(elapsed / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                timer.textContent = `⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        function startAssignmentTimer() {
+            assignmentTimer = setTimeout(() => {
+                completeAssignment(true);
+            }, maxDuration);
+            
+            // Update progress bar
+            const progressInterval = setInterval(() => {
+                const elapsed = Date.now() - sessionStartTime;
+                const progress = Math.min((elapsed / maxDuration) * 100, 100);
+                progressFill.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                }
+            }, 1000);
+        }
+        
+        function completeAssignment(timeExpired = false) {
+            // Set assignment completed flag
+            assignmentCompleted = true;
+            
+            // Clear timers
+            if (sessionTimer) clearInterval(sessionTimer);
+            if (assignmentTimer) clearTimeout(assignmentTimer);
+            
+            // Update session log
+            sessionLog.endTime = new Date().toISOString();
+            sessionLog.completed = !timeExpired;
+            
+            // Update summary modal data
+            const elapsed = Date.now() - sessionStartTime;
+            const minutes = Math.round(elapsed / 60000);
+            document.getElementById('summaryMessages').textContent = sessionLog.messageCount;
+            document.getElementById('summaryVoice').textContent = sessionLog.voiceUsed ? 'Yes' : 'No';
+            document.getElementById('summaryVocab').textContent = sessionLog.usedVocab.length;
+            document.getElementById('summaryDuration').textContent = `${minutes} min`;
+            
+            // Disable inputs
+            messageInput.disabled = true;
+            voiceButton.disabled = true;
+            
+            // Close WebSocket
+            if (ws) {
+                ws.onopen = null; // Prevent reconnection
+                ws.onmessage = null;
+                ws.onclose = null;
+                ws.onerror = null;
+                ws.close();
+                ws = null;
+            }
+            
+            // Show time up modal
+            document.getElementById('timeUpModal').classList.add('active');
+        }
+        
+        function connect() {
+            if (isConnecting || assignmentCompleted) {
+                console.log('Already connecting or assignment completed, skipping...');
+                return;
+            }
+            
+            isConnecting = true;
+            console.log(`Connecting to WebSocket with level: ${currentAssignment.level}`);
+            ws = new WebSocket('ws://' + window.location.host + '/ws/' + currentAssignment.level);
+            
+            ws.onopen = function() {
+                console.log('WebSocket connection established');
+                isConnecting = false;
+                reconnectAttempts = 0;
+                
+                // Send assignment data to server
+                ws.send(JSON.stringify({
+                    type: 'assignment_setup',
+                    assignment: currentAssignment
+                }));
+                
+                messageInput.disabled = false;
+                voiceButton.disabled = false;
+                messageInput.focus();
+            };
+            
+            ws.onmessage = function(event) {
+                console.log('Message received:', event.data);
+                
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === 'voice_response') {
+                        handleVoiceResponse(data);
+                    } else if (data.type === 'error') {
+                        addMessage(data.content, 'bot');
+                    }
+                } catch (e) {
+                    // Handle legacy text format
+                    const message = event.data;
+                    if (message.startsWith('bot:')) {
+                        addMessage(message.substring(4), 'bot');
+                    } else if (message.startsWith('Error:')) {
+                        addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'bot');
+                    } else {
+                        console.log('Unhandled message format:', message);
+                    }
+                }
+            };
+            
+            ws.onclose = function(event) {
+                console.log('WebSocket connection closed:', event);
+                isConnecting = false;
+                messageInput.disabled = true;
+                voiceButton.disabled = true;
+                
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 15000);
+                    console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttempts}/${maxReconnectAttempts})`);
+                    setTimeout(connect, delay);
+                }
+            };
+            
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+                isConnecting = false;
+            };
+        }
+        
+        function checkVocabulary(message, sender = 'student') {
+            // Only track vocabulary used by students, not by the bot
+            if (sender !== 'student') {
+                console.log('Skipping vocabulary check - not a student message');
+                return;
+            }
+            
+            if (!currentAssignment || !currentAssignment.vocab || currentAssignment.vocab.length === 0) {
+                console.log('Skipping vocabulary check - no vocabulary list');
+                return;
+            }
+            
+            console.log('=== VOCABULARY CHECK START ===');
+            console.log('Student message:', message);
+            console.log('Current assignment vocab:', currentAssignment.vocab);
+            console.log('Current used vocab before check:', sessionLog.usedVocab);
+            
+            const vocabWords = currentAssignment.vocab.map(v => v.toLowerCase().trim());
+            // Clean message: remove punctuation and split into words
+            const cleanMessage = message.toLowerCase().replace(/[.,!?;:¡¿]/g, ' ').replace(/\s+/g, ' ').trim();
+            const messageWords = cleanMessage.split(/\s+/);
+            
+            console.log('Cleaned message words:', messageWords);
+            
+            vocabWords.forEach(vocabWord => {
+                // Only check for exact word matches - no partial matches
+                const exactMatch = messageWords.some(word => word === vocabWord);
+                
+                console.log(`Checking "${vocabWord}": exact=${exactMatch}`);
+                
+                if (exactMatch) {
+                    if (!sessionLog.usedVocab.includes(vocabWord)) {
+                        sessionLog.usedVocab.push(vocabWord);
+                        console.log(`✅ Added "${vocabWord}" to used vocabulary (first time)`);
+                    } else {
+                        console.log(`"${vocabWord}" already used - not counting again`);
+                    }
+                }
+            });
+            
+            console.log('Final used vocabulary (unique words only):', sessionLog.usedVocab);
+            console.log('Total unique vocabulary words used:', sessionLog.usedVocab.length);
+            console.log('=== VOCABULARY CHECK END ===');
+        }
+        
+        function addMessage(content, sender, audioData = null, isVoiceTranscript = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            // Add to conversation transcript
+            sessionLog.conversation.push({
+                sender: sender,
+                content: content,
+                timestamp: new Date().toISOString(),
+                audioData: audioData,
+                isVoiceTranscript: isVoiceTranscript
+            });
+            
+            // Update message count
+            if (sender === 'user') {
+                sessionLog.messageCount++;
+            }
+            
+            if (audioData && sender === 'bot') {
+                // Create voice message for bot responses
+                messageDiv.className = `message bot-message`;
+                const messageId = 'bot-' + Date.now();
+                messageDiv.innerHTML = `
+                    <div class="voice-message bot-voice" id="${messageId}">
+                        <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
+                            ▶️
+                        </button>
+                        <div class="waveform">
+                            ${generateWaveformBars()}
+                        </div>
+                        <span class="duration">Cargando...</span>
+                    </div>
+                    <button class="transcript-btn" onclick="toggleTranscript(this)" style="
+                        margin-top: 8px;
+                        padding: 4px 8px;
+                        background: rgba(102, 126, 234, 0.1);
+                        border: 1px solid rgba(102, 126, 234, 0.3);
+                        border-radius: 12px;
+                        color: #667eea;
+                        font-size: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">📝 Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(102, 126, 234, 0.05); border-radius: 8px; font-size: 13px; color: #666; font-style: italic;">${content}</div>
+                `;
+                
+                preloadAudioDuration(audioData, messageId);
+                
+            } else if (audioData && sender === 'user') {
+                // Create voice message for user
+                messageDiv.className = `message user-message`;
+                const messageId = 'user-' + Date.now();
+                messageDiv.innerHTML = `
+                    <div class="voice-message user-voice" id="${messageId}">
+                        <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
+                            ▶️
+                        </button>
+                        <div class="waveform">
+                            ${generateWaveformBars()}
+                        </div>
+                        <span class="duration">Cargando...</span>
+                    </div>
+                    <button class="transcript-btn" onclick="toggleTranscript(this)" style="
+                        margin-top: 8px;
+                        padding: 4px 8px;
+                        background: rgba(255, 255, 255, 0.2);
+                        border: 1px solid rgba(255, 255, 255, 0.3);
+                        border-radius: 12px;
+                        color: white;
+                        font-size: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">📝 Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 13px; color: rgba(255, 255, 255, 0.9); font-style: italic;">${content}</div>
+                `;
+                
+                preloadAudioDuration(audioData, messageId);
+                
+            } else {
+                // Regular text message
+                messageDiv.textContent = content;
+            }
+            
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function preloadAudioDuration(audioBase64, messageId) {
+            try {
+                const audioBytes = atob(audioBase64);
+                const audioArray = new Uint8Array(audioBytes.length);
+                for (let i = 0; i < audioBytes.length; i++) {
+                    audioArray[i] = audioBytes.charCodeAt(i);
+                }
+                
+                const audioBlob = new Blob([audioArray], { type: 'audio/mpeg' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                const tempAudio = new Audio(audioUrl);
+                
+                tempAudio.addEventListener('loadedmetadata', () => {
+                    const durationElement = document.querySelector(`#${messageId} .duration`);
+                    if (durationElement) {
+                        const minutes = Math.floor(tempAudio.duration / 60);
+                        const seconds = Math.floor(tempAudio.duration % 60);
+                        durationElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                    URL.revokeObjectURL(audioUrl);
+                });
+                
+                tempAudio.addEventListener('error', () => {
+                    const durationElement = document.querySelector(`#${messageId} .duration`);
+                    if (durationElement) {
+                        durationElement.textContent = 'Error';
+                    }
+                    URL.revokeObjectURL(audioUrl);
+                });
+                
+            } catch (error) {
+                const durationElement = document.querySelector(`#${messageId} .duration`);
+                if (durationElement) {
+                    durationElement.textContent = 'Error';
+                }
+            }
+        }
+        
+        function toggleTranscript(button) {
+            // This function only shows/hides the transcript display
+            // It doesn't mean the student used speech-to-text
+            
+            const transcriptDiv = button.nextElementSibling;
+            const isHidden = transcriptDiv.style.display === 'none';
+            
+            if (isHidden) {
+                transcriptDiv.style.display = 'block';
+                button.textContent = '📝 Ocultar transcripción';
+                button.style.background = 'rgba(102, 126, 234, 0.2)';
+            } else {
+                transcriptDiv.style.display = 'none';
+                button.textContent = '📝 Mostrar transcripción';
+                button.style.background = 'rgba(102, 126, 234, 0.1)';
+            }
+        }
+        
+        function generateWaveformBars() {
+            let bars = '';
+            for (let i = 0; i < 20; i++) {
+                const height = Math.random() * 60 + 20;
+                bars += `<div class="waveform-bar" style="height: ${height}%"></div>`;
+            }
+            return bars;
+        }
+        
+        let currentAudio = null;
+        
+        function toggleVoicePlayback(button, audioBase64) {
+            const voiceMessage = button.closest('.voice-message');
+            const waveformBars = voiceMessage.querySelectorAll('.waveform-bar');
+            const duration = voiceMessage.querySelector('.duration');
+            
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio = null;
+                button.textContent = '▶️';
+                button.classList.remove('playing');
+                waveformBars.forEach(bar => bar.classList.remove('active'));
+                return;
+            }
+            
+            if (button.textContent === '⏸️') {
+                currentAudio.pause();
+                button.textContent = '▶️';
+                button.classList.remove('playing');
+                waveformBars.forEach(bar => bar.classList.remove('active'));
+                return;
+            }
+            
+            try {
+                const audioBytes = atob(audioBase64);
+                const audioArray = new Uint8Array(audioBytes.length);
+                for (let i = 0; i < audioBytes.length; i++) {
+                    audioArray[i] = audioBytes.charCodeAt(i);
+                }
+                
+                const audioBlob = new Blob([audioArray], { type: 'audio/mpeg' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                currentAudio = new Audio(audioUrl);
+                
+                currentAudio.addEventListener('loadedmetadata', () => {
+                    const minutes = Math.floor(currentAudio.duration / 60);
+                    const seconds = Math.floor(currentAudio.duration % 60);
+                    duration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                });
+                
+                currentAudio.addEventListener('timeupdate', () => {
+                    if (currentAudio.duration) {
+                        const progress = currentAudio.currentTime / currentAudio.duration;
+                        const activeBars = Math.floor(progress * waveformBars.length);
+                        waveformBars.forEach((bar, index) => {
+                            if (index < activeBars) {
+                                bar.classList.add('active');
+                            } else {
+                                bar.classList.remove('active');
+                            }
+                        });
+                        
+                        const minutes = Math.floor(currentAudio.currentTime / 60);
+                        const seconds = Math.floor(currentAudio.currentTime % 60);
+                        duration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                });
+                
+                currentAudio.addEventListener('ended', () => {
+                    button.textContent = '▶️';
+                    button.classList.remove('playing');
+                    waveformBars.forEach(bar => bar.classList.remove('active'));
+                    currentAudio = null;
+                });
+                
+                currentAudio.addEventListener('error', (e) => {
+                    console.error('Audio error:', e);
+                    duration.textContent = 'Error';
+                });
+                
+                currentAudio.play().then(() => {
+                    button.textContent = '⏸️';
+                    button.classList.add('playing');
+                    
+                    const animateWaveform = () => {
+                        if (currentAudio && !currentAudio.paused) {
+                            waveformBars.forEach(bar => {
+                                if (bar.classList.contains('active')) {
+                                    const height = Math.random() * 60 + 20;
+                                    bar.style.height = `${height}%`;
+                                }
+                            });
+                            requestAnimationFrame(animateWaveform);
+                        }
+                    };
+                    animateWaveform();
+                }).catch(error => {
+                    console.error('Error playing audio:', error);
+                    duration.textContent = 'Error';
+                });
+                
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                duration.textContent = 'Error';
+            }
+        }
+        
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                console.log('Sending message:', message);
+                addMessage(message, 'user');
+                checkVocabulary(message, 'student'); // Check vocabulary in student text message
+                ws.send(JSON.stringify({
+                    type: 'text',
+                    content: message
+                }));
+                messageInput.value = '';
+                messageInput.focus();
+            } else {
+                console.error('Cannot send message - WebSocket not connected');
+                connect();
+            }
+        }
+        
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Voice functionality
+        voiceButton.addEventListener('click', toggleRecording);
+        
+        async function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                sessionLog.voiceUsed = true;
+                sessionLog.transcriptUsed = true;  // Student is using speech-to-text
+                
+                voiceButton.classList.add('recording');
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    voiceButton.classList.remove('recording');
+                    
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioBase64 = await blobToBase64(audioBlob);
+                    
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: 'voice',
+                            audio: audioBase64
+                        }));
+                    }
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                addMessage('No se pudo acceder al micrófono. Por favor verifica los permisos.', 'bot');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+            }
+        }
+        
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+        
+        function handleVoiceResponse(data) {
+            // Show user voice message with waveform and hidden transcript
+            if (data.transcription) {
+                addMessage(data.transcription, 'user', data.audio);
+                // Check vocabulary in student's transcribed voice message
+                checkVocabulary(data.transcription, 'student');
+            }
+            
+            // Show bot's response with voice message and hidden transcript
+            if (data.audio) {
+                addMessage(data.text, 'bot', data.audio);
+            } else {
+                addMessage(data.text, 'bot');
+            }
+        }
+        
+        // Initialize
+        loadAssignment();
+        
+        // Submit assignment function
+        function submitAssignment() {
+            // Mark assignment as completed since student is submitting it
+            sessionLog.completed = true;
+            sessionLog.endTime = new Date().toISOString();
+            
+            // Save log to localStorage (in production, this would be sent to server)
+            const logs = JSON.parse(localStorage.getItem('logs') || '[]');
+            logs.push(sessionLog);
+            localStorage.setItem('logs', JSON.stringify(logs));
+            
+            // Update assignment statistics
+            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+            const assignmentIndex = assignments.findIndex(a => a.id === sessionLog.assignmentId);
+            
+            if (assignmentIndex !== -1) {
+                // Increment student count if this is a new student for this assignment
+                const existingLogsForAssignment = logs.filter(log => 
+                    log.assignmentId === sessionLog.assignmentId && 
+                    log.studentName === sessionLog.studentName
+                );
+                
+                // Only count as new student if this is their first submission for this assignment
+                if (existingLogsForAssignment.length === 1) {
+                    assignments[assignmentIndex].studentCount = (assignments[assignmentIndex].studentCount || 0) + 1;
+                }
+                
+                // Increment completion count if assignment was completed
+                if (sessionLog.completed) {
+                    assignments[assignmentIndex].completionCount = (assignments[assignmentIndex].completionCount || 0) + 1;
+                }
+                
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+            }
+            
+            // Close time up modal and show submission confirmation
+            document.getElementById('timeUpModal').classList.remove('active');
+            document.getElementById('submissionModal').classList.add('active');
+        }
+        
+        function goToPractice() {
+            // Close submission modal and redirect to practice page
+            document.getElementById('submissionModal').classList.remove('active');
+            window.location.href = '/practice';
+        }
+        
+        // Debug function to test submission
+        function debugSubmission() {
+            console.log('=== DEBUG INFO ===');
+            console.log('sessionLog:', sessionLog);
+            console.log('currentAssignment:', currentAssignment);
+            console.log('studentName:', studentName);
+            
+            const logs = JSON.parse(localStorage.getItem('logs') || '[]');
+            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+            
+            console.log('Current logs count:', logs.length);
+            console.log('Current assignments count:', assignments.length);
+            
+            if (currentAssignment) {
+                const assignmentLogs = logs.filter(log => log.assignmentId === currentAssignment.id);
+                console.log('Logs for this assignment:', assignmentLogs.length);
+            }
+        }
+        
+        function closeSubmissionModal() {
+            // Close submission modal and go back to teacher dashboard
+            document.getElementById('submissionModal').classList.remove('active');
+            window.location.href = '/teacher';
+        }
+        
+        // Try again function
+        function tryAgain() {
+            // Close modal
+            document.getElementById('timeUpModal').classList.remove('active');
+            
+            // Reset assignment completed flag
+            assignmentCompleted = false;
+            
+            // Reset session log
+            sessionLog = {
+                assignmentId: currentAssignment.id,
+                studentName: studentName,
+                classNumber: document.getElementById('classNumber').value.trim(),
+                startTime: null,
+                endTime: null,
+                level: currentAssignment.level,
+                messageCount: 0,
+                voiceUsed: false,
+                transcriptUsed: false,
+                completed: false,
+                isNewStudent: false,
+                usedVocab: [],
+                conversation: []
+            };
+            
+            // Clear chat and hide it
+            chatBox.innerHTML = '';
+            chatContainer.classList.remove('active');
+            
+            // Reset progress
+            progressFill.style.width = '0%';
+            
+            // Show intro modal again
+            document.getElementById('introModal').classList.add('active');
+        }
+    </script>
+</body>
+</html>
