@@ -648,14 +648,39 @@
         <button class="logout-btn-absolute" onclick="logout()">Logout</button>
         
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('classrooms')">My Classrooms</button>
-            <button class="nav-tab" onclick="switchTab('assignments')">All Assignments</button>
-            <button class="nav-tab" onclick="switchTab('enroll')">Join New Class</button>
-            <button class="nav-tab" onclick="switchTab('practice')">Practice Mode</button>
+            <button class="nav-tab" id="classrooms-tab-btn" onclick="switchTab('classrooms')">My Classrooms</button>
+            <button class="nav-tab" id="assignments-tab-btn" onclick="switchTab('assignments')">All Assignments</button>
+            <button class="nav-tab" id="enroll-tab-btn" onclick="switchTab('enroll')">Join New Class</button>
+            <button class="nav-tab" id="practice-tab-btn" onclick="switchTab('practice')">Practice Mode</button>
         </div>
         
+        <script>
+            // Set initial active tab immediately to prevent flicker
+            (function() {
+                const savedTab = localStorage.getItem('activeStudentTab');
+                if (savedTab && ['classrooms', 'assignments', 'enroll', 'practice'].includes(savedTab)) {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.nav-tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    // Add active class to saved tab
+                    document.getElementById(`${savedTab}-tab-btn`).classList.add('active');
+                    
+                    // Also set the correct tab content as active
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${savedTab}-tab`).classList.add('active');
+                } else {
+                    // Default to classrooms if no saved tab
+                    document.getElementById('classrooms-tab-btn').classList.add('active');
+                    document.getElementById('classrooms-tab').classList.add('active');
+                }
+            })();
+        </script>
+        
         <!-- My Classrooms Tab -->
-        <div id="classrooms-tab" class="tab-content active">
+        <div id="classrooms-tab" class="tab-content">
             <div class="classrooms-grid" id="classroomsGrid">
                 <!-- Classrooms will be loaded here -->
             </div>
@@ -776,7 +801,6 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadCurrentStudent();
-            loadActiveTab();
         });
         
         // Load current student from sessionStorage
@@ -785,7 +809,10 @@
             if (savedStudent) {
                 currentStudent = JSON.parse(savedStudent);
                 updateUserInfo();
-                loadStudentData();
+                loadStudentData().then(() => {
+                    // Load active tab only after student data is loaded
+                    loadActiveTab();
+                });
             } else {
                 // Redirect to login page
                 window.location.href = '/student-login';
@@ -1314,7 +1341,6 @@
                     sessionInfo.style.marginBottom = '10px';
                     sessionInfo.innerHTML = `
                         <span class="level-badge level-${session.level}">${session.level}</span>
-                        <span style="margin-left: 10px; color: #64748b;">Attempt #${session.attempt_number || 1}</span>
                         <span style="margin-left: 10px; color: #64748b;">Messages: ${session.message_count || 0}</span>
                         <span style="margin-left: 10px; color: #64748b;">Duration: ${session.start_time && session.end_time ? Math.round((new Date(session.end_time) - new Date(session.start_time)) / 60000) + ' min' : 'N/A'}</span>
                     `;
@@ -1328,22 +1354,21 @@
                     };
                     
                     const submitButton = document.createElement('button');
-                    submitButton.className = session.submitted_for_grading ? 'btn btn-success btn-small' : 'btn btn-primary btn-small';
-                    submitButton.textContent = session.submitted_for_grading ? '✓ Submitted for Grading' : 'Submit for Grading';
-                    submitButton.style.marginLeft = '8px';
-                    if (session.submitted_for_grading) {
-                        submitButton.disabled = true;
-                        submitButton.style.opacity = '0.8';
-                        submitButton.style.cursor = 'default';
-                    } else {
-                        submitButton.onclick = () => submitForGrading(session.id, submitButton);
+                    if (!session.submitted_for_grading) {
+                        submitButton.className = 'btn btn-primary btn-small';
+                        submitButton.textContent = 'Submit for Grading';
+                        submitButton.style.marginLeft = '8px';
+                        submitButton.onclick = () => submitForGrading(session.id, assignmentId);
+                        sessionInfo.appendChild(submitButton);
                     }
                     
                     const buttonContainer = document.createElement('div');
                     buttonContainer.style.display = 'flex';
                     buttonContainer.style.gap = '8px';
                     buttonContainer.appendChild(viewButton);
-                    buttonContainer.appendChild(submitButton);
+                    if (!session.submitted_for_grading) {
+                        buttonContainer.appendChild(submitButton);
+                    }
                     
                     sessionDiv.appendChild(sessionHeader);
                     sessionDiv.appendChild(sessionInfo);
