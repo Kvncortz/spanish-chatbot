@@ -2653,29 +2653,66 @@
                             </div>
                             <div class="modal-body">
                                 ${previousAttempts.map((log, index) => {
-                                    console.log(`History modal - Log ${index}:`, {
-                                        attemptNumber: log.attemptNumber,
-                                        startTime: log.startTime,
-                                        createdAt: log.createdAt
-                                    });
+                                    // Prepare date string outside template literal
+                                    let dateString = 'Date not available';
+                                    try {
+                                        if (log.startTime) {
+                                            const date = new Date(log.startTime);
+                                            if (!isNaN(date.getTime())) {
+                                                dateString = date.toLocaleString();
+                                            }
+                                        }
+                                        if (dateString === 'Date not available' && log.endTime) {
+                                            const endDate = new Date(log.endTime);
+                                            if (!isNaN(endDate.getTime())) {
+                                                dateString = endDate.toLocaleString();
+                                            }
+                                        }
+                                        if (dateString === 'Date not available' && log.createdAt) {
+                                            const createdDate = new Date(log.createdAt);
+                                            if (!isNaN(createdDate.getTime())) {
+                                                dateString = createdDate.toLocaleString();
+                                            }
+                                        }
+                                    } catch (e) {
+                                        dateString = 'Date error';
+                                    }
                                     return `
-                                    <div style="margin-bottom: 25px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background: ${index === 0 ? '#f0f9ff' : '#ffffff'};">
-                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                            <h4 style="margin: 0; color: #1e40af;">
-                                                Attempt #${log.attemptNumber || 1}
-                                            </h4>
-                                            <span style="color: #64748b; font-size: 14px;">
-                                                ${log.completed ? 'Completed' : 'Incomplete'} - ${new Date(log.createdAt).toLocaleString()}
-                                            </span>
+                                    <div style="margin-bottom: 20px; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: ${index === 0 ? 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' : '#ffffff'}; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); transition: all 0.2s ease;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                            <div style="display: flex; align-items: center; gap: 12px;">
+                                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 18px;">
+                                                    #${log.attemptNumber || 1}
+                                                </div>
+                                                <div>
+                                                    <h4 style="margin: 0; color: #1e40af; font-size: 18px; font-weight: 600;">
+                                                        Attempt ${log.attemptNumber || 1}
+                                                    </h4>
+                                                    <span style="color: #64748b; font-size: 13px; font-weight: 500;">
+                                                        ${log.completed ? '✓ Completed' : '○ Incomplete'} • ${dateString}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div style="margin-bottom: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                                            <div><strong>Attempt:</strong> #${log.attemptNumber || 1}</div>
-                                            <div><strong>Messages:</strong> ${log.messageCount || 0}</div>
-                                            <div><strong>Vocabulary:</strong> <span style="color: ${log.usedVocabCount >= (log.minVocabWords || 0) ? '#10b981' : '#ef4444'}; font-weight: 500;">${log.usedVocabCount || 0}/${log.minVocabWords || 0}</span></div>
-                                            <div><strong>Duration:</strong> ${log.startTime && log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) + ' min' : 'N/A'}</div>
-                                            <div><strong>Voice:</strong> ${log.voiceUsed ? 'Yes' : 'No'}</div>
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                            <div style="display: flex; flex-direction: column; padding: 12px; background: rgba(99, 102, 241, 0.05); border-radius: 8px; border-left: 3px solid #6366f1;">
+                                                <span style="font-size: 11px; color: #6366f1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Messages</span>
+                                                <span style="font-size: 16px; font-weight: 600; color: #1e293b;">${log.messageCount || 0}</span>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column; padding: 12px; background: rgba(16, 185, 129, 0.05); border-radius: 8px; border-left: 3px solid ${log.usedVocabCount >= (log.minVocabWords || 0) ? '#10b981' : '#ef4444'};">
+                                                <span style="font-size: 11px; color: ${log.usedVocabCount >= (log.minVocabWords || 0) ? '#10b981' : '#ef4444'}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Vocabulary</span>
+                                                <span style="font-size: 16px; font-weight: 600; color: #1e293b;">${log.usedVocabCount || 0}/${log.minVocabWords || 0}</span>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column; padding: 12px; background: rgba(245, 158, 11, 0.05); border-radius: 8px; border-left: 3px solid #f59e0b;">
+                                                <span style="font-size: 11px; color: #f59e0b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Duration</span>
+                                                <span style="font-size: 16px; font-weight: 600; color: #1e293b;">${log.startTime && log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) + ' min' : 'N/A'}</span>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column; padding: 12px; background: rgba(139, 92, 246, 0.05); border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                                                <span style="font-size: 11px; color: #8b5cf6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Voice</span>
+                                                <span style="font-size: 16px; font-weight: 600; color: #1e293b;">${log.voiceUsed ? 'Yes' : 'No'}</span>
+                                            </div>
                                         </div>
-                                        <button class="btn btn-secondary btn-small" onclick="viewHistoryConversation('${log.assignmentId}', '${log.studentName}', '${log.startTime}', '${log.attemptNumber || 1}')">
+                                        <button class="btn btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="viewHistoryConversation('${log.assignmentId}', '${log.studentName}', '${log.startTime}', '${log.attemptNumber || 1}')">
                                             View Conversation
                                         </button>
                                     </div>
@@ -2786,8 +2823,9 @@
                     `;
                     
                     // Update conversation meta (session info like main modal)
+                    const sessionDate = log.start_time || log.startTime || log.endTime || log.createdAt;
                     document.getElementById('conversationMeta').innerHTML = `
-                        Session: ${new Date(log.start_time).toLocaleString()} ${log.completed ? '- Completed' : '- In Progress'}
+                        Session: ${sessionDate ? new Date(sessionDate).toLocaleString() : 'Date not available'} ${log.completed ? '- Completed' : '- In Progress'}
                     `;
                     
                     // Hide vocabulary section completely
@@ -2947,8 +2985,9 @@
             `;
             
             // Update meta info
+            const sessionDate = log.startTime || log.start_time || log.endTime || log.createdAt;
             document.getElementById('conversationMeta').innerHTML = `
-                Session: ${new Date(log.startTime).toLocaleString()} ${log.completed ? '- Completed' : '- In Progress'}
+                Session: ${sessionDate ? new Date(sessionDate).toLocaleString() : 'Date not available'} ${log.completed ? '- Completed' : '- In Progress'}
             `;
             
             // Hide vocabulary section completely
