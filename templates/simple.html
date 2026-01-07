@@ -407,7 +407,7 @@
     </style>
 </head>
 <body>
-    <a href="/" class="home-btn-absolute">Home</a>
+    <div id="navigation-placeholder"></div>
     <div class="chat-container">
         <div class="chat-header">
             <div style="display: flex; justify-content: center; align-items: center;">
@@ -435,6 +435,35 @@
     </div>
 
     <script>
+        // Check if user is logged in and show appropriate navigation
+        function setupNavigation() {
+            const currentStudent = sessionStorage.getItem('currentStudent');
+            const currentTeacher = sessionStorage.getItem('currentTeacher');
+            const navPlaceholder = document.getElementById('navigation-placeholder');
+            
+            if (currentStudent) {
+                // Student is logged in - show "Back to Dashboard"
+                navPlaceholder.innerHTML = `
+                    <a href="/student-dashboard" class="home-btn-absolute">← Back to Dashboard</a>
+                `;
+            } else if (currentTeacher) {
+                // Teacher is logged in - show "Back to Dashboard" 
+                navPlaceholder.innerHTML = `
+                    <a href="/teacher" class="home-btn-absolute">← Back to Dashboard</a>
+                `;
+            } else {
+                // No one is logged in - show "Home"
+                navPlaceholder.innerHTML = `
+                    <a href="/" class="home-btn-absolute">← Home</a>
+                `;
+            }
+        }
+        
+        // Initialize navigation when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupNavigation();
+        });
+        
         const chatBox = document.getElementById('chatBox');
         const messageInput = document.getElementById('messageInput');
         const voiceButton = document.getElementById('voiceButton');

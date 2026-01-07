@@ -20,9 +20,9 @@
         }
         
         .dashboard-container {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 25px;
         }
         
         .header {
@@ -247,6 +247,85 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
         
+        .assignment-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            z-index: 1 !important;
+            display: block !important;
+            width: 18px !important;
+            height: 18px !important;
+            cursor: pointer !important;
+        }
+        
+        .assignment-card:hover .assignment-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Force checkbox visibility - ALWAYS VISIBLE */
+        input[type="checkbox"].assignment-checkbox {
+            -webkit-appearance: checkbox !important;
+            -moz-appearance: checkbox !important;
+            appearance: checkbox !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            z-index: 999 !important;
+            display: inline-block !important;
+            width: 18px !important;
+            height: 18px !important;
+            cursor: pointer !important;
+            background: white !important;
+            border: 2px solid #d1d5db !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Make sure checkboxes are visible in ALL states */
+        input[type="checkbox"].assignment-checkbox:before,
+        input[type="checkbox"].assignment-checkbox:after,
+        input[type="checkbox"].assignment-checkbox:hover,
+        input[type="checkbox"].assignment-checkbox:focus,
+        input[type="checkbox"].assignment-checkbox:active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Override any parent hover effects */
+        * input[type="checkbox"].assignment-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+        }
+        
+        /* Force visibility on any parent element hover */
+        .assignment-card * input[type="checkbox"].assignment-checkbox,
+        .assignment-header * input[type="checkbox"].assignment-checkbox,
+        .assignment-card:hover * input[type="checkbox"].assignment-checkbox,
+        .assignment-header:hover * input[type="checkbox"].assignment-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+        }
+        
+        input[type="checkbox"].assignment-checkbox:checked {
+            background-color: #667eea !important;
+            border-color: #667eea !important;
+        }
+        
+        input[type="checkbox"].assignment-checkbox:hover {
+            border-color: #667eea !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+        }
+        
+        input[type="checkbox"].assignment-checkbox:focus {
+            outline: 2px solid #667eea !important;
+            outline-offset: 2px !important;
+        }
+        
         .assignment-card h3 {
             color: #2d3748;
             margin-bottom: 8px;
@@ -281,22 +360,27 @@
             padding: 8px 16px;
             font-size: 13px;
             border-radius: 10px;
+        }
+        
+        .btn-xs {
+            padding: 2px 6px;
+            font-size: 11px;
+            border-radius: 6px;
             font-weight: 500;
-            letter-spacing: -0.025em;
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 30px;
+            gap: 35px;
+            margin-bottom: 50px;
         }
         
         .stat-card {
             background: white;
             border: 1px solid #e9ecef;
             border-radius: 15px;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
@@ -335,19 +419,17 @@
         
         .logs-table th {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 20px 18px;
             text-align: left;
             font-weight: 600;
-            color: #333;
             font-size: 14px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 2px solid #e2e8f0;
         }
         
         .logs-table td {
-            padding: 15px;
-            border-bottom: 1px solid #f8f9fa;
-            font-size: 14px;
-            color: #666;
+            padding: 18px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
         }
         
         .logs-table tr:hover {
@@ -433,27 +515,111 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
         
         .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 1;
+            visibility: visible;
         }
         
         .modal-content {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            max-width: 90%;
+            max-height: 90vh;
             overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
         }
         
         .modal-header {
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 0;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: #f1f5f9;
+            color: #333;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #e3f2fd;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.assistant {
+            background: #f3e5f5;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-content {
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .message.user .message-time {
+            text-align: right;
+        }
+        
+        .message.assistant .message-time {
+            text-align: left;
+        }
+        
+        .modal-body {
+            padding: 24px;
         }
         
         .modal-header h2 {
@@ -508,7 +674,7 @@
             }
             
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(4, 1fr);
             }
             
             .assignment-header {
@@ -578,28 +744,434 @@
             box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.4);
         }
+        
+        .logout-btn-absolute {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .logout-btn-absolute:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .classrooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+        
+        .classroom-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            text-align: center;
+        }
+        
+        .classroom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .classroom-card .classroom-checkbox {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 10 !important;
+            background: white !important;
+            border: 2px solid #667eea !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease;
+        }
+        
+        .classroom-card:hover .classroom-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+            border-color: #667eea !important;
+        }
+        
+        /* Force classroom checkbox visibility */
+        input[type="checkbox"].classroom-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: absolute !important;
+            z-index: 999 !important;
+            display: block !important;
+            width: 20px !important;
+            height: 20px !important;
+            cursor: pointer !important;
+            background: white !important;
+            border: 2px solid #667eea !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Override any hover effects that might hide classroom checkboxes */
+        .classroom-card:hover input[type="checkbox"].classroom-checkbox,
+        .classroom-header:hover input[type="checkbox"].classroom-checkbox,
+        * input[type="checkbox"].classroom-checkbox {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+        
+        input[type="checkbox"].classroom-checkbox:checked {
+            background-color: #667eea !important;
+            border-color: #667eea !important;
+        }
+        
+        input[type="checkbox"].classroom-checkbox:hover {
+            border-color: #764ba2 !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+        }
+        
+        .classroom-header {
+            margin-bottom: 16px;
+        }
+        
+        .classroom-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        
+        .classroom-meta {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+        
+        .classroom-description {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .classroom-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        .classroom-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .join-code {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        /* Fix spacing for classroom creation modal */
+        .modal-form {
+            display: grid;
+            gap: 24px;
+        }
+        
+        .modal-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 0;
+        }
+        
+        .modal-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .modal-form .modal-actions {
+            margin-top: 30px;
+        }
+        
+        /* Custom Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            z-index: 10000;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateX(100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(22, 163, 74, 0.9));
+            color: white;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
+            color: white;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.9));
+            color: white;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9));
+            color: white;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+        
+        .notification-message {
+            font-size: 14px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+        
+        .notification-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            line-height: 1;
+            transition: all 0.2s ease;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .notification-modal {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            max-width: 400px;
+            transform: translateX(500px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        
+        .notification-modal.show {
+            transform: translateX(0);
+        }
+        
+        .notification-modal.success {
+            border-left-color: #10b981;
+        }
+        
+        .notification-modal.error {
+            border-left-color: #ef4444;
+        }
+        
+        .notification-modal.warning {
+            border-left-color: #f59e0b;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+        
+        .notification-message {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .notification-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-close:hover {
+            background: #f3f4f6;
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <a href="/" class="home-btn-absolute">Home</a>
         <div class="header">
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="text-align: center; flex: 1;">
                     <h1>VocaFlow</h1>
                     <p>Create assignments, track student progress, and monitor engagement</p>
                 </div>
             </div>
         </div>
         
+        <button class="logout-btn-absolute" onclick="logout()">Logout</button>
+        
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('create')">Create Assignment</button>
+            <button class="nav-tab active" onclick="switchTab('classrooms')">Classroom Management</button>
+            <button class="nav-tab" onclick="switchTab('create')">Create Assignment</button>
             <button class="nav-tab" onclick="switchTab('assignments')">My Assignments</button>
             <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
+            <button class="nav-tab" onclick="switchTab('profile')">Teacher Profile</button>
+        </div>
+        
+        <!-- Classroom Management Tab -->
+        <div id="classrooms-tab" class="tab-content active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #333;">My Classrooms</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-secondary btn-small" id="classroomsToggleBtn" onclick="toggleClassroomsSelection()">Select All</button>
+                    <button class="btn btn-secondary btn-small" id="deleteSelectedClassroomsBtn" onclick="deleteSelectedClassrooms()" style="background: #dc3545; color: white;">Delete Selected</button>
+                    <button class="btn btn-primary" onclick="showCreateClassroomModal()">Create New Classroom</button>
+                </div>
+            </div>
+            <div class="classrooms-grid" id="classroomsGrid">
+                <!-- Classrooms will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Teacher Profile Tab -->
+        <div id="profile-tab" class="tab-content">
+            <div style="max-width: 600px; margin: 0 auto;">
+                <h3 style="margin-bottom: 30px; color: #333;">Teacher Profile</h3>
+                
+                <form class="assignment-form" onsubmit="updateTeacherProfile(event)">
+                    <div class="form-group">
+                        <label for="teacherName">Full Name</label>
+                        <input type="text" id="teacherName" name="name" required placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="teacherEmail">Email Address</label>
+                        <input type="email" id="teacherEmail" name="email" required placeholder="your.email@school.edu">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="teacherSchool">School Name</label>
+                        <input type="text" id="teacherSchool" name="school" placeholder="Enter your school name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="teacherTitle">Title/Position</label>
+                        <input type="text" id="teacherTitle" name="title" placeholder="e.g., Spanish Teacher, Department Head">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="teacherBio">Bio (Optional)</label>
+                        <textarea id="teacherBio" name="bio" placeholder="Tell your students about yourself..." style="min-height: 100px;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
         </div>
         
         <!-- Create Assignment Tab -->
-        <div id="create-tab" class="tab-content active">
+        <div id="create-tab" class="tab-content">
             <form class="assignment-form" onsubmit="createAssignment(event)">
                 <div class="form-section">
                     <div class="form-section-title">Basic Information</div>
@@ -610,6 +1182,13 @@
                     
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="assignmentClassroom">Classroom</label>
+                            <select id="assignmentClassroom" name="classroom_id" required>
+                                <option value="">Select Classroom</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="assignmentLevel">Difficulty Level</label>
                             <select id="assignmentLevel" name="level" required>
                                 <option value="">Select Level</option>
@@ -618,10 +1197,16 @@
                                 <option value="advanced">Advanced</option>
                             </select>
                         </div>
-                        
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="assignmentDuration">Duration (minutes)</label>
                             <input type="number" id="assignmentDuration" name="duration" min="1" max="60" step="1" value="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentDueDate">Due Date (Optional)</label>
+                            <input type="datetime-local" id="assignmentDueDate" name="due_date">
                         </div>
                     </div>
                 </div>
@@ -650,6 +1235,12 @@
                         <label for="assignmentVocab">Key Vocabulary (Optional)</label>
                         <textarea id="assignmentVocab" name="vocab" placeholder="Enter important vocabulary words or phrases (comma-separated). These will be tracked in student logs..."></textarea>
                         <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Example: zapatos, talla, color, precio, comprar, tienda</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="minVocabWords">Minimum Vocabulary Words Required</label>
+                        <input type="number" id="minVocabWords" name="min_vocab_words" min="0" max="20" step="1" value="0" placeholder="Number of vocabulary words students must use">
+                        <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Set to 0 for no minimum requirement. Students will be tracked on how many unique vocabulary words they use.</small>
                     </div>
                 </div>
                 
@@ -707,12 +1298,12 @@
                             <th>Student</th>
                             <th>Assignment</th>
                             <th>Level</th>
-                            <th>Date</th>
-                            <th>Duration</th>
+                            <th>Date Assigned</th>
+                            <th>Due Date</th>
+                            <th>Submitted On Time</th>
                             <th>Messages</th>
-                            <th>Bot Speaking</th>
-                            <th>Student Speaking</th>
                             <th>Vocabulary Used</th>
+                            <th>Attempt Submitted</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -741,35 +1332,197 @@
     
     <!-- Conversation Modal -->
     <div id="conversationModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content">
             <div class="modal-header">
-                <h2>Conversation Transcript</h2>
-                <p id="conversationInfo">Loading...</p>
+                <h3>Conversation Transcript</h3>
+                <button class="modal-close" onclick="closeConversationModal()">&times;</button>
             </div>
-            <div id="conversationContent" style="max-height: 400px; overflow-y: auto; padding: 20px; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
-                <!-- Conversation will be loaded here -->
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeConversationModal()">Close</button>
+            <div class="modal-body">
+                <div id="conversationHeader" style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px;">
+                    <h4 id="conversationTitle" style="margin: 0 0 5px 0; color: #333;">Loading...</h4>
+                    <div id="conversationStats" style="display: flex; gap: 15px; margin-top: 8px; font-size: 14px; color: #666;">
+                        <!-- Stats will be populated here -->
+                    </div>
+                    <div id="conversationMeta" style="margin-top: 8px; font-size: 12px; color: #64748b;">
+                        <!-- Meta info will be populated here -->
+                    </div>
+                </div>
+                <div id="conversationVocab" style="margin-top: 20px;">
+                    <!-- Vocabulary usage will be displayed here -->
+                </div>
+                <div id="conversationContent">
+                    <!-- Conversation will be loaded here -->
+                </div>
             </div>
         </div>
+    </div>
+    
+    <!-- Classroom Details Modal -->
+    <div id="classroomDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Classroom Details</h2>
+                <p id="classroomDetailsInfo">Loading classroom information...</p>
+            </div>
+            <div id="classroomDetailsContent" style="max-height: 400px; overflow-y: auto; padding: 20px; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
+                <!-- Classroom details will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeClassroomDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Create Classroom Modal -->
+    <div id="createClassroomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Classroom</h2>
+                <p>Set up a new classroom for your students</p>
+            </div>
+            <form class="modal-form" onsubmit="createClassroom(event)">
+                <div class="form-group">
+                    <label for="modalClassroomName">Classroom Name</label>
+                    <input type="text" id="modalClassroomName" name="name" required placeholder="e.g., Spanish 101 - Fall 2024">
+                </div>
+                
+                <div class="form-group">
+                    <label for="modalClassroomDescription">Description</label>
+                    <textarea id="modalClassroomDescription" name="description" placeholder="Describe your classroom and learning objectives..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modalGradeLevel">Spanish Course Level</label>
+                    <select id="modalGradeLevel" name="gradeLevel">
+                        <option value="">Select Spanish Level</option>
+                        <option value="Spanish 1">Spanish 1</option>
+                        <option value="Spanish 2">Spanish 2</option>
+                        <option value="Spanish 3">Spanish 3</option>
+                        <option value="Spanish 4">Spanish 4</option>
+                        <option value="Spanish 5">Spanish 5</option>
+                        <option value="AP Spanish">AP Spanish</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="modalAdvanced" name="advanced" style="width: auto; margin: 0;">
+                        <span>Honors Level</span>
+                    </label>
+                    <small style="color: #718096; font-size: 13px; margin-top: 4px; display: block;">Check if this is an honors level course</small>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCreateClassroomModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Classroom</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Custom Notification Modal -->
+    <div id="notificationModal" class="notification-modal">
+        <button class="notification-close" onclick="hideNotification()">×</button>
+        <div class="notification-title" id="notificationTitle">Success</div>
+        <div class="notification-message" id="notificationMessage">Operation completed successfully</div>
     </div>
     
     <script>
         let assignments = [];
         let logs = [];
+        let currentTeacher = null;
+        let classrooms = [];
         
-        // Load data from localStorage
-        function loadData() {
-            const savedAssignments = localStorage.getItem('assignments');
-            const savedLogs = localStorage.getItem('logs');
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrCreateTeacher();
+            loadActiveTab();
+        });
+        
+        // Custom notification system
+        function showNotification(title, message, type = 'success') {
+            const modal = document.getElementById('notificationModal');
+            const titleElement = document.getElementById('notificationTitle');
+            const messageElement = document.getElementById('notificationMessage');
             
-            if (savedAssignments) {
-                assignments = JSON.parse(savedAssignments);
+            // Set content
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            
+            // Set type
+            modal.className = 'notification-modal ' + type;
+            
+            // Show notification
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 100);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+        
+        function hideNotification() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.remove('show');
+        }
+        
+        // Replace alert calls with custom notifications
+        function showAlert(message, type = 'success') {
+            showNotification(type === 'error' ? 'Error' : 'Success', message, type);
+        }
+        
+        // Teacher management
+        async function loadOrCreateTeacher() {
+            const savedTeacher = sessionStorage.getItem('currentTeacher');
+            if (savedTeacher) {
+                currentTeacher = JSON.parse(savedTeacher);
+            } else {
+                // Redirect to login page
+                window.location.href = '/teacher-login';
+                return;
             }
             
-            if (savedLogs) {
-                logs = JSON.parse(savedLogs);
+            if (currentTeacher) {
+                loadClassrooms();
+                loadClassroomSelect();
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('currentTeacher');
+            window.location.href = '/';
+        }
+        
+        // Load data from server
+        async function loadData() {
+            try {
+                // Load assignments from server
+                const assignmentsResponse = await fetch('/api/assignments');
+                const assignmentsData = await assignmentsResponse.json();
+                assignments = assignmentsData.assignments || [];
+                
+                // Load logs from server
+                const logsResponse = await fetch('/api/logs');
+                const logsData = await logsResponse.json();
+                logs = logsData.logs || [];
+                
+                console.log('Loaded from server:', { assignments: assignments.length, logs: logs.length });
+            } catch (error) {
+                console.error('Error loading data from server:', error);
+                // Fallback to localStorage
+                const savedAssignments = localStorage.getItem('assignments');
+                const savedLogs = localStorage.getItem('logs');
+                
+                if (savedAssignments) {
+                    assignments = JSON.parse(savedAssignments);
+                }
+                
+                if (savedLogs) {
+                    logs = JSON.parse(savedLogs);
+                }
             }
         }
         
@@ -787,7 +1540,7 @@
         // Load active tab from localStorage
         function loadActiveTab() {
             const savedTab = localStorage.getItem('activeTab');
-            if (savedTab && ['create', 'assignments', 'analytics'].includes(savedTab)) {
+            if (savedTab && ['classrooms', 'create', 'assignments', 'analytics', 'profile'].includes(savedTab)) {
                 // Remove active class from all tabs and contents
                 document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -797,16 +1550,20 @@
                 document.getElementById(`${savedTab}-tab`).classList.add('active');
                 
                 // Load tab-specific data
-                if (savedTab === 'assignments') {
+                if (savedTab === 'classrooms') {
+                    loadClassrooms();
+                } else if (savedTab === 'assignments') {
                     loadAssignments();
                 } else if (savedTab === 'analytics') {
                     loadAnalytics();
+                } else if (savedTab === 'profile') {
+                    loadTeacherProfile();
                 }
             }
         }
         
         // Switch between tabs
-        function switchTab(tabName) {
+        async function switchTab(tabName) {
             // Update nav tabs
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -819,50 +1576,481 @@
             });
             document.getElementById(`${tabName}-tab`).classList.add('active');
             
-            // Save active tab to localStorage
-            saveActiveTab(tabName);
+            // Save active tab
+            localStorage.setItem('activeTab', tabName);
             
-            // Load tab-specific data
-            if (tabName === 'assignments') {
+            // Load tab-specific content
+            if (tabName === 'classrooms') {
+                loadClassrooms();
+            } else if (tabName === 'create') {
+                // Form is already clean when switching to create tab
+                // No need to reset as it's always fresh
+            } else if (tabName === 'assignments') {
                 loadAssignments();
             } else if (tabName === 'analytics') {
-                loadAnalytics();
+                await loadAnalytics();
+            } else if (tabName === 'profile') {
+                loadTeacherProfile();
+            }
+        }
+        
+        // Teacher profile functions
+        async function loadTeacherProfile() {
+            if (!currentTeacher) return;
+            
+            try {
+                const response = await fetch(`/api/teachers/${currentTeacher.id}`);
+                const data = await response.json();
+                const teacher = data.teacher;
+                
+                // Fill form fields
+                document.getElementById('teacherName').value = teacher.name || '';
+                document.getElementById('teacherEmail').value = teacher.email || '';
+                document.getElementById('teacherSchool').value = teacher.school || '';
+                document.getElementById('teacherTitle').value = teacher.title || '';
+                document.getElementById('teacherBio').value = teacher.bio || '';
+            } catch (error) {
+                console.error('Error loading teacher profile:', error);
+            }
+        }
+        
+        async function updateTeacherProfile(event) {
+            event.preventDefault();
+            
+            if (!currentTeacher) {
+                showNotification('Error', 'Teacher not found', 'error');
+                return;
+            }
+            
+            const formData = new FormData(event.target);
+            
+            try {
+                const response = await fetch(`/api/teachers/${currentTeacher.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        school: formData.get('school'),
+                        title: formData.get('title'),
+                        bio: formData.get('bio')
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    // Update current teacher data
+                    currentTeacher = data.teacher;
+                    localStorage.setItem('currentTeacher', JSON.stringify(currentTeacher));
+                    
+                    showNotification('Success', 'Profile updated successfully!', 'success');
+                } else {
+                    showNotification('Error', 'Error updating profile: ' + data.detail, 'error');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showNotification('Error', 'Error updating profile', 'error');
+            }
+        }
+        
+        // Classroom management functions
+        async function loadClassrooms() {
+            if (!currentTeacher) {
+                console.log('No current teacher found');
+                return;
+            }
+            
+            console.log('Loading classrooms for teacher:', currentTeacher.id);
+            
+            try {
+                const response = await fetch(`/api/teachers/${currentTeacher.id}/classrooms`);
+                const data = await response.json();
+                console.log('Classrooms response:', data);
+                classrooms = data.classrooms || [];
+                console.log('Classrooms loaded:', classrooms);
+                displayClassrooms();
+            } catch (error) {
+                console.error('Error loading classrooms:', error);
+                classrooms = [];
+                displayClassrooms();
+            }
+        }
+        
+        async function loadClassroomSelect() {
+            if (!currentTeacher) return;
+            
+            try {
+                const response = await fetch(`/api/teachers/${currentTeacher.id}/classrooms`);
+                const data = await response.json();
+                const classrooms = data.classrooms || [];
+                
+                const select = document.getElementById('assignmentClassroom');
+                select.innerHTML = '<option value="">Select Classroom</option>' +
+                    classrooms.map(classroom => 
+                        `<option value="${classroom.id}">${classroom.name}</option>`
+                    ).join('');
+            } catch (error) {
+                console.error('Error loading classroom select:', error);
+            }
+        }
+        
+        function displayClassrooms() {
+            const container = document.getElementById('classroomsGrid');
+            const toggleBtn = document.getElementById('classroomsToggleBtn');
+            const deleteBtn = document.getElementById('deleteSelectedClassroomsBtn');
+            
+            if (classrooms.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>No classrooms yet</h3>
+                        <p>Create your first classroom to get started</p>
+                    </div>
+                `;
+                // Hide buttons when no classrooms
+                toggleBtn.style.display = 'none';
+                deleteBtn.style.display = 'none';
+                return;
+            }
+            
+            // Show buttons when classrooms exist
+            toggleBtn.style.display = 'inline-block';
+            deleteBtn.style.display = 'inline-block';
+            toggleBtn.textContent = 'Select All';
+            
+            container.innerHTML = classrooms.map(classroom => {
+                let levelInfo = '';
+                if (classroom.spanish_level) {
+                    levelInfo = classroom.spanish_level;
+                    if (classroom.is_advanced) {
+                        levelInfo += ' (Honors)';
+                    }
+                }
+                
+                return `
+                    <div class="classroom-card">
+                        <input type="checkbox" class="classroom-checkbox" value="${classroom.id}" onchange="updateClassroomsToggleBtn()">
+                        <div class="classroom-header">
+                            <div class="classroom-title">${classroom.name}</div>
+                            <div class="classroom-meta">
+                                <span class="join-code">🔑 ${classroom.join_code}</span>
+                                ${levelInfo ? `<span>🇪🇸 ${levelInfo}</span>` : ''}
+                            </div>
+                        </div>
+                        ${classroom.description ? `<div class="classroom-description">${classroom.description}</div>` : ''}
+                        <div class="classroom-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">${classroom.student_count || 0}</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">${classroom.assignment_count || 0}</div>
+                                <div class="stat-label">Assignments</div>
+                            </div>
+                        </div>
+                        <div class="classroom-actions">
+                            <button class="btn btn-primary btn-small" onclick="viewClassroom('${classroom.id}')">View Details</button>
+                            <button class="btn btn-secondary btn-small" onclick="copyJoinCode('${classroom.join_code}')">Copy Code</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function showCreateClassroomModal() {
+            document.getElementById('createClassroomModal').classList.add('active');
+        }
+        
+        function closeCreateClassroomModal() {
+            document.getElementById('createClassroomModal').classList.remove('active');
+            // Reset form
+            document.querySelector('#createClassroomModal form').reset();
+        }
+        
+        async function createClassroom(event) {
+            event.preventDefault();
+            
+            if (!currentTeacher) {
+                alert('Please set up teacher account first');
+                return;
+            }
+            
+            const formData = new FormData(event.target);
+            
+            try {
+                const response = await fetch(`/api/classrooms?teacher_id=${currentTeacher.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        description: formData.get('description'),
+                        grade_level: '',
+                        subject: formData.get('gradeLevel'),
+                        spanish_level: formData.get('gradeLevel'),
+                        is_advanced: formData.get('advanced') === 'on'
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('Success', 'Classroom created successfully!', 'success');
+                    closeCreateClassroomModal();
+                    loadClassrooms();
+                    loadClassroomSelect();
+                } else {
+                    console.error('Server response:', data);
+                    showNotification('Error', 'Error creating classroom: ' + (data.detail || data.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error creating classroom:', error);
+                showNotification('Error', 'Error creating classroom: ' + error.message, 'error');
+            }
+        }
+        
+        function copyJoinCode(joinCode) {
+            navigator.clipboard.writeText(joinCode).then(() => {
+                showNotification('Success', 'Join code copied to clipboard!', 'success');
+            }).catch(() => {
+                showNotification('Error', 'Failed to copy join code', 'error');
+            });
+        }
+        
+        async function viewClassroom(classroomId) {
+            const classroom = classrooms.find(c => c.id === classroomId);
+            if (!classroom) return;
+            
+            // Show modal
+            document.getElementById('classroomDetailsModal').classList.add('active');
+            
+            // Update header info
+            let levelInfo = '';
+            if (classroom.spanish_level) {
+                levelInfo = classroom.spanish_level;
+                if (classroom.is_advanced) {
+                    levelInfo += ' (Honors)';
+                }
+            }
+            
+            document.getElementById('classroomDetailsInfo').innerHTML = `
+                <strong>${classroom.name}</strong> • 🔑 ${classroom.join_code}
+                ${levelInfo ? ` • 🇪🇸 ${levelInfo}` : ''}
+            `;
+            
+            try {
+                const response = await fetch(`/api/classrooms/${classroomId}/students`);
+                const data = await response.json();
+                const students = data.students || [];
+                
+                // Load classroom details content
+                const content = document.getElementById('classroomDetailsContent');
+                content.innerHTML = `
+                    <div style="display: grid; gap: 20px;">
+                        <div>
+                            <h3 style="color: #333; margin-bottom: 10px;">Classroom Information</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Join Code</div>
+                                    <div style="font-size: 18px; font-weight: 600; color: #667eea;">${classroom.join_code}</div>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Total Students</div>
+                                    <div style="font-size: 18px; font-weight: 600; color: #667eea;">${students.length}</div>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Assignments</div>
+                                    <div style="font-size: 18px; font-weight: 600; color: #667eea;">${classroom.assignment_count || 0}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${classroom.description ? `
+                        <div>
+                            <h3 style="color: #333; margin-bottom: 10px;">Description</h3>
+                            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                <p style="color: #4a5568; line-height: 1.6; margin: 0;">${classroom.description}</p>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div>
+                            <h3 style="color: #333; margin-bottom: 10px;">Enrolled Students (${students.length})</h3>
+                            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden;">
+                                ${students.length === 0 ? 
+                                    '<div style="padding: 20px; text-align: center; color: #64748b;">No students enrolled yet</div>' :
+                                    students.map(student => `
+                                        <div style="padding: 12px 15px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-weight: 500; color: #2d3748;">${student.name}</div>
+                                                ${student.email ? `<div style="font-size: 13px; color: #64748b;">${student.email}</div>` : ''}
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                ${student.grade_level ? `<span style="background: #f8fafc; padding: 4px 8px; border-radius: 4px; font-size: 12px; color: #64748b;">${student.grade_level}</span>` : ''}
+                                                <span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Enrolled</span>
+                                            </div>
+                                        </div>
+                                    `).join('')
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading classroom details:', error);
+                document.getElementById('classroomDetailsContent').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #64748b;">
+                        <p>Error loading classroom details</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function closeClassroomDetailsModal() {
+            document.getElementById('classroomDetailsModal').classList.remove('active');
+        }
+        
+        // Classroom selection functions
+        function toggleClassroomsSelection() {
+            const checkboxes = document.querySelectorAll('.classroom-checkbox');
+            const toggleBtn = document.getElementById('classroomsToggleBtn');
+            const selectAll = toggleBtn.textContent === 'Select All';
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll;
+            });
+            
+            toggleBtn.textContent = selectAll ? 'Deselect All' : 'Select All';
+        }
+        
+        function updateClassroomsToggleBtn() {
+            const checkboxes = document.querySelectorAll('.classroom-checkbox');
+            const checkedBoxes = document.querySelectorAll('.classroom-checkbox:checked');
+            const toggleBtn = document.getElementById('classroomsToggleBtn');
+            
+            if (checkboxes.length === 0) return;
+            
+            if (checkedBoxes.length === 0) {
+                toggleBtn.textContent = 'Select All';
+            } else if (checkedBoxes.length === checkboxes.length) {
+                toggleBtn.textContent = 'Deselect All';
+            } else {
+                toggleBtn.textContent = 'Select All';
+            }
+        }
+        
+        async function deleteSelectedClassrooms() {
+            const checkedBoxes = document.querySelectorAll('.classroom-checkbox:checked');
+            
+            if (checkedBoxes.length === 0) {
+                showNotification('Warning', 'Please select at least one classroom to delete', 'warning');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to delete ${checkedBoxes.length} classroom(s)? This will also delete all assignments and student enrollments.`)) {
+                return;
+            }
+            
+            const classroomIds = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            try {
+                const deletePromises = classroomIds.map(async (classroomId, index) => {
+                    const response = await fetch(`/api/classrooms/${classroomId}`, { method: 'DELETE' });
+                    return { classroomId, response, index };
+                });
+                
+                const results = await Promise.all(deletePromises);
+                
+                const successful = results.filter(r => r.response.ok);
+                const failed = results.filter(r => !r.response.ok);
+                
+                if (failed.length === 0) {
+                    showNotification('Success', `${classroomIds.length} classroom(s) deleted successfully`, 'success');
+                    loadClassrooms();
+                    loadClassroomSelect();
+                } else {
+                    const failedDetails = failed.map(f => {
+                        const statusText = f.response.status;
+                        const errorText = f.response.status === 404 ? 'Classroom not found' : 'Server error';
+                        return `Classroom ${classroomIds[f.index]}: ${statusText} - ${errorText}`;
+                    }).join('\n');
+                    
+                    showNotification('Error', `Some classrooms could not be deleted:\n\n${failedDetails}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting classrooms:', error);
+                showNotification('Error', 'Error deleting classrooms: ' + error.message, 'error');
             }
         }
         
         // Create assignment
-        function createAssignment(event) {
+        async function createAssignment(event) {
             event.preventDefault();
             
             const formData = new FormData(event.target);
             const vocabText = formData.get('vocab') || '';
             const vocabList = vocabText.split(',').map(v => v.trim()).filter(v => v.length > 0);
             
-            const assignment = {
-                id: Date.now().toString(),
-                title: formData.get('title'),
-                level: formData.get('level'),
-                duration: parseInt(formData.get('duration')),
-                prompt: formData.get('prompt') || '',
-                description: formData.get('description'),
-                instructions: formData.get('instructions'),
-                vocab: vocabList,
-                createdAt: new Date().toISOString(),
-                studentCount: 0,
-                completionCount: 0
-            };
-            
-            assignments.push(assignment);
-            saveData();
-            
-            // Reset form
-            event.target.reset();
-            
-            // Show success message
-            alert('Assignment created successfully!');
-            
-            // Switch to assignments tab
-            document.querySelector('[onclick="switchTab(\'assignments\')"]').click();
+            try {
+                const response = await fetch('/api/classroom-assignments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        classroom_id: formData.get('classroom_id'),
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        instructions: formData.get('instructions'),
+                        level: formData.get('level'),
+                        duration: parseInt(formData.get('duration')),
+                        due_date: formData.get('due_date') || null,
+                        prompt: formData.get('prompt'),
+                        vocab: vocabList,
+                        min_vocab_words: parseInt(formData.get('min_vocab_words')) || 0
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    // Reset form
+                    event.target.reset();
+                    
+                    // Show success message
+                    const successDiv = document.createElement('div');
+                    successDiv.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #10b981;
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        z-index: 10001;
+                        font-weight: 500;
+                        font-size: 14px;
+                    `;
+                    successDiv.textContent = 'Assignment created successfully!';
+                    document.body.appendChild(successDiv);
+                    
+                    // Remove success message after 3 seconds
+                    setTimeout(() => {
+                        successDiv.remove();
+                    }, 3000);
+                    
+                    // Reload assignments from database
+                    await loadAssignments();
+                    
+                    // Switch to assignments tab
+                    document.querySelector('[onclick="switchTab(\'assignments\')"]').click();
+                } else {
+                    alert('Error creating assignment: ' + data.detail);
+                }
+            } catch (error) {
+                console.error('Error creating assignment:', error);
+                alert('Error creating assignment');
+            }
         }
         
         // Recalculate assignment statistics from logs
@@ -883,10 +2071,29 @@
         }
         
         // Load assignments
-        function loadAssignments() {
-            // Recalculate stats before loading to ensure consistency
-            recalculateAssignmentStats();
+        async function loadAssignments() {
+            if (!currentTeacher) {
+                console.log('No current teacher found');
+                return;
+            }
             
+            console.log('Loading assignments for teacher:', currentTeacher.id);
+            
+            try {
+                const response = await fetch(`/api/teachers/${currentTeacher.id}/assignments`);
+                const data = await response.json();
+                console.log('Assignments response:', data);
+                assignments = data.assignments || [];
+                console.log('Assignments loaded:', assignments);
+                displayAssignments();
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+                assignments = [];
+                displayAssignments();
+            }
+        }
+        
+        function displayAssignments() {
             const container = document.getElementById('assignmentsList');
             
             if (assignments.length === 0) {
@@ -903,18 +2110,19 @@
             }
             
             container.innerHTML = assignments.map(assignment => {
-                const studentText = assignment.studentCount === 1 ? 'student' : 'students';
+                const studentText = assignment.completion_count === 1 ? 'student' : 'students';
                 return `
                 <div class="assignment-card">
                     <div class="assignment-header">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <input type="checkbox" class="assignment-checkbox" value="${assignment.id}" style="width: 18px; height: 18px;" onchange="updateAssignmentsToggleBtn()">
+                            <input type="checkbox" class="assignment-checkbox" value="${assignment.id}" onchange="updateAssignmentsToggleBtn()">
                             <div>
                                 <div class="assignment-title">${assignment.title}</div>
                                 <div class="assignment-meta">
                                     <span class="level-badge level-${assignment.level}">${assignment.level}</span>
                                     <span>⏱️ ${assignment.duration} min</span>
-                                    <span>${assignment.studentCount} ${studentText} completed</span>
+                                    <span>📚 ${assignment.classroom_name}</span>
+                                    <span>${assignment.completion_count} ${studentText} completed</span>
                                 </div>
                             </div>
                         </div>
@@ -1060,128 +2268,324 @@
         
         // Edit assignment
         function editAssignment(assignmentId) {
+            console.log('editAssignment called with ID:', assignmentId);
+            console.log('Available assignments:', assignments);
+            
             const assignment = assignments.find(a => a.id === assignmentId);
-            if (!assignment) return;
+            console.log('Found assignment:', assignment);
             
-            // Switch to create tab and populate form
-            document.querySelector('[onclick="switchTab(\'create\')"]').click();
+            if (!assignment) {
+                console.error('Assignment not found with ID:', assignmentId);
+                return;
+            }
             
-            setTimeout(() => {
-                document.getElementById('assignmentTitle').value = assignment.title;
-                document.getElementById('assignmentLevel').value = assignment.level;
-                document.getElementById('assignmentDuration').value = assignment.duration;
-                document.getElementById('assignmentPrompt').value = assignment.prompt;
-                document.getElementById('assignmentDescription').value = assignment.description;
-                document.getElementById('assignmentInstructions').value = assignment.instructions;
-                document.getElementById('assignmentVocab').value = assignment.vocab ? assignment.vocab.join(', ') : '';
-            }, 100);
+            console.log('Populating modal...');
+            
+            // Populate the edit modal with assignment data
+            document.getElementById('editAssignmentId').value = assignment.id;
+            document.getElementById('editAssignmentTitle').value = assignment.title;
+            document.getElementById('editAssignmentLevel').value = assignment.level;
+            document.getElementById('editAssignmentDuration').value = assignment.duration;
+            document.getElementById('editAssignmentDueDate').value = assignment.due_date ? new Date(assignment.due_date).toISOString().slice(0, 16) : '';
+            document.getElementById('editAssignmentPrompt').value = assignment.prompt;
+            document.getElementById('editAssignmentDescription').value = assignment.description;
+            document.getElementById('editAssignmentInstructions').value = assignment.instructions;
+            document.getElementById('editAssignmentVocab').value = assignment.vocab ? assignment.vocab.join(', ') : '';
+            document.getElementById('editMinVocabWords').value = assignment.min_vocab_words || 0;
+            
+            // Set classroom dropdown
+            const classroomSelect = document.getElementById('editAssignmentClassroom');
+            if (classroomSelect) {
+                // Clear existing options
+                classroomSelect.innerHTML = '<option value="">Select Classroom</option>';
+                
+                // Add classroom options
+                classrooms.forEach(classroom => {
+                    const option = document.createElement('option');
+                    option.value = classroom.id;
+                    option.textContent = classroom.name;
+                    classroomSelect.appendChild(option);
+                });
+                
+                // Set the value to the assignment's classroom
+                classroomSelect.value = assignment.classroom_id;
+            }
+            
+            console.log('Showing modal...');
+            
+            // Show the modal
+            const modal = document.getElementById('editAssignmentModal');
+            console.log('Modal element:', modal);
+            modal.classList.add('active');
+            
+            console.log('Modal should now be visible');
+        }
+        
+        // Close edit assignment modal
+        function closeEditAssignmentModal() {
+            document.getElementById('editAssignmentModal').classList.remove('active');
+        }
+        
+        // Update assignment (form submission for edit modal)
+        async function updateAssignment(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const assignmentId = formData.get('assignment_id');
+            const vocabText = formData.get('vocab') || '';
+            const vocabList = vocabText.split(',').map(v => v.trim()).filter(v => v.length > 0);
+            
+            try {
+                const response = await fetch(`/api/assignments/${assignmentId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        instructions: formData.get('instructions'),
+                        level: formData.get('level'),
+                        duration: parseInt(formData.get('duration')),
+                        due_date: formData.get('due_date') || null,
+                        prompt: formData.get('prompt'),
+                        vocab: vocabList,
+                        min_vocab_words: parseInt(formData.get('min_vocab_words')) || 0
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    // Close modal
+                    closeEditAssignmentModal();
+                    
+                    // Show success message
+                    const successDiv = document.createElement('div');
+                    successDiv.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #10b981;
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        z-index: 10001;
+                        font-weight: 500;
+                        font-size: 14px;
+                    `;
+                    successDiv.textContent = 'Assignment updated successfully!';
+                    document.body.appendChild(successDiv);
+                    
+                    // Remove success message after 3 seconds
+                    setTimeout(() => {
+                        successDiv.remove();
+                    }, 3000);
+                    
+                    // Reload assignments from database
+                    await loadAssignments();
+                } else {
+                    alert('Error updating assignment: ' + (data.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error updating assignment:', error);
+                alert('Error updating assignment. Please try again.');
+            }
         }
         
         // Delete assignment
-        function deleteAssignment(assignmentId) {
+        async function deleteAssignment(assignmentId) {
             if (confirm('Are you sure you want to delete this assignment?')) {
-                // Delete the assignment
-                assignments = assignments.filter(a => a.id !== assignmentId);
-                
-                // Also delete all logs associated with this assignment
-                logs = logs.filter(log => log.assignmentId !== assignmentId);
-                
-                // Save both assignments and logs
-                saveData();
-                loadAssignments();
+                try {
+                    const response = await fetch(`/api/assignments/${assignmentId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        // Reload assignments from database
+                        await loadAssignments();
+                    } else {
+                        const data = await response.json();
+                        alert('Error deleting assignment: ' + data.detail);
+                    }
+                } catch (error) {
+                    console.error('Error deleting assignment:', error);
+                    alert('Error deleting assignment');
+                }
             }
         }
         
         // Load analytics
-        function loadAnalytics() {
+        async function loadAnalytics() {
             console.log('Loading analytics...');
+            
+            // First load fresh data from server
+            await loadData();
+            
             console.log('Assignments:', assignments.length);
             console.log('Logs:', logs.length);
             
-            // Calculate stats
-            const totalAssignments = assignments.length;
-            const totalStudents = logs.reduce((sum, log) => sum + (log.isNewStudent ? 1 : 0), 0);
-            const totalSessions = logs.length;
-            const completedSessions = logs.filter(log => log.completed).length;
-            const avgCompletion = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
-            const voiceUsedSessions = logs.filter(log => log.voiceUsed).length;
-            const voiceUsage = totalSessions > 0 ? Math.round((voiceUsedSessions / totalSessions) * 100) : 0;
-            
-            console.log('Stats calculated:', {
-                totalAssignments,
-                totalStudents,
-                totalSessions,
-                completedSessions,
-                avgCompletion,
-                voiceUsedSessions,
-                voiceUsage
-            });
+            // Debug: Show first few logs and assignments
+            console.log('First 3 logs:', logs.slice(0, 3));
+            console.log('First 3 assignments:', assignments.slice(0, 3));
             
             // Update stats
-            const totalAssignmentsEl = document.getElementById('totalAssignments');
-            const totalStudentsEl = document.getElementById('totalStudents');
-            const avgCompletionEl = document.getElementById('avgCompletion');
-            const voiceUsageEl = document.getElementById('voiceUsage');
+            const uniqueStudents = new Set(logs.map(log => log.studentName)).size;
+            const completedAssignments = logs.filter(log => log.completed).length;
+            const totalVocabUsed = logs.reduce((sum, log) => sum + (log.usedVocabCount || 0), 0);
+            const voiceUsageCount = logs.filter(log => log.voiceUsed).length;
+            const avgCompletionRate = logs.length > 0 ? Math.round((completedAssignments / logs.length) * 100) : 0;
+            const voiceUsageRate = logs.length > 0 ? Math.round((voiceUsageCount / logs.length) * 100) : 0;
             
-            if (totalAssignmentsEl) totalAssignmentsEl.textContent = totalAssignments;
-            if (totalStudentsEl) totalStudentsEl.textContent = totalStudents;
-            if (avgCompletionEl) avgCompletionEl.textContent = avgCompletion + '%';
-            if (voiceUsageEl) voiceUsageEl.textContent = voiceUsage + '%';
+            // Calculate vocabulary performance metrics
+            const vocabRequirementsMet = logs.filter(log => {
+                const minVocab = log.minVocabWords || 0;
+                const usedVocab = log.usedVocabCount || 0;
+                return minVocab > 0 && usedVocab >= minVocab;
+            }).length;
+            
+            const totalVocabRequirements = logs.filter(log => (log.minVocabWords || 0) > 0).length;
+            const vocabRequirementRate = totalVocabRequirements > 0 ? Math.round((vocabRequirementsMet / totalVocabRequirements) * 100) : 0;
+            
+            console.log('Calculated stats:', {
+                uniqueStudents,
+                completedAssignments,
+                totalVocabUsed,
+                voiceUsageCount,
+                avgCompletionRate,
+                voiceUsageRate
+            });
+            
+            document.getElementById('totalAssignments').textContent = assignments.length;
+            document.getElementById('totalStudents').textContent = uniqueStudents;
+            document.getElementById('avgCompletion').textContent = avgCompletionRate + '%';
+            document.getElementById('voiceUsage').textContent = voiceUsageRate + '%';
             
             // Load logs table
             const tableBody = document.getElementById('logsTableBody');
             
-            if (!tableBody) {
-                console.error('logsTableBody element not found');
-                return;
-            }
-            
             if (logs.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="11" style="text-align: center; padding: 40px; color: #666;">
-                            No student activity yet
-                        </td>
-                    </tr>
-                `;
-                // Reset toggle button
-                const toggleBtn = document.getElementById('logsToggleBtn');
-                if (toggleBtn) toggleBtn.textContent = 'Select All';
+                tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px; color: #666;">No student activity logs found. Students need to complete assignments for data to appear here.</td></tr>';
                 return;
             }
             
-            tableBody.innerHTML = logs.slice().reverse().map(log => {
+            console.log('Building logs table...');
+            
+            // Debug: Check if submitted_for_grading field exists
+            console.log('Sample log with submitted field:', logs[0]);
+            console.log('Logs with submitted_for_grading:', logs.filter(l => l.submitted_for_grading).length);
+            
+            // Filter logs to show only submitted attempt (or most recent if none submitted) per student per assignment
+            const filteredLogs = {};
+            logs.forEach(log => {
+                const key = `${log.studentId}-${log.assignmentId}`;
+                console.log(`Processing log for ${log.studentName} - ${log.assignmentId}: submitted=${log.submitted_for_grading}, attempt=${log.attemptNumber}`);
+                
+                if (!filteredLogs[key]) {
+                    filteredLogs[key] = log;
+                } else {
+                    const current = filteredLogs[key];
+                    // Prefer submitted attempt
+                    if (log.submitted_for_grading && !current.submitted_for_grading) {
+                        console.log(`  Replacing with submitted attempt #${log.attemptNumber}`);
+                        filteredLogs[key] = log;
+                    }
+                    // If both submitted or neither submitted, prefer newer
+                    else if (log.submitted_for_grading === current.submitted_for_grading && 
+                             new Date(log.createdAt) > new Date(current.createdAt)) {
+                        console.log(`  Replacing with newer attempt #${log.attemptNumber}`);
+                        filteredLogs[key] = log;
+                    }
+                }
+            });
+            
+            console.log('Filtered logs count:', Object.keys(filteredLogs).length);
+            
+            // Store all logs for previous attempts feature
+            window.allLogs = logs;
+            
+            // Use filtered logs for main table
+            const displayLogs = Object.values(filteredLogs);
+            
+            // Store displayLogs globally for viewConversation function
+            window.displayLogs = displayLogs;
+            
+            console.log('Display logs stored globally:', window.displayLogs.length);
+            
+            tableBody.innerHTML = displayLogs.map(log => {
                 const assignment = assignments.find(a => a.id === log.assignmentId);
                 const assignmentTitle = assignment ? assignment.title : 'Unknown Assignment';
-                const assignmentVocab = assignment ? assignment.vocab : [];
+                const assignmentVocab = assignment ? assignment.vocab || [] : [];
                 
-                // Check which vocabulary words were used
-                const usedVocab = log.usedVocab || [];
-                const vocabCount = usedVocab.length;
-                const vocabDisplay = vocabCount > 0 
-                    ? `<span style="background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">${vocabCount} words used</span>`
-                    : '<span style="color: #999; font-size: 12px;">0 words used</span>';
+                // Check if there are multiple attempts for this student/assignment
+                const studentAttempts = window.allLogs.filter(l => 
+                    l.assignmentId === log.assignmentId && 
+                    l.studentName === log.studentName
+                );
+                const hasMultipleAttempts = studentAttempts.length > 1;
+                
+                // Debug: Log assignment matching
+                if (!assignment) {
+                    console.log('No assignment found for log:', log);
+                }
+                
+                // Check vocabulary usage count and minimum requirement
+                const vocabCount = log.usedVocabCount || 0;
+                const minVocabWords = log.minVocabWords || 0;
+                
+                // Create vocabulary display with fraction and color coding
+                let vocabDisplay;
+                let vocabColor;
+                
+                if (minVocabWords > 0) {
+                    // Show as fraction when there's a minimum requirement
+                    vocabDisplay = `${vocabCount}/${minVocabWords}`;
+                    // Color coding: red for below minimum, green for meeting or exceeding
+                    vocabColor = vocabCount >= minVocabWords ? '#10b981' : '#ef4444';
+                } else {
+                    // Show just the count when no minimum requirement
+                    vocabDisplay = vocabCount.toString();
+                    vocabColor = '#666'; // Neutral gray color
+                }
+                
+                // Get due date and check if submitted on time
+                const dueDate = assignment ? assignment.due_date : null;
+                const dueDateDisplay = dueDate ? new Date(dueDate).toLocaleDateString() : 'No due date';
+                
+                let onTimeDisplay = 'N/A';
+                if (dueDate && log.completed && log.endTime) {
+                    const submittedTime = new Date(log.endTime);
+                    const dueTime = new Date(dueDate);
+                    const isOnTime = submittedTime <= dueTime;
+                    
+                    if (isOnTime) {
+                        onTimeDisplay = '<span style="color: #10b981; font-weight: 600;">✅ Yes</span>';
+                    } else {
+                        const daysLate = Math.ceil((submittedTime - dueTime) / (1000 * 60 * 60 * 24));
+                        onTimeDisplay = `<span style="color: #ef4444; font-weight: 600;">❌ ${daysLate} day${daysLate !== 1 ? 's' : ''} late</span>`;
+                    }
+                } else if (dueDate && !log.completed) {
+                    onTimeDisplay = '<span style="color: #f59e0b;">⏱️ Pending</span>';
+                }
                 
                 return `
                     <tr>
                         <td><input type="checkbox" class="log-checkbox" value="${log.assignmentId}-${log.studentName}-${log.startTime}" style="width: 16px; height: 16px;" onchange="updateLogsToggleBtn()"></td>
-                        <td>${log.studentName || 'Anonymous'}</td>
+                        <td>
+                            <div>${log.studentName || 'Anonymous'}</div>
+                            ${hasMultipleAttempts ? `<button class="btn btn-info btn-xs" onclick="viewStudentHistory('${log.assignmentId}', '${log.studentName}', '${log.studentId}')" style="font-size: 10px; padding: 2px 6px; margin-top: 4px; white-space: nowrap;">Previous Attempts</button>` : ''}
+                        </td>
                         <td>${assignmentTitle}</td>
                         <td><span class="level-badge level-${log.level}">${log.level}</span></td>
-                        <td>${new Date(log.startTime).toLocaleDateString()}</td>
-                        <td>${log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) + ' min' : 'In Progress'}</td>
-                        <td>${log.messageCount}</td>
+                        <td>${assignment ? new Date(assignment.created_at).toLocaleDateString() : 'Unknown'}</td>
+                        <td>${dueDateDisplay}</td>
+                        <td>${onTimeDisplay}</td>
+                        <td>${log.messageCount || 0}</td>
+                        <td style="color: ${vocabColor}; font-weight: 500;">${vocabDisplay}</td>
                         <td>
-                            <span class="voice-indicator ${log.voiceUsed ? 'voice-used' : 'voice-not-used'}">
-                                ${log.voiceUsed ? 'Yes' : 'No'}
-                            </span>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="background: #e0e7ff; color: #3730a3; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">Attempt #${log.attemptNumber || 1}</span>
+                            </div>
                         </td>
-                        <td>
-                            <span class="transcript-indicator ${log.transcriptUsed ? 'transcript-used' : 'transcript-not-used'}">
-                                ${log.transcriptUsed ? 'Yes' : 'No'}
-                            </span>
-                        </td>
-                        <td>${vocabDisplay}</td>
                         <td>
                             <button class="btn btn-secondary btn-small" onclick="viewConversation('${log.assignmentId}', '${log.studentName}', '${log.startTime}')">
                                 View Conversation
@@ -1191,9 +2595,270 @@
                 `;
             }).join('');
             
-            // Reset toggle button text
-            const toggleBtn = document.getElementById('logsToggleBtn');
-            if (toggleBtn) toggleBtn.textContent = 'Select All';
+            console.log('Analytics loading complete');
+        }
+        
+        // View student history for all attempts
+        async function viewStudentHistory(assignmentId, studentName, studentId) {
+            try {
+                // Use the stored all logs instead of fetching again
+                const allLogs = window.allLogs || [];
+                
+                // Filter for this specific student and assignment
+                const studentLogs = allLogs.filter(log => 
+                    log.assignmentId === assignmentId && 
+                    log.studentName === studentName
+                ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Most recent first
+                
+                console.log('All logs for this student/assignment:', studentLogs.length);
+                
+                if (studentLogs.length <= 1) {
+                    alert('No previous attempts found for this student and assignment.');
+                    return;
+                }
+                
+                // Find which attempt is displayed in main table (submitted or most recent)
+                const displayedLog = window.displayLogs?.find(log => 
+                    log.assignmentId === assignmentId && 
+                    log.studentName === studentName
+                );
+                
+                console.log('Displayed log:', displayedLog);
+                
+                // Remove the displayed attempt from previous attempts
+                const previousAttempts = studentLogs.filter(log => log.id !== displayedLog?.id);
+                
+                console.log('Previous attempts (excluding displayed):', previousAttempts.length);
+                
+                if (previousAttempts.length === 0) {
+                    alert('No previous attempts found for this student and assignment.');
+                    return;
+                }
+                
+                previousAttempts.forEach((log, index) => {
+                    console.log(`History modal - Log ${index}:`, {
+                        attemptNumber: log.attemptNumber,
+                        startTime: log.startTime,
+                        createdAt: log.createdAt
+                    });
+                });
+                
+                // Create history modal
+                const modalHtml = `
+                    <div id="historyModal" class="modal active">
+                        <div class="modal-content" style="width: 800px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+                            <div class="modal-header">
+                                <h3>${studentName} - Previous Attempts (${previousAttempts.length})</h3>
+                                <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                ${previousAttempts.map((log, index) => {
+                                    console.log(`History modal - Log ${index}:`, {
+                                        attemptNumber: log.attemptNumber,
+                                        startTime: log.startTime,
+                                        createdAt: log.createdAt
+                                    });
+                                    return `
+                                    <div style="margin-bottom: 25px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background: ${index === 0 ? '#f0f9ff' : '#ffffff'};">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                            <h4 style="margin: 0; color: #1e40af;">
+                                                Attempt #${log.attemptNumber || 1}
+                                            </h4>
+                                            <span style="color: #64748b; font-size: 14px;">
+                                                ${log.completed ? 'Completed' : 'Incomplete'} - ${new Date(log.createdAt).toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <div style="margin-bottom: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                                            <div><strong>Attempt:</strong> #${log.attemptNumber || 1}</div>
+                                            <div><strong>Messages:</strong> ${log.messageCount || 0}</div>
+                                            <div><strong>Vocabulary:</strong> <span style="color: ${log.usedVocabCount >= (log.minVocabWords || 0) ? '#10b981' : '#ef4444'}; font-weight: 500;">${log.usedVocabCount || 0}/${log.minVocabWords || 0}</span></div>
+                                            <div><strong>Duration:</strong> ${log.startTime && log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) + ' min' : 'N/A'}</div>
+                                            <div><strong>Voice:</strong> ${log.voiceUsed ? 'Yes' : 'No'}</div>
+                                        </div>
+                                        <button class="btn btn-secondary btn-small" onclick="viewHistoryConversation('${log.assignmentId}', '${log.studentName}', '${log.startTime}', '${log.attemptNumber || 1}')">
+                                            View Conversation
+                                        </button>
+                                    </div>
+                                `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add modal to page
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+            } catch (error) {
+                console.error('Error loading student history:', error);
+                alert('Error loading student history. Please try again.');
+            }
+        }
+        
+        // Close history modal
+        function closeHistoryModal() {
+            const modal = document.getElementById('historyModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // View conversation from history modal (closes history modal first)
+        async function viewHistoryConversation(assignmentId, studentName, startTime, attemptNumber) {
+            console.log('Viewing history conversation:', { assignmentId, studentName, startTime, attemptNumber });
+            
+            // Close history modal first
+            closeHistoryModal();
+            
+            // Wait a moment for modal to close, then open conversation
+            setTimeout(async () => {
+                // First find the session ID, then get conversation directly
+                try {
+                    console.log('Fetching ALL logs to find session ID...');
+                    const logsResponse = await fetch('/api/logs/all');
+                    const logsData = await logsResponse.json();
+                    const allLogs = logsData.logs || [];
+                    
+                    const log = allLogs.find(l => 
+                        l.assignmentId === assignmentId && 
+                        l.studentName === studentName && 
+                        l.startTime === startTime
+                    );
+                    
+                    console.log('Found log:', log);
+                    
+                    if (!log) {
+                        console.error('Log not found. Available logs:', allLogs.slice(0, 3).map(l => ({ 
+                        assignmentId: l.assignmentId, 
+                        studentName: l.studentName, 
+                        startTime: l.startTime 
+                    })));
+                        alert('Student log not found');
+                        return;
+                    }
+                    
+                    // Get session ID from the log
+                    const sessionId = log.id;
+                    console.log('Session ID:', sessionId);
+                    
+                    // Fetch conversation directly for this session
+                    console.log('Fetching conversation for session:', sessionId);
+                    const conversationResponse = await fetch(`/api/sessions/${sessionId}/conversation`);
+                    console.log('Conversation response status:', conversationResponse.status);
+                    
+                    const conversationData = await conversationResponse.json();
+                    console.log('Conversation data received:', conversationData);
+                    
+                    if (conversationData.error) {
+                        console.error('Conversation error:', conversationData.error);
+                        alert('Error loading conversation: ' + conversationData.error);
+                        return;
+                    }
+                    
+                    const conversation = conversationData.conversation || [];
+                    console.log('Conversation loaded:', conversation.length, 'messages');
+                    
+                    if (conversation.length === 0) {
+                        console.log('No conversation messages found');
+                        alert('Conversation transcript not available - no conversation data was recorded');
+                        return;
+                    }
+                    
+                    console.log('First message:', conversation[0]);
+                    console.log('Last message:', conversation[conversation.length - 1]);
+                    
+                    console.log('Loading conversation modal...');
+                    
+                    const assignment = assignments.find(a => a.id === assignmentId);
+                    const assignmentTitle = assignment ? assignment.title : 'Unknown Assignment';
+                    const assignmentVocab = assignment ? assignment.vocab || [] : [];
+                    
+                    // Update modal header with session info including attempt number
+                    document.getElementById('conversationTitle').textContent = `${studentName} - ${assignmentTitle} (Attempt #${attemptNumber})`;
+                    
+                    // Update session stats
+                    const sessionDuration = log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) : 0;
+                    document.getElementById('conversationStats').innerHTML = `
+                        <span>${log.messageCount} messages</span>
+                        <span>${log.voiceUsed ? 'Voice used' : 'Text only'}</span>
+                        <span>${sessionDuration} minutes</span>
+                        <span class="level-badge level-${log.level}">${log.level}</span>
+                    `;
+                    
+                    // Update conversation meta (session info like main modal)
+                    document.getElementById('conversationMeta').innerHTML = `
+                        Session: ${new Date(log.start_time).toLocaleString()} ${log.completed ? '- Completed' : '- In Progress'}
+                    `;
+                    
+                    // Hide vocabulary section completely
+                    document.getElementById('conversationVocab').innerHTML = '';
+                    
+                    // Function to highlight vocabulary words in text
+                    function highlightVocabulary(text, vocabList) {
+                        let highlightedText = text;
+                        vocabList.forEach(word => {
+                            const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                            highlightedText = highlightedText.replace(regex, `<mark style="background: #fef3c7; padding: 2px 4px; border-radius: 3px; font-weight: 600;">${word}</mark>`);
+                        });
+                        return highlightedText;
+                    }
+                    
+                    // Display conversation with highlighted vocabulary
+                    const conversationContainer = document.getElementById('conversationContent');
+                    conversationContainer.innerHTML = `
+                        <h5 style="margin: 20px 0 15px 0; color: #333;">Conversation Transcript</h5>
+                        ${conversation.map(msg => {
+                            const senderClass = msg.message_type === 'user' ? 'user-message' : 'bot-message';
+                            const senderLabel = msg.message_type === 'user' ? studentName : 'AI Tutor';
+                            const timestamp = new Date(msg.timestamp || msg.created_at).toLocaleTimeString();
+                            
+                            // Only highlight vocabulary in student messages
+                            const highlightedContent = msg.message_type === 'user' ? 
+                                highlightVocabulary(msg.content, assignmentVocab) : 
+                                msg.content;
+                            
+                            return `
+                                <div class="message ${senderClass}" style="margin-bottom: 15px; padding: 12px; border-radius: 8px; background: ${msg.message_type === 'user' ? '#e3f2fd' : '#f3e5f5'};">
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 600;">${senderLabel} - ${timestamp}</div>
+                                    <div style="line-height: 1.5;">${highlightedContent}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    `;
+                    
+                    // Show modal with same dimensions as main conversation
+                    const conversationModal = document.getElementById('conversationModal');
+                    console.log('Conversation modal element found:', conversationModal);
+                    
+                    const modalContent = conversationModal.querySelector('.modal-content');
+                    console.log('Modal content element found:', modalContent);
+                    
+                    if (modalContent) {
+                        // Debug: Log current styles
+                        console.log('Current modal content styles:', {
+                            width: modalContent.style.width,
+                            maxWidth: modalContent.style.maxWidth,
+                            computedWidth: window.getComputedStyle(modalContent).width,
+                            computedMaxWidth: window.getComputedStyle(modalContent).maxWidth
+                        });
+                        
+                        // Force exact same styling as main modal uses
+                        modalContent.style.width = '800px';
+                        modalContent.style.maxWidth = '90%';
+                        modalContent.style.maxHeight = '90vh';
+                        modalContent.style.overflowY = 'auto';
+                    } else {
+                        console.error('Modal content not found!');
+                    }
+                    
+                    conversationModal.classList.add('active');
+                    console.log('Conversation modal should now be visible with forced dimensions');
+                    
+                } catch (error) {
+                    console.error('Error loading conversation:', error);
+                    alert('Error loading conversation. Please try again. Error: ' + error.message);
+                }
+            }, 300);
         }
         
         // Update logs toggle button text based on checkbox states
@@ -1217,15 +2882,50 @@
         loadActiveTab(); // Load saved tab state
         
         // View conversation function
-        function viewConversation(assignmentId, studentName, startTime) {
-            const log = logs.find(l => 
+        async function viewConversation(assignmentId, studentName, startTime) {
+            console.log('Viewing conversation:', { assignmentId, studentName, startTime });
+            
+            // First try to find in the filtered display logs (submitted attempts)
+            let log = window.displayLogs?.find(l => 
                 l.assignmentId === assignmentId && 
                 l.studentName === studentName && 
                 l.startTime === startTime
             );
             
-            if (!log || !log.conversation) {
-                alert('Conversation transcript not available');
+            // If not found in display logs, try the original logs array
+            if (!log) {
+                log = logs.find(l => 
+                    l.assignmentId === assignmentId && 
+                    l.studentName === studentName && 
+                    l.startTime === startTime
+                );
+            }
+            
+            // If still not found, fetch all logs to find the specific session
+            if (!log) {
+                try {
+                    const response = await fetch('/api/logs');
+                    const data = await response.json();
+                    const allLogs = data.logs || [];
+                    log = allLogs.find(l => 
+                        l.assignmentId === assignmentId && 
+                        l.studentName === studentName && 
+                        l.startTime === startTime
+                    );
+                } catch (error) {
+                    console.error('Error fetching all logs:', error);
+                }
+            }
+            
+            console.log('Found log:', log);
+            
+            if (!log) {
+                alert('Student log not found');
+                return;
+            }
+            
+            if (!log.conversation || log.conversation.length === 0) {
+                alert('Conversation transcript not available - no conversation data was recorded');
                 return;
             }
             
@@ -1234,51 +2934,58 @@
             const assignmentVocab = assignment ? assignment.vocab || [] : [];
             const usedVocab = log.usedVocab || [];
             
-            // Update modal info
-            document.getElementById('conversationInfo').textContent = 
-                `${studentName} - ${assignmentTitle} - ${new Date(startTime).toLocaleString()}`;
+            // Update modal header with session info including attempt number
+            document.getElementById('conversationTitle').textContent = `${studentName} - ${assignmentTitle} (Attempt #${log.attemptNumber || 1})`;
+            
+            // Update session stats
+            const sessionDuration = log.endTime ? Math.round((new Date(log.endTime) - new Date(log.startTime)) / 60000) : 0;
+            document.getElementById('conversationStats').innerHTML = `
+                <span>${log.messageCount} messages</span>
+                <span>${log.voiceUsed ? 'Voice used' : 'Text only'}</span>
+                <span>${sessionDuration} minutes</span>
+                <span class="level-badge level-${log.level}">${log.level}</span>
+            `;
+            
+            // Update meta info
+            document.getElementById('conversationMeta').innerHTML = `
+                Session: ${new Date(log.startTime).toLocaleString()} ${log.completed ? '- Completed' : '- In Progress'}
+            `;
+            
+            // Hide vocabulary section completely
+            document.getElementById('conversationVocab').innerHTML = '';
             
             // Function to highlight vocabulary words in text
-            function highlightVocabulary(text) {
+            function highlightVocabulary(text, vocabList) {
                 let highlightedText = text;
-                
-                // Sort vocabulary words by length (longest first) to avoid partial matches
-                const sortedVocab = [...assignmentVocab].sort((a, b) => b.length - a.length);
-                
-                sortedVocab.forEach(vocabWord => {
-                    if (usedVocab.includes(vocabWord)) {
-                        // Create regex for exact word match (case insensitive)
-                        const regex = new RegExp(`\\b${vocabWord}\\b`, 'gi');
-                        highlightedText = highlightedText.replace(regex, 
-                            `<mark style="background: #fff3cd; color: #856404; padding: 2px 4px; border-radius: 3px; font-weight: 600;">${vocabWord}</mark>`
-                        );
-                    }
+                vocabList.forEach(word => {
+                    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                    highlightedText = highlightedText.replace(regex, `<mark style="background: #fef3c7; padding: 2px 4px; border-radius: 3px; font-weight: 600;">${word}</mark>`);
                 });
-                
                 return highlightedText;
             }
             
-            // Display conversation with highlighted vocabulary
+            // Display conversation with highlighted vocabulary (but no vocabulary section)
             const conversationContent = document.getElementById('conversationContent');
-            conversationContent.innerHTML = log.conversation.map(msg => {
-                const senderClass = msg.sender === 'user' ? 'user-message' : 'bot-message';
-                const senderLabel = msg.sender === 'user' ? studentName : 'Bot';
-                const timestamp = new Date(msg.timestamp).toLocaleTimeString();
-                
-                // Only highlight vocabulary in student messages, not bot messages
-                const highlightedContent = msg.sender === 'user' ? highlightVocabulary(msg.content) : msg.content;
-                
-                return `
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
-                            <strong>${senderLabel}</strong> - ${timestamp}
+            conversationContent.innerHTML = `
+                <h5 style="margin: 20px 0 15px 0; color: #333;">Conversation Transcript</h5>
+                ${log.conversation.map(msg => {
+                    const senderClass = msg.message_type === 'user' ? 'user-message' : 'bot-message';
+                    const senderLabel = msg.message_type === 'user' ? studentName : 'AI Tutor';
+                    const timestamp = new Date(msg.timestamp).toLocaleTimeString();
+                    
+                    // Only highlight vocabulary in student messages
+                    const highlightedContent = msg.message_type === 'user' ? 
+                        highlightVocabulary(msg.content, assignmentVocab) : 
+                        msg.content;
+                    
+                    return `
+                        <div class="message ${senderClass}" style="margin-bottom: 15px; padding: 12px; border-radius: 8px; background: ${msg.message_type === 'user' ? '#e3f2fd' : '#f3e5f5'};">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 600;">${senderLabel} - ${timestamp}</div>
+                            <div style="line-height: 1.5;">${highlightedContent}</div>
                         </div>
-                        <div class="${senderClass}" style="padding: 10px; border-radius: 10px; max-width: 80%;">
-                            ${highlightedContent}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('')}
+            `;
             
             // Show modal
             document.getElementById('conversationModal').classList.add('active');
@@ -1464,5 +3171,92 @@
             }
         }
     </script>
+    
+    <!-- Edit Assignment Modal -->
+    <div id="editAssignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Assignment</h2>
+                <span class="modal-close" onclick="closeEditAssignmentModal()">&times;</span>
+            </div>
+            <form class="assignment-form" onsubmit="updateAssignment(event)">
+                <input type="hidden" id="editAssignmentId" name="assignment_id">
+                
+                <div class="form-section">
+                    <div class="form-section-title">Basic Information</div>
+                    <div class="form-group">
+                        <label for="editAssignmentTitle">Assignment Title</label>
+                        <input type="text" id="editAssignmentTitle" name="title" required placeholder="e.g., Ordering Food at a Restaurant">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editAssignmentClassroom">Classroom</label>
+                            <select id="editAssignmentClassroom" name="classroom_id" disabled>
+                                <option value="">Select Classroom</option>
+                            </select>
+                            <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Classroom cannot be changed when editing</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editAssignmentLevel">Difficulty Level</label>
+                            <select id="editAssignmentLevel" name="level" required>
+                                <option value="">Select Level</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editAssignmentDuration">Duration (minutes)</label>
+                            <input type="number" id="editAssignmentDuration" name="duration" min="1" max="60" step="1" value="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAssignmentDueDate">Due Date (Optional)</label>
+                            <input type="datetime-local" id="editAssignmentDueDate" name="due_date">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-section-title">Content Details</div>
+                    <div class="form-group">
+                        <label for="editAssignmentDescription">Assignment Description</label>
+                        <textarea id="editAssignmentDescription" name="description" required placeholder="Describe what students should practice and accomplish in this assignment..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editAssignmentInstructions">Student Instructions</label>
+                        <textarea id="editAssignmentInstructions" name="instructions" required placeholder="Clear instructions for students on how to complete this assignment..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-section-title">Advanced Options</div>
+                    <div class="form-group">
+                        <label for="editAssignmentPrompt">Custom Prompt (Optional)</label>
+                        <textarea id="editAssignmentPrompt" name="prompt" placeholder="Override the default system prompt with custom instructions for the AI..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editAssignmentVocab">Key Vocabulary (Optional)</label>
+                        <textarea id="editAssignmentVocab" name="vocab" placeholder="Enter important vocabulary words or phrases (comma-separated). These will be tracked in student logs..."></textarea>
+                        <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Example: zapatos, talla, color, precio, comprar, tienda</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinVocabWords">Minimum Vocabulary Words Required</label>
+                        <input type="number" id="editMinVocabWords" name="min_vocab_words" min="0" max="20" step="1" value="0" placeholder="Number of vocabulary words students must use">
+                        <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Set to 0 for no minimum requirement. Students will be tracked on how many unique vocabulary words they use.</small>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-self: center;">Save Assignment</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

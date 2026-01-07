@@ -1,8 +1,9 @@
 import os
 import json
 import base64
+import sqlite3
 import requests
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, HTTPException, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -11,6 +12,11 @@ import asyncio
 from dotenv import load_dotenv
 from datetime import datetime
 import uuid
+from pydantic import BaseModel
+from typing import List, Optional
+
+# Import database models
+from database import db
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,6 +38,13 @@ print(f"ELEVENLABS_API_KEY present: {bool(ELEVENLABS_API_KEY)}")
 print(f"TTS_SERVICE: {TTS_SERVICE}")
 print(f"========================")
 
+@app.get("/home")
+async def smart_home_redirect(request: Request):
+    """Smart home redirect - checks authentication and redirects appropriately"""
+    # For now, we'll just redirect to the landing page
+    # In a real app, you'd check session cookies/tokens here
+    return RedirectResponse(url="/")
+
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -40,35 +53,122 @@ async def index(request: Request):
 async def teacher_dashboard(request: Request):
     return templates.TemplateResponse("teacher.html", {"request": request})
 
+@app.get("/teacher-login", response_class=HTMLResponse)
+async def teacher_login_page(request: Request):
+    return templates.TemplateResponse("teacher_login.html", {"request": request})
+
+@app.get("/teacher-signup", response_class=HTMLResponse)
+async def teacher_signup_page(request: Request):
+    return templates.TemplateResponse("teacher_signup.html", {"request": request})
+
+@app.get("/student-login", response_class=HTMLResponse)
+async def student_login_page(request: Request):
+    return templates.TemplateResponse("student_login.html", {"request": request})
+
+@app.get("/student-signup", response_class=HTMLResponse)
+async def student_signup_page(request: Request):
+    return templates.TemplateResponse("student_signup.html", {"request": request})
+
 @app.get("/student", response_class=HTMLResponse)
 async def student_assignment(request: Request):
     return templates.TemplateResponse("student.html", {"request": request})
+
+@app.get("/student-dashboard", response_class=HTMLResponse)
+async def student_dashboard(request: Request):
+    return templates.TemplateResponse("student_dashboard.html", {"request": request})
 
 @app.get("/practice", response_class=HTMLResponse)
 async def practice_mode(request: Request):
     return templates.TemplateResponse("simple.html", {"request": request})
 
+# Pydantic models for API requests
+class TeacherCreate(BaseModel):
+    name: str
+    email: str
+
+class ClassroomCreate(BaseModel):
+    name: str
+    description: str = ""
+    grade_level: str = ""
+    subject: str = ""
+
+class ClassroomUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    grade_level: Optional[str] = None
+    subject: Optional[str] = None
+
+class StudentCreate(BaseModel):
+    name: str
+    email: Optional[str] = None
+    grade_level: Optional[str] = None
+
+class EnrollmentRequest(BaseModel):
+    join_code: str
+    student_name: str
+    student_email: Optional[str] = None
+    student_grade: Optional[str] = None
+
+class AssignmentCreate(BaseModel):
+    classroom_id: str
+    title: str
+    description: str
+    instructions: str
+    level: str
+    duration: int
+    due_date: Optional[str] = None
+    prompt: Optional[str] = None
+    vocab: Optional[List[str]] = None
+    min_vocab_words: int = 0
+
+class AssignmentUpdate(BaseModel):
+    title: str
+    description: str
+    instructions: str
+    level: str
+    duration: int
+    due_date: Optional[str] = None
+    prompt: Optional[str] = None
+    vocab: Optional[List[str]] = None
+    min_vocab_words: int = 0
+
 # API endpoints for assignments and logs
 @app.post("/api/assignments")
 async def create_assignment(request: Request):
-    """Create a new assignment"""
+    """Create a new assignment (legacy endpoint - redirects to classroom assignment)"""
     try:
         data = await request.json()
-        assignment = {
-            "id": str(uuid.uuid4()),
-            "title": data.get("title"),
-            "level": data.get("level"),
-            "duration": data.get("duration"),
-            "prompt": data.get("prompt", ""),
-            "description": data.get("description"),
-            "instructions": data.get("instructions"),
-            "createdAt": datetime.now().isoformat(),
-            "studentCount": 0,
-            "completionCount": 0
-        }
+        # For backward compatibility, create without classroom if not provided
+        classroom_id = data.get("classroom_id")
+        if not classroom_id:
+            # Create a default classroom for backward compatibility
+            assignment = {
+                "id": str(uuid.uuid4()),
+                "title": data.get("title"),
+                "level": data.get("level"),
+                "duration": data.get("duration"),
+                "prompt": data.get("prompt", ""),
+                "description": data.get("description"),
+                "instructions": data.get("instructions"),
+                "createdAt": datetime.now().isoformat(),
+                "studentCount": 0,
+                "completionCount": 0
+            }
+            return {"assignment": assignment}
         
-        # In production, save to database
-        # For now, return the assignment
+        # Create with classroom
+        assignment_id = db.create_assignment(
+            classroom_id=classroom_id,
+            title=data.get("title"),
+            description=data.get("description"),
+            instructions=data.get("instructions"),
+            level=data.get("level"),
+            duration=data.get("duration"),
+            due_date=data.get("due_date"),
+            prompt=data.get("prompt"),
+            vocab=data.get("vocab", [])
+        )
+        assignment = db.get_assignment_by_id(assignment_id)
         return {"assignment": assignment}
     except Exception as e:
         return {"error": str(e)}
@@ -76,42 +176,246 @@ async def create_assignment(request: Request):
 @app.get("/api/assignments")
 async def get_assignments():
     """Get all assignments"""
-    # In production, fetch from database
-    # For now, return empty list (frontend uses localStorage)
-    return {"assignments": []}
+    try:
+        assignments = db.get_all_assignments()
+        return {"assignments": assignments}
+    except Exception as e:
+        print(f"Error fetching assignments: {e}")
+        return {"error": str(e), "assignments": []}
 
 @app.post("/api/logs")
 async def submit_log(request: Request):
     """Submit student activity log"""
     try:
         log_data = await request.json()
-        log = {
-            "id": str(uuid.uuid4()),
-            "assignmentId": log_data.get("assignmentId"),
-            "studentName": log_data.get("studentName"),
-            "startTime": log_data.get("startTime"),
-            "endTime": log_data.get("endTime"),
-            "level": log_data.get("level"),
-            "messageCount": log_data.get("messageCount"),
-            "voiceUsed": log_data.get("voiceUsed", False),
-            "transcriptUsed": log_data.get("transcriptUsed", False),
-            "completed": log_data.get("completed", False),
-            "isNewStudent": log_data.get("isNewStudent", False),
-            "submittedAt": datetime.now().isoformat()
-        }
         
-        # In production, save to database
-        # For now, return success
-        return {"success": True, "logId": log["id"]}
+        # Save to database using the database module
+        session_id = db.create_assignment_session(
+            assignment_id=log_data.get("assignmentId"),
+            student_id=log_data.get("studentId"),  # This might need to be looked up by name
+            start_time=log_data.get("startTime"),
+            end_time=log_data.get("endTime"),
+            completed=log_data.get("completed", False),
+            message_count=log_data.get("messageCount", 0),
+            voice_used=log_data.get("voiceUsed", False),
+            transcript_used=log_data.get("transcriptUsed", False)
+        )
+        
+        # Save conversation logs if provided
+        if "conversation" in log_data and log_data["conversation"]:
+            for msg in log_data["conversation"]:
+                db.log_conversation_message(
+                    session_id=session_id,
+                    message_type=msg.get("sender", "unknown"),
+                    content=msg.get("content", ""),
+                    timestamp=msg.get("timestamp")
+                )
+        
+        return {"success": True, "sessionId": session_id}
     except Exception as e:
+        print(f"Error saving log: {e}")
         return {"error": str(e)}
 
 @app.get("/api/logs")
 async def get_logs(assignment_id: str = None):
     """Get activity logs, optionally filtered by assignment"""
-    # In production, fetch from database
-    # For now, return empty list (frontend uses localStorage)
-    return {"logs": []}
+    try:
+        # Get all assignment sessions by querying all students
+        # For now, we'll get all sessions and filter on the server side
+        # In a larger system, you might want a more efficient method
+        
+        # Get all students first
+        all_students = db.get_all_students()
+        
+        logs = []
+        for student in all_students:
+            # Get sessions for this student
+            student_sessions = db.get_student_sessions(student["id"])
+            
+            for session in student_sessions:
+                # Filter by assignment if specified
+                if assignment_id and session["assignment_id"] != assignment_id:
+                    continue
+                
+                # Get conversation logs for this session
+                conversations = db.get_conversation_logs_by_session(session["id"])
+                
+                # Get assignment details
+                assignment = db.get_assignment_by_id(session["assignment_id"])
+                
+                # Extract vocabulary used from conversation
+                usedVocabCount = 0
+                if assignment and assignment.get("vocab"):
+                    assignment_vocab = assignment["vocab"]
+                    used_vocab_words = set()  # Use set to track unique words
+                    for msg in conversations:
+                        if msg.get("message_type") == "user":
+                            # Check which vocabulary words were used
+                            for vocab_word in assignment_vocab:
+                                if vocab_word.lower() in msg.get("content", "").lower():
+                                    used_vocab_words.add(vocab_word)
+                    usedVocabCount = len(used_vocab_words)
+                
+                log_entry = {
+                    "id": session["id"],
+                    "assignmentId": session["assignment_id"],
+                    "assignmentTitle": session.get("assignment_title", "Unknown Assignment"),
+                    "studentId": session["student_id"],
+                    "studentName": student["name"],
+                    "startTime": session["start_time"],
+                    "endTime": session["end_time"],
+                    "completed": session["completed"],
+                    "messageCount": session["message_count"],
+                    "voiceUsed": session["voice_used"],
+                    "transcriptUsed": session["transcript_used"],
+                    "level": session.get("level", "unknown"),
+                    "conversation": conversations,
+                    "createdAt": session["created_at"],
+                    "dueDate": assignment.get("due_date") if assignment else None,
+                    "usedVocabCount": usedVocabCount,
+                    "minVocabWords": assignment.get("min_vocab_words") if assignment else 0,
+                    "attemptNumber": session.get("attempt_number", 1),
+                    "submitted_for_grading": session.get("submitted_for_grading", False)
+                }
+                
+                logs.append(log_entry)
+        
+        # Sort by creation date, newest first (no filtering here - let frontend handle it)
+        logs.sort(key=lambda x: x["createdAt"], reverse=True)
+        
+        return {"logs": logs}
+    except Exception as e:
+        print(f"Error fetching logs: {e}")
+        return {"error": str(e), "logs": []}
+
+@app.get("/api/logs/all")
+async def get_all_logs():
+    """Get all logs without filtering (for history modal)"""
+    try:
+        # Get all students
+        students = db.get_all_students()
+        
+        # Get all assignment sessions
+        all_sessions = []
+        for student in students:
+            sessions = db.get_student_sessions(student["id"])
+            for session in sessions:
+                session["studentName"] = student["name"]
+                session["studentId"] = student["id"]
+                # Debug: Check if submitted_for_grading exists
+                print(f"Session {session.get('id')}: submitted_for_grading = {session.get('submitted_for_grading')}")
+                all_sessions.append(session)
+        
+        logs = []
+        for session in all_sessions:
+            # Get assignment details
+            assignment = db.get_assignment_by_id(session["assignment_id"])
+            
+            # Get conversation logs for this session
+            conversations = db.get_conversation_logs_by_session(session["id"])
+            
+            # Get assignment details
+            assignment = db.get_assignment_by_id(session["assignment_id"])
+            
+            # Extract vocabulary used from conversation
+            usedVocabCount = 0
+            if assignment and assignment.get("vocab"):
+                assignment_vocab = assignment["vocab"]
+                used_vocab_words = set()  # Use set to track unique words
+                for msg in conversations:
+                    if msg.get("message_type") == "user":
+                        # Check which vocabulary words were used
+                        for vocab_word in assignment_vocab:
+                            if vocab_word.lower() in msg.get("content", "").lower():
+                                used_vocab_words.add(vocab_word)
+                usedVocabCount = len(used_vocab_words)
+            
+            log_entry = {
+                "id": session["id"],
+                "assignmentId": session["assignment_id"],
+                "assignmentTitle": session.get("assignment_title", "Unknown Assignment"),
+                "studentId": session["student_id"],
+                "studentName": session["studentName"],
+                "startTime": session["start_time"],
+                "endTime": session["end_time"],
+                "completed": session["completed"],
+                "messageCount": session["message_count"],
+                "voiceUsed": session["voice_used"],
+                "transcriptUsed": session["transcript_used"],
+                "level": session.get("level", "unknown"),
+                "conversation": conversations,
+                "createdAt": session["created_at"],
+                "dueDate": assignment.get("due_date") if assignment else None,
+                "usedVocabCount": usedVocabCount,
+                "minVocabWords": assignment.get("min_vocab_words") if assignment else 0,
+                "attemptNumber": session.get("attempt_number", 1),
+                "submitted_for_grading": session.get("submitted_for_grading", False)
+            }
+            
+            logs.append(log_entry)
+        
+        # Sort by creation date, newest first (no filtering - keep all attempts for previous attempts feature)
+        logs.sort(key=lambda x: x["createdAt"], reverse=True)
+        
+        return {"logs": logs}
+    except Exception as e:
+        print(f"Error fetching all logs: {e}")
+        return {"error": str(e), "logs": []}
+
+@app.get("/api/students/{student_id}/sessions")
+async def get_student_sessions(student_id: str):
+    """Get all assignment sessions for a specific student"""
+    try:
+        # Use the existing database method
+        sessions = db.get_student_sessions(student_id)
+        
+        return {"sessions": sessions}
+    except Exception as e:
+        print(f"Error fetching student sessions: {e}")
+        return {"error": str(e), "sessions": []}
+
+@app.get("/api/students/{student_id}/submitted-sessions")
+async def get_submitted_sessions(student_id: str):
+    """Get only submitted assignment sessions for a specific student"""
+    try:
+        # Get all sessions first
+        all_sessions = db.get_student_sessions(student_id)
+        
+        # Filter to only submitted sessions (one per assignment)
+        submitted_sessions = {}
+        for session in all_sessions:
+            if session.get("submitted_for_grading"):
+                assignment_id = session["assignment_id"]
+                # Keep only the submitted session for each assignment
+                submitted_sessions[assignment_id] = session
+        
+        return {"sessions": list(submitted_sessions.values())}
+    except Exception as e:
+        print(f"Error fetching submitted sessions: {e}")
+        return {"error": str(e), "sessions": []}
+
+@app.get("/api/sessions/{session_id}/conversation")
+async def get_session_conversation(session_id: str):
+    """Get conversation logs for a specific session"""
+    try:
+        conversation = db.get_conversation_logs_by_session(session_id)
+        return {"conversation": conversation}
+    except Exception as e:
+        print(f"Error fetching conversation: {e}")
+        return {"error": str(e), "conversation": []}
+
+@app.post("/api/sessions/{session_id}/submit")
+async def submit_session_for_grading(session_id: str):
+    """Submit a session for grading"""
+    try:
+        success = db.submit_session_for_grading(session_id)
+        if success:
+            return {"success": True, "message": "Session submitted for grading"}
+        else:
+            return {"success": False, "error": "Failed to submit session"}
+    except Exception as e:
+        print(f"Error submitting session: {e}")
+        return {"success": False, "error": str(e)}
 
 @app.get("/api/analytics")
 async def get_analytics():
@@ -124,6 +428,447 @@ async def get_analytics():
         "avgCompletion": 0,
         "voiceUsage": 0
     }
+
+# Classroom Management Endpoints
+@app.post("/api/teachers")
+async def create_teacher(teacher: TeacherCreate):
+    """Create a new teacher"""
+    try:
+        # Check if teacher already exists
+        existing = db.get_teacher_by_email(teacher.email)
+        if existing:
+            raise HTTPException(status_code=400, detail="Teacher with this email already exists")
+        
+        teacher_id = db.create_teacher(teacher.name, teacher.email)
+        teacher_data = db.get_teacher_by_id(teacher_id)
+        return {"teacher": teacher_data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/teachers/{teacher_id}")
+async def get_teacher(teacher_id: str):
+    """Get teacher by ID"""
+    teacher = db.get_teacher_by_id(teacher_id)
+    if not teacher:
+        raise HTTPException(status_code=404, detail="Teacher not found")
+    return {"teacher": teacher}
+
+@app.put("/api/teachers/{teacher_id}")
+async def update_teacher(teacher_id: str, teacher_data: dict):
+    """Update teacher profile"""
+    try:
+        success = db.update_teacher(
+            teacher_id=teacher_id,
+            name=teacher_data.get("name"),
+            email=teacher_data.get("email"),
+            school=teacher_data.get("school"),
+            title=teacher_data.get("title"),
+            bio=teacher_data.get("bio")
+        )
+        if not success:
+            raise HTTPException(status_code=404, detail="Teacher not found")
+        
+        updated_teacher = db.get_teacher_by_id(teacher_id)
+        return {"teacher": updated_teacher}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Authentication Endpoints
+@app.post("/api/teachers/signup")
+async def teacher_signup(teacher_data: dict):
+    """Teacher sign-up"""
+    try:
+        name = teacher_data.get("name")
+        email = teacher_data.get("email")
+        password = teacher_data.get("password")
+        school = teacher_data.get("school")
+        title = teacher_data.get("title")
+        
+        if not name or not email or not password:
+            raise HTTPException(status_code=400, detail="Name, email, and password required")
+        
+        # Check if teacher already exists
+        existing = db.get_teacher_by_email(email)
+        if existing:
+            raise HTTPException(status_code=400, detail="Teacher with this email already exists")
+        
+        # Create teacher with hashed password
+        teacher_id = db.create_teacher(name, email, password, school, title)
+        teacher = db.get_teacher_by_id(teacher_id)
+        
+        # Don't return password hash
+        if teacher and 'password_hash' in teacher:
+            del teacher['password_hash']
+        
+        return {"teacher": teacher}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/students/signup")
+async def student_signup(student_data: dict):
+    """Student sign-up"""
+    try:
+        name = student_data.get("name")
+        email = student_data.get("email")
+        password = student_data.get("password")
+        grade_level = student_data.get("grade_level")
+        
+        if not name or not email or not password:
+            raise HTTPException(status_code=400, detail="Name, email, and password required")
+        
+        # Check if student already exists
+        existing = db.get_student_by_email(email)
+        if existing:
+            raise HTTPException(status_code=400, detail="Student with this email already exists")
+        
+        # Create student with hashed password
+        student_id = db.create_student(name, email, password, grade_level)
+        student = db.get_student_by_id(student_id)
+        
+        # Don't return password hash
+        if student and 'password_hash' in student:
+            del student['password_hash']
+        
+        return {"student": student}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/teachers/login")
+async def teacher_login(credentials: dict):
+    """Teacher login"""
+    try:
+        email = credentials.get("email")
+        password = credentials.get("password")
+        
+        if not email or not password:
+            raise HTTPException(status_code=400, detail="Email and password required")
+        
+        # Authenticate teacher with proper password verification
+        teacher = db.authenticate_teacher(email, password)
+        if not teacher:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        
+        return {"teacher": teacher}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/students/login")
+async def student_login(credentials: dict):
+    """Student login"""
+    try:
+        email = credentials.get("email")
+        password = credentials.get("password")
+        
+        if not email or not password:
+            raise HTTPException(status_code=400, detail="Email and password required")
+        
+        # Authenticate student with proper password verification
+        student = db.authenticate_student(email, password)
+        if not student:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        
+        return {"student": student}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/classrooms")
+async def create_classroom(classroom: ClassroomCreate, teacher_id: str, spanish_level: str = "", is_advanced: bool = False):
+    """Create a new classroom"""
+    try:
+        classroom_id = db.create_classroom(
+            teacher_id=teacher_id,
+            name=classroom.name,
+            description=classroom.description,
+            grade_level=classroom.grade_level,
+            subject=classroom.subject,
+            spanish_level=spanish_level,
+            is_advanced=is_advanced
+        )
+        classroom_data = db.get_classroom_by_id(classroom_id)
+        return {"classroom": classroom_data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/classrooms/{classroom_id}")
+async def get_classroom(classroom_id: str):
+    """Get classroom by ID"""
+    classroom = db.get_classroom_by_id(classroom_id)
+    if not classroom:
+        raise HTTPException(status_code=404, detail="Classroom not found")
+    return {"classroom": classroom}
+
+@app.get("/api/classrooms/join/{join_code}")
+async def get_classroom_by_join_code(join_code: str):
+    """Get classroom by join code for student enrollment"""
+    classroom = db.get_classroom_by_join_code(join_code)
+    if not classroom:
+        raise HTTPException(status_code=404, detail="Invalid join code")
+    return {"classroom": classroom}
+
+@app.put("/api/classrooms/{classroom_id}")
+async def update_classroom(classroom_id: str, classroom: ClassroomUpdate):
+    """Update classroom details"""
+    try:
+        success = db.update_classroom(
+            classroom_id=classroom_id,
+            name=classroom.name,
+            description=classroom.description,
+            grade_level=classroom.grade_level,
+            subject=classroom.subject
+        )
+        if not success:
+            raise HTTPException(status_code=404, detail="Classroom not found")
+        
+        updated_classroom = db.get_classroom_by_id(classroom_id)
+        return {"classroom": updated_classroom}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/classrooms/{classroom_id}")
+async def delete_classroom(classroom_id: str):
+    """Delete a classroom"""
+    try:
+        success = db.delete_classroom(classroom_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Classroom not found")
+        return {"message": "Classroom deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/teachers/{teacher_id}/classrooms")
+async def get_teacher_classrooms(teacher_id: str):
+    """Get all classrooms for a teacher"""
+    try:
+        classrooms = db.get_teacher_classrooms(teacher_id)
+        return {"classrooms": classrooms}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/classrooms/{classroom_id}/students")
+async def get_classroom_students(classroom_id: str):
+    """Get all students enrolled in a classroom"""
+    try:
+        students = db.get_classroom_students(classroom_id)
+        return {"students": students}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/enroll")
+async def enroll_student(enrollment: EnrollmentRequest):
+    """Enroll a student in a classroom using join code"""
+    try:
+        # Get classroom by join code
+        classroom = db.get_classroom_by_join_code(enrollment.join_code)
+        if not classroom:
+            raise HTTPException(status_code=404, detail="Invalid join code")
+        
+        # Create or get student - for enrollment without authentication, create with default password
+        student = db.get_student_by_email(enrollment.student_email) if enrollment.student_email else None
+        if not student:
+            # For enrollment via join code, create student with a default password
+            # They can change it later when they log in
+            default_password = "temp123"  # They should change this when they first log in
+            student_id = db.create_student(
+                name=enrollment.student_name,
+                email=enrollment.student_email,
+                password=default_password,
+                grade_level=enrollment.student_grade
+            )
+        else:
+            student_id = student['id']
+        
+        # Enroll student
+        enrollment_id = db.enroll_student(student_id, classroom['id'])
+        
+        return {
+            "message": "Successfully enrolled in classroom",
+            "classroom": classroom,
+            "student_id": student_id,
+            "temp_password": default_password if not student else None
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/students/{student_id}/classrooms")
+async def get_student_classrooms(student_id: str):
+    """Get all classrooms a student is enrolled in"""
+    try:
+        classrooms = db.get_student_classrooms(student_id)
+        return {"classrooms": classrooms}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/students/classrooms/leave")
+async def leave_classroom(request: Request):
+    """Student leaves a classroom"""
+    try:
+        data = await request.json()
+        student_id = data.get("student_id")
+        classroom_id = data.get("classroom_id")
+        
+        if not student_id or not classroom_id:
+            raise HTTPException(status_code=400, detail="student_id and classroom_id are required")
+        
+        success = db.remove_student_enrollment(student_id, classroom_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Enrollment not found")
+        
+        return {"message": "Successfully left classroom"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/enroll/{student_id}/{classroom_id}")
+async def remove_student_enrollment(student_id: str, classroom_id: str):
+    """Remove a student from a classroom"""
+    try:
+        success = db.remove_student_enrollment(student_id, classroom_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Enrollment not found")
+        return {"message": "Student removed from classroom successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/classroom-assignments")
+async def create_classroom_assignment(assignment: AssignmentCreate):
+    """Create a new assignment for a specific classroom"""
+    try:
+        assignment_id = db.create_assignment(
+            classroom_id=assignment.classroom_id,
+            title=assignment.title,
+            description=assignment.description,
+            instructions=assignment.instructions,
+            level=assignment.level,
+            duration=assignment.duration,
+            due_date=assignment.due_date,
+            prompt=assignment.prompt,
+            vocab=assignment.vocab,
+            min_vocab_words=assignment.min_vocab_words
+        )
+        assignment_data = db.get_assignment_by_id(assignment_id)
+        return {"assignment": assignment_data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/classrooms/{classroom_id}/assignments")
+async def get_classroom_assignments(classroom_id: str):
+    """Get all assignments for a classroom"""
+    try:
+        assignments = db.get_classroom_assignments(classroom_id)
+        return {"assignments": assignments}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/students/{student_id}/assignments")
+async def get_student_assignments(student_id: str):
+    """Get all assignments available to a student"""
+    try:
+        assignments = db.get_student_assignments(student_id)
+        return {"assignments": assignments}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/teachers/{teacher_id}/assignments")
+async def get_teacher_assignments(teacher_id: str):
+    """Get all assignments for a teacher across all classrooms"""
+    try:
+        # Get all classrooms for this teacher
+        classrooms = db.get_teacher_classrooms(teacher_id)
+        all_assignments = []
+        
+        # Get assignments for each classroom
+        for classroom in classrooms:
+            classroom_assignments = db.get_classroom_assignments(classroom['id'])
+            # Add classroom info to each assignment
+            for assignment in classroom_assignments:
+                assignment['classroom_name'] = classroom['name']
+                assignment['classroom_id'] = classroom['id']
+            all_assignments.extend(classroom_assignments)
+        
+        # Sort by creation date (newest first)
+        all_assignments.sort(key=lambda x: x['created_at'], reverse=True)
+        
+        return {"assignments": all_assignments}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/assignments/{assignment_id}")
+async def get_assignment(assignment_id: str):
+    """Get assignment by ID"""
+    try:
+        assignment = db.get_assignment_by_id(assignment_id)
+        if not assignment:
+            raise HTTPException(status_code=404, detail="Assignment not found")
+        return assignment
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/api/assignments/{assignment_id}")
+async def update_assignment(assignment_id: str, assignment: AssignmentUpdate):
+    """Update an existing assignment"""
+    try:
+        success = db.update_assignment(
+            assignment_id=assignment_id,
+            title=assignment.title,
+            description=assignment.description,
+            instructions=assignment.instructions,
+            level=assignment.level,
+            duration=assignment.duration,
+            due_date=assignment.due_date,
+            prompt=assignment.prompt,
+            vocab=assignment.vocab,
+            min_vocab_words=assignment.min_vocab_words
+        )
+        
+        if not success:
+            raise HTTPException(status_code=404, detail="Assignment not found")
+            
+        return {"message": "Assignment updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/assignments/{assignment_id}")
+async def delete_assignment(assignment_id: str):
+    """Delete an assignment and all related student data (soft delete)"""
+    try:
+        # Soft delete the assignment and all related data
+        with sqlite3.connect("vocafow.db") as conn:
+            cursor = conn.cursor()
+            
+            # Soft delete the assignment
+            cursor.execute("UPDATE assignments SET is_active = FALSE WHERE id = ?", (assignment_id,))
+            
+            # Soft delete all assignment sessions for this assignment
+            cursor.execute("""
+                UPDATE assignment_sessions 
+                SET is_active = FALSE 
+                WHERE assignment_id = ?
+            """, (assignment_id,))
+            
+            # Note: conversation_logs don't have is_active column, but they're linked to sessions
+            # The sessions are soft deleted, so logs won't appear in student views
+            
+            conn.commit()
+        
+        return {"message": "Assignment and related student data deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/classrooms/{classroom_id}/analytics")
+async def get_classroom_analytics(classroom_id: str):
+    """Get analytics for a classroom"""
+    try:
+        analytics = db.get_classroom_analytics(classroom_id)
+        return analytics
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.websocket("/ws/{level}")
 async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):

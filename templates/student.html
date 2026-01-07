@@ -15,7 +15,7 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -33,7 +33,7 @@
         }
         
         .assignment-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
             padding: 30px;
         }
@@ -132,8 +132,13 @@
         
         .chat-container {
             display: none;
-            height: 70vh;
+            height: 35vh;
             flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
         }
         
         .chat-container.active {
@@ -142,133 +147,204 @@
         
         .chat-box {
             flex: 1;
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
-            background: #f8f9fa;
+            overflow-x: hidden;
+            background: #f8fafc;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            max-height: calc(35vh - 100px);
         }
         
-        .message {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            animation: fadeIn 0.3s ease;
+        .input-wrapper {
+            display: none; /* Hide the old input wrapper */
         }
         
-        .voice-message {
+        .main-input-wrapper {
+            padding: 10px;
+            background: white;
+            border-top: 1px solid rgba(240, 147, 251, 0.2);
             display: flex;
-            align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 8px 12px;
-            min-width: 200px;
+            align-items: center;
+            margin-top: 0;
         }
         
-        .voice-message.user-voice {
-            background: rgba(255, 255, 255, 0.2);
+        .main-input-wrapper input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            color: #2d3748;
         }
         
-        .voice-message.bot-voice {
-            background: rgba(0, 0, 0, 0.05);
+        .main-input-wrapper input::placeholder {
+            color: #94a3b8;
         }
         
-        .play-button {
-            width: 36px;
-            height: 36px;
+        .main-input-wrapper input:focus {
+            border-color: #f093fb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
+        }
+        
+        .main-input-wrapper button {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             border: none;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
         }
         
-        .voice-message.user-voice .play-button {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
+        .main-input-wrapper button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
         }
         
-        .voice-message.bot-voice .play-button {
-            background: #667eea;
-            color: white;
+        .main-input-wrapper button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
-        .play-button:hover {
-            transform: scale(1.1);
+        .main-input-wrapper button.recording {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: pulse 1.5s ease-in-out infinite;
         }
         
-        .play-button.playing {
-            animation: pulse 1.5s infinite;
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            animation: messageSlide 0.3s ease-out;
         }
         
-        .waveform {
-            flex: 1;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            gap: 2px;
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .waveform-bar {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        
-        .voice-message.user-voice .waveform-bar {
-            background: rgba(255, 255, 255, 0.8);
-        }
-        
-        .voice-message.bot-voice .waveform-bar {
-            background: rgba(102, 126, 234, 0.6);
-        }
-        
-        .waveform-bar.active {
-            background: #667eea;
-            animation: wave 0.5s ease-in-out infinite;
-        }
-        
-        @keyframes wave {
-            0%, 100% { height: 20%; }
-            50% { height: 80%; }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .bot-message {
+            align-self: flex-start;
+            background: white;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .user-message {
             align-self: flex-end;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 18px 18px 4px 18px;
+            border-bottom-right-radius: 4px;
         }
         
-        .bot-message {
-            align-self: flex-start;
-            background: white;
-            color: #333;
-            border-radius: 18px 18px 18px 4px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        .voice-message {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: transparent;
         }
         
-        .input-area {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e9ecef;
+        .voice-message.bot-voice {
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+        
+        .voice-message.user-voice {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+        
+        .play-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .play-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .play-button:active {
+            transform: scale(0.95);
+        }
+        
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex: 1;
+        }
+        
+        .waveform-bar {
+            width: 3px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+        
+        .voice-message.bot-voice .waveform-bar {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .voice-message.user-voice .waveform-bar {
+            background: rgba(102, 126, 234, 0.6);
+        }
+        
+        .waveform-bar.active {
+            background: rgba(255, 255, 255, 1) !important;
+        }
+        
+        @keyframes wave {
+            0%, 100% { height: 20px; }
+            50% { height: 30px; }
+        }
+        
+        .duration {
+            font-size: 12px;
+            opacity: 0.8;
+            min-width: 40px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .input-wrapper {
-            display: flex;
             align-items: center;
             gap: 12px;
             background: #f8fafc;
@@ -279,9 +355,9 @@
         }
         
         .input-wrapper:focus-within {
-            border-color: #667eea;
+            border-color: #f093fb;
             background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
         }
         
         #messageInput {
@@ -601,10 +677,138 @@
             box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.4);
         }
+        
+        /* Beautiful Intro Modal */
+        .intro-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .intro-modal.active {
+            display: flex;
+        }
+        
+        .intro-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            animation: modalSlide 0.3s ease-out;
+        }
+        
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .intro-modal-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .intro-modal-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .intro-modal-header p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .intro-modal-body {
+            padding: 25px;
+        }
+        
+        .intro-section {
+            margin-bottom: 25px;
+        }
+        
+        .intro-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .intro-section h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .intro-section p {
+            margin: 0;
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .intro-section ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+        
+        .intro-section li {
+            margin-bottom: 8px;
+        }
+        
+        .intro-modal-actions {
+            padding: 0 25px 25px 25px;
+            text-align: center;
+        }
+        
+        .intro-btn {
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px 24px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .intro-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+        }
+        
+        .intro-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
-    <a href="/" class="home-btn-absolute">Home</a>
     <div class="assignment-container">
         <div class="assignment-header">
             <div style="display: flex; justify-content: center; align-items: center;">
@@ -614,93 +818,61 @@
                         <span class="level-badge" id="assignmentLevel">Loading...</span>
                         <span class="duration" id="assignmentDuration">Loading...</span>
                     </div>
-                </div>
-            </div>
-            
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            
-            <!-- Assignment details moved into header -->
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-                <div style="margin-bottom: 15px;">
-                    <h4 style="color: white; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Assignment Description</h4>
-                    <p id="assignmentDescription" style="color: rgba(255,255,255,0.9); font-size: 14px; line-height: 1.5; margin: 0;">Loading...</p>
-                </div>
-                <div>
-                    <h4 style="color: white; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Instructions</h4>
-                    <p id="assignmentInstructions" style="color: rgba(255,255,255,0.9); font-size: 14px; line-height: 1.5; margin: 0;">Loading...</p>
+                    <div id="assignmentDetailsHeader" style="margin-top: 12px; font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.4;">
+                        Loading...
+                    </div>
+                    <div id="assignmentInstructionsHeader" style="margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.4;">
+                        Loading...
+                    </div>
+                    <div id="timer" style="margin-top: 16px; font-size: 18px; font-weight: 600; color: white; display: none;">
+                        ⏱️ <span id="timerDisplay">00:00</span> / <span id="totalTime">00:00</span>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="assignment-info">
+        <!-- Chat interface integrated into the same container -->
+        <div class="chat-container" id="assignmentContent" style="display: none; margin-top: 20px;">
+            <div class="chat-box" id="chatBox">
+                <!-- Messages will appear here -->
+            </div>
+        </div>
+        
+        <!-- Input bar at the very bottom of the main container -->
+        <div class="main-input-wrapper" id="mainInputWrapper" style="display: none;">
+            <input type="text" id="mainMessageInput" placeholder="Escribe tu mensaje..." disabled>
+            <button id="mainVoiceButton" disabled>
+                <div class="mic-icon"></div>
+            </button>
+        </div>
+            
+            <!-- Beautiful intro modal -->
+            <div id="introModal" class="intro-modal">
+                <div class="intro-modal-content">
+                    <div class="intro-modal-header">
+                        <h2>Ready to Practice Spanish?</h2>
+                        <p id="introAssignmentTitle">Loading...</p>
+                    </div>
+                    <div class="intro-modal-body">
+                        <div class="intro-section">
+                            <h4>Tips for Success:</h4>
+                            <ul>
+                                <li>Don't worry about being perfect - just try your best!</li>
+                                <li>Use the voice button to practice pronunciation</li>
+                                <li>Click the play button to hear proper pronunciation</li>
+                                <li>Have fun and learn at your own pace</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="intro-modal-actions">
+                        <button class="btn btn-primary intro-btn" onclick="startChatFromModal()">
+                            Listo - Let's Start!
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <div id="errorMessage" class="error-message" style="display: none;"></div>
-            
-            <div class="student-form" id="studentForm">
-                <h3>Student Information</h3>
-                <div class="form-group">
-                    <label for="studentName">Your Name</label>
-                    <input type="text" id="studentName" placeholder="Enter your name" required>
-                </div>
-                <div class="form-group">
-                    <label for="classNumber">Class Number (Optional)</label>
-                    <input type="text" id="classNumber" placeholder="e.g., SPAN-101, Period 2">
-                </div>
-                <button class="start-btn" onclick="showAssignmentIntro()">Continue to Assignment</button>
-            </div>
-        </div>
-        
-        <div class="chat-container" id="chatContainer">
-            <div class="chat-box" id="chatBox"></div>
-            
-            <div class="input-area">
-                <div class="input-wrapper">
-                    <input type="text" id="messageInput" placeholder="Escribe tu mensaje..." disabled>
-                    <button id="voiceButton" disabled>
-                        <div class="mic-icon"></div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Assignment Intro Modal -->
-    <div id="introModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Assignment Instructions</h2>
-                <p id="introAssignmentTitle">Loading...</p>
-            </div>
-            <div class="modal-body">
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0;">
-                    <h4 style="margin: 0 0 10px 0; color: #333;">What you need to do:</h4>
-                    <p id="introInstructions" style="margin: 0; color: #666;">Loading...</p>
-                </div>
-                <div style="background: #e8f4fd; padding: 15px; border-radius: 10px; margin: 15px 0;">
-                    <h4 style="margin: 0 0 10px 0; color: #333;">Assignment Details:</h4>
-                    <p id="introDescription" style="margin: 0; color: #666;">Loading...</p>
-                </div>
-                <div style="text-align: center; margin: 25px 0;">
-                    <div style="font-size: 14px; color: #666; margin-bottom: 15px;">When you're ready to begin, click below:</div>
-                    <button class="btn btn-primary" onclick="startChatSession()" style="
-                        font-size: 16px; 
-                        font-weight: 600; 
-                        padding: 18px 40px; 
-                        border-radius: 12px;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        border: none;
-                        color: white;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
-                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)';">
-                        ¡Listo! - Start Conversation
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
     
@@ -740,6 +912,19 @@
             <div class="modal-body">
                 <p>What would you like to do next?</p>
                 <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="goToDashboard()" style="
+                        font-size: 14px; 
+                        font-weight: 600; 
+                        padding: 12px 24px; 
+                        border-radius: 8px;
+                        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                        border: none;
+                        color: white;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.transform='translateY(-1px)';" onmouseout="this.style.transform='translateY(0)';">
+                        Back to Dashboard
+                    </button>
                     <button class="btn btn-primary" onclick="goToPractice()" style="
                         font-size: 14px; 
                         font-weight: 600; 
@@ -779,7 +964,7 @@
         let sessionStartTime = null;
         let sessionTimer = null;
         let assignmentTimer = null;
-        let maxDuration = 15 * 60 * 1000; // 15 minutes default
+        let maxDuration = 15 * 60 * 1000; // 15 minutes default - will be updated dynamically
         let sessionLog = {
             assignmentId: null,
             studentName: '',
@@ -799,49 +984,94 @@
         let assignmentCompleted = false; // Flag to prevent reconnection
         
         // Load assignment from URL parameter
-        function loadAssignment() {
+        async function loadAssignment() {
+            console.log('loadAssignment function called');
+            
             const urlParams = new URLSearchParams(window.location.search);
             const assignmentId = urlParams.get('assignment');
             
+            console.log('Assignment ID from URL:', assignmentId);
+            
             if (!assignmentId) {
-                showError('No assignment ID provided. Please use the link from your teacher.');
+                console.error('No assignment ID provided');
+                showError('No assignment ID provided');
                 return;
             }
             
-            // Load assignments from localStorage (in production, this would be an API call)
-            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-            currentAssignment = assignments.find(a => a.id === assignmentId);
-            
-            if (!currentAssignment) {
-                showError('Assignment not found. Please check the link with your teacher.');
-                return;
+            try {
+                // Get current student from sessionStorage
+                const currentStudent = sessionStorage.getItem('currentStudent');
+                console.log('Current student from sessionStorage:', currentStudent);
+                
+                if (!currentStudent) {
+                    console.error('No current student found');
+                    showError('Please log in to access assignments');
+                    setTimeout(() => {
+                        window.location.href = '/student-login';
+                    }, 2000);
+                    return;
+                }
+                
+                const student = JSON.parse(currentStudent);
+                studentName = student.name;
+                console.log('Student name set to:', studentName);
+                
+                // Fetch assignment details
+                console.log('Fetching assignment details...');
+                const response = await fetch(`/api/assignments/${assignmentId}`);
+                console.log('Assignment fetch response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Assignment data received:', data);
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to load assignment');
+                }
+                
+                assignment = data; // The API returns the assignment directly
+                currentAssignment = assignment; // Set currentAssignment for other functions
+                console.log('Assignment loaded:', assignment);
+                
+                // Update maxDuration based on assignment duration
+                maxDuration = assignment.duration * 60 * 1000; // Convert minutes to milliseconds
+                console.log('Max duration set to:', maxDuration, 'ms');
+                
+                // Update UI with assignment details
+                console.log('Updating UI with assignment details...');
+                document.getElementById('assignmentTitle').textContent = assignment.title;
+                document.getElementById('assignmentLevel').textContent = assignment.level.charAt(0).toUpperCase() + assignment.level.slice(1);
+                document.getElementById('assignmentDuration').textContent = `${assignment.duration} min`;
+                
+                // Update assignment details in the header
+                document.getElementById('assignmentDetailsHeader').textContent = assignment.description;
+                document.getElementById('assignmentInstructionsHeader').textContent = assignment.instructions || 'Follow the conversation prompts and practice your Spanish!';
+                console.log('UI updated successfully');
+                
+                // Show assignment content directly
+                console.log('Showing assignment content...');
+                document.getElementById('assignmentContent').style.display = 'block';
+                console.log('Assignment content displayed');
+                
+                // Show the intro modal
+                console.log('Showing intro modal...');
+                document.getElementById('introModal').classList.add('active');
+                
+                // Update intro modal content
+                document.getElementById('introAssignmentTitle').textContent = assignment.title;
+                console.log('Intro modal displayed');
+                
+            } catch (error) {
+                console.error('Error loading assignment:', error);
+                showError('Error loading assignment. Please try again.');
             }
-            
-            // Update UI with assignment details
-            document.getElementById('assignmentTitle').textContent = currentAssignment.title;
-            document.getElementById('assignmentLevel').textContent = currentAssignment.level.charAt(0).toUpperCase() + currentAssignment.level.slice(1);
-            document.getElementById('assignmentDuration').textContent = `⏱️ Duration: ${currentAssignment.duration} min`;
-            document.getElementById('assignmentDescription').textContent = currentAssignment.description;
-            document.getElementById('assignmentInstructions').textContent = currentAssignment.instructions;
-            
-            // Update intro modal
-            document.getElementById('introAssignmentTitle').textContent = currentAssignment.title;
-            document.getElementById('introInstructions').textContent = currentAssignment.instructions;
-            document.getElementById('introDescription').textContent = currentAssignment.description;
-            
-            // Set max duration
-            maxDuration = currentAssignment.duration * 60 * 1000;
-            
-            // Update session log
-            sessionLog.assignmentId = currentAssignment.id;
-            sessionLog.level = currentAssignment.level;
         }
         
         function showError(message) {
             const errorElement = document.getElementById('errorMessage');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-            studentForm.style.display = 'none';
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
         }
         
         function showAssignmentIntro() {
@@ -864,13 +1094,17 @@
         
         function startAssignment() {
             // This function is now called from startChatSession
-            // Update session log with start time
+            // Update session log with start time and assignment info
             sessionLog.startTime = new Date().toISOString();
+            sessionLog.assignmentId = currentAssignment.id;
+            sessionLog.level = currentAssignment.level;
             
             // Check if this is a new student (in production, this would be server-side)
             const pastLogs = JSON.parse(localStorage.getItem('logs') || '[]');
             const studentExists = pastLogs.some(log => log.studentName === studentName);
             sessionLog.isNewStudent = !studentExists;
+            
+            console.log('Session log updated:', sessionLog);
             
             // Don't start chat yet - wait for user to click "Listo"
         }
@@ -879,9 +1113,16 @@
             // Start the assignment (sets start time, checks if new student)
             startAssignment();
             
-            // Hide intro modal and show chat
-            document.getElementById('introModal').classList.remove('active');
-            chatContainer.classList.add('active');
+            // Show chat interface
+            console.log('Chat interface ready');
+            const chatContainer = document.querySelector('.chat-container');
+            if (chatContainer) {
+                chatContainer.classList.add('active');
+                console.log('Chat container activated');
+            }
+            
+            // Show the main input wrapper
+            document.getElementById('mainInputWrapper').style.display = 'flex';
             
             // Start timers
             startSessionTimer();
@@ -891,13 +1132,44 @@
             connect();
         }
         
+        function startChatFromModal() {
+            // Hide the intro modal
+            document.getElementById('introModal').classList.remove('active');
+            
+            // Start the chat session
+            startChatSession();
+        }
+        
         function startSessionTimer() {
             sessionStartTime = Date.now();
+            
+            // Show the timer
+            document.getElementById('timer').style.display = 'block';
+            
+            // Set total time
+            const totalMinutes = currentAssignment.duration;
+            const totalSeconds = totalMinutes * 60;
+            const totalMinutesDisplay = Math.floor(totalSeconds / 60);
+            const totalSecondsDisplay = totalSeconds % 60;
+            document.getElementById('totalTime').textContent = `${totalMinutesDisplay.toString().padStart(2, '0')}:${totalSecondsDisplay.toString().padStart(2, '0')}`;
+            
             sessionTimer = setInterval(() => {
                 const elapsed = Date.now() - sessionStartTime;
-                const minutes = Math.floor(elapsed / 60000);
-                const seconds = Math.floor((elapsed % 60000) / 1000);
-                timer.textContent = `⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                const remainingSeconds = Math.max(0, totalSeconds - Math.floor(elapsed / 1000));
+                
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                
+                document.getElementById('timerDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Update progress bar
+                const progress = ((totalSeconds - remainingSeconds) / totalSeconds) * 100;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+                
+                // Time's up
+                if (remainingSeconds === 0) {
+                    completeAssignment(true);
+                }
             }, 1000);
         }
         
@@ -939,8 +1211,8 @@
             document.getElementById('summaryDuration').textContent = `${minutes} min`;
             
             // Disable inputs
-            messageInput.disabled = true;
-            voiceButton.disabled = true;
+            document.getElementById('mainMessageInput').disabled = true;
+            document.getElementById('mainVoiceButton').disabled = true;
             
             // Close WebSocket
             if (ws) {
@@ -964,12 +1236,44 @@
             
             isConnecting = true;
             console.log(`Connecting to WebSocket with level: ${currentAssignment.level}`);
-            ws = new WebSocket('ws://' + window.location.host + '/ws/' + currentAssignment.level);
+            console.log(`WebSocket URL: ws://${window.location.host}/ws/${currentAssignment.level}`);
+            
+            // Show connection status
+            const chatBox = document.getElementById('chatBox');
+            // Only show connecting message if chat box is empty
+            if (chatBox.children.length === 0) {
+                chatBox.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><div style="font-size: 24px; margin-bottom: 16px;">🔄</div><div>Connecting to conversation server...</div>';
+            }
+            
+            try {
+                ws = new WebSocket('ws://' + window.location.host + '/ws/' + currentAssignment.level);
+                console.log('WebSocket object created:', ws);
+            } catch (error) {
+                console.error('Error creating WebSocket:', error);
+                chatBox.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><div style="font-size: 24px; margin-bottom: 16px;">❌</div><div>Failed to create WebSocket connection.</div><div style="margin-top: 8px; font-size: 14px;">Error: ' + error.message + '</div><button onclick="location.reload()" style="margin-top: 16px; padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">Retry</button></div>';
+                isConnecting = false;
+                return;
+            }
+            
+            const connectionTimeout = setTimeout(() => {
+                if (isConnecting) {
+                    console.error('WebSocket connection timeout');
+                    chatBox.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><div style="font-size: 24px; margin-bottom: 16px;">❌</div><div>Connection failed. Please try again.</div><div style="margin-top: 8px; font-size: 14px;">The WebSocket server may not be running.</div><button onclick="location.reload()" style="margin-top: 16px; padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">Retry</button></div>';
+                    isConnecting = false;
+                }
+            }, 10000); // 10 second timeout
             
             ws.onopen = function() {
                 console.log('WebSocket connection established');
+                clearTimeout(connectionTimeout);
                 isConnecting = false;
                 reconnectAttempts = 0;
+                
+                // Clear connection status only if it's showing
+                const chatBox = document.getElementById('chatBox');
+                if (chatBox.children.length === 1 && chatBox.innerHTML.includes('Connecting to conversation server')) {
+                    chatBox.innerHTML = '';
+                }
                 
                 // Send assignment data to server
                 ws.send(JSON.stringify({
@@ -977,9 +1281,10 @@
                     assignment: currentAssignment
                 }));
                 
-                messageInput.disabled = false;
-                voiceButton.disabled = false;
-                messageInput.focus();
+                // Enable the input elements
+                document.getElementById('mainMessageInput').disabled = false;
+                document.getElementById('mainVoiceButton').disabled = false;
+                document.getElementById('mainMessageInput').focus();
             };
             
             ws.onmessage = function(event) {
@@ -1009,8 +1314,8 @@
             ws.onclose = function(event) {
                 console.log('WebSocket connection closed:', event);
                 isConnecting = false;
-                messageInput.disabled = true;
-                voiceButton.disabled = true;
+                document.getElementById('mainMessageInput').disabled = true;
+                document.getElementById('mainVoiceButton').disabled = true;
                 
                 if (reconnectAttempts < maxReconnectAttempts) {
                     reconnectAttempts++;
@@ -1072,6 +1377,16 @@
         }
         
         function addMessage(content, sender, audioData = null, isVoiceTranscript = false) {
+            console.log('addMessage called with:', { content, sender, audioData: !!audioData });
+            
+            const chatBox = document.getElementById('chatBox');
+            console.log('Chat box element:', chatBox);
+            
+            if (!chatBox) {
+                console.error('Chat box element not found!');
+                return;
+            }
+            
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
             
@@ -1088,6 +1403,8 @@
             if (sender === 'user') {
                 sessionLog.messageCount++;
             }
+            
+            console.log('Creating message element...');
             
             if (audioData && sender === 'bot') {
                 // Create voice message for bot responses
@@ -1154,8 +1471,11 @@
                 messageDiv.textContent = content;
             }
             
+            console.log('Appending message to chat box...');
             chatBox.appendChild(messageDiv);
+            console.log('Message appended, scrolling to bottom...');
             chatBox.scrollTop = chatBox.scrollHeight;
+            console.log('Message display complete!');
         }
         
         function preloadAudioDuration(audioBase64, messageId) {
@@ -1324,7 +1644,7 @@
         }
         
         function sendMessage() {
-            const message = messageInput.value.trim();
+            const message = document.getElementById('mainMessageInput').value.trim();
             if (!message) return;
             
             if (ws && ws.readyState === WebSocket.OPEN) {
@@ -1335,22 +1655,22 @@
                     type: 'text',
                     content: message
                 }));
-                messageInput.value = '';
-                messageInput.focus();
+                document.getElementById('mainMessageInput').value = '';
+                document.getElementById('mainMessageInput').focus();
             } else {
                 console.error('Cannot send message - WebSocket not connected');
                 connect();
             }
         }
         
-        messageInput.addEventListener('keypress', function(e) {
+        document.getElementById('mainMessageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
         
         // Voice functionality
-        voiceButton.addEventListener('click', toggleRecording);
+        document.getElementById('mainVoiceButton').addEventListener('click', toggleRecording);
         
         async function toggleRecording() {
             if (isRecording) {
@@ -1365,7 +1685,7 @@
                 sessionLog.voiceUsed = true;
                 sessionLog.transcriptUsed = true;  // Student is using speech-to-text
                 
-                voiceButton.classList.add('recording');
+                document.getElementById('mainVoiceButton').classList.add('recording');
                 
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
@@ -1376,7 +1696,7 @@
                 };
                 
                 mediaRecorder.onstop = async () => {
-                    voiceButton.classList.remove('recording');
+                    document.getElementById('mainVoiceButton').classList.remove('recording');
                     
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const audioBase64 = await blobToBase64(audioBlob);
@@ -1433,6 +1753,7 @@
         }
         
         // Initialize
+        console.log('Student assignment page loading...');
         loadAssignment();
         
         // Submit assignment function
@@ -1441,10 +1762,13 @@
             sessionLog.completed = true;
             sessionLog.endTime = new Date().toISOString();
             
-            // Save log to localStorage (in production, this would be sent to server)
+            // Save log to localStorage (as backup)
             const logs = JSON.parse(localStorage.getItem('logs') || '[]');
             logs.push(sessionLog);
             localStorage.setItem('logs', JSON.stringify(logs));
+            
+            // Also send to server
+            sendLogToServer(sessionLog);
             
             // Update assignment statistics
             const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
@@ -1475,10 +1799,67 @@
             document.getElementById('submissionModal').classList.add('active');
         }
         
+        // Send log data to server
+        async function sendLogToServer(logData) {
+            try {
+                console.log('Sending log to server:', logData);
+                
+                // Get student ID from sessionStorage
+                const currentStudent = JSON.parse(sessionStorage.getItem('currentStudent') || '{}');
+                const studentId = currentStudent.id || null;
+                
+                if (!studentId) {
+                    console.error('No student ID found, cannot save to server');
+                    return;
+                }
+                
+                const serverLogData = {
+                    assignmentId: logData.assignmentId,
+                    studentId: studentId,
+                    studentName: logData.studentName,
+                    startTime: logData.startTime,
+                    endTime: logData.endTime,
+                    level: logData.level,
+                    messageCount: logData.messageCount,
+                    voiceUsed: logData.voiceUsed,
+                    transcriptUsed: logData.transcriptUsed,
+                    completed: logData.completed,
+                    isNewStudent: logData.isNewStudent,
+                    conversation: logData.conversation || []
+                };
+                
+                const response = await fetch('/api/logs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(serverLogData)
+                });
+                
+                const result = await response.json();
+                console.log('Server response:', result);
+                
+                if (result.success) {
+                    console.log('Log successfully saved to server with session ID:', result.sessionId);
+                } else {
+                    console.error('Failed to save log to server:', result.error);
+                }
+            } catch (error) {
+                console.error('Error sending log to server:', error);
+                // Data is still saved to localStorage as backup
+            }
+        }
+        
         function goToPractice() {
             // Close submission modal and redirect to practice page
             document.getElementById('submissionModal').classList.remove('active');
             window.location.href = '/practice';
+        }
+        
+        function goToDashboard() {
+            // Close submission modal and redirect to student dashboard
+            document.getElementById('submissionModal').classList.remove('active');
+            window.location.href = '/student-dashboard';
         }
         
         // Debug function to test submission

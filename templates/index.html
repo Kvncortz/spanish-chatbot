@@ -121,6 +121,63 @@
             box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
         }
         
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.025em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-outline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn-outline:hover::before {
+            opacity: 1;
+        }
+        
+        .alternative-options {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .alternative-options p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .alt-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
         .features {
             text-align: left;
             background: rgba(248, 250, 252, 0.8);
@@ -187,11 +244,11 @@
         <p class="subtitle">Interactive AI-powered conversations for Spanish language learning</p>
         
         <div class="buttons">
-            <a href="/teacher" class="btn btn-teacher">
-                Teacher Dashboard
+            <a href="/teacher-login" class="btn btn-teacher">
+                Teacher Login
             </a>
-            <a href="/student" class="btn btn-student">
-                Student Portal
+            <a href="/student-login" class="btn btn-student">
+                Student Login
             </a>
             <a href="/practice" class="btn btn-practice">
                 Quick Practice

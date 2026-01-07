@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocaFlow - Classroom Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.025em;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(102, 126, 234, 0.08);
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .classroom-form {
+            display: grid;
+            gap: 24px;
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+            letter-spacing: -0.025em;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            background: #f8fafc;
+            color: #2d3748;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.025em;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f8fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .classrooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+        
+        .classroom-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .classroom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+        
+        .classroom-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        
+        .classroom-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+        
+        .classroom-description {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .classroom-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+        }
+        
+        .classroom-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .join-code {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            color: #0369a1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .students-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .student-item:last-child {
+            border-bottom: none;
+        }
+        
+        .student-name {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        
+        .student-email {
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .modal-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .home-btn-absolute {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-btn-absolute:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .classrooms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .classroom-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <a href="/" class="home-btn-absolute">Home</a>
+        <div class="header">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="text-align: center;">
+                    <h1>Classroom Management</h1>
+                    <p>Create and manage your Spanish learning classrooms</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('create')">Create Classroom</button>
+            <button class="nav-tab" onclick="switchTab('classrooms')">My Classrooms</button>
+            <button class="nav-tab" onclick="switchTab('students')">Student Management</button>
+        </div>
+        
+        <!-- Create Classroom Tab -->
+        <div id="create-tab" class="tab-content active">
+            <form class="classroom-form" onsubmit="createClassroom(event)">
+                <div class="form-group">
+                    <label for="classroomName">Classroom Name</label>
+                    <input type="text" id="classroomName" name="name" required placeholder="e.g., Spanish 101 - Fall 2024">
+                </div>
+                
+                <div class="form-group">
+                    <label for="classroomDescription">Description</label>
+                    <textarea id="classroomDescription" name="description" placeholder="Describe your classroom and learning objectives..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gradeLevel">Grade Level</label>
+                        <select id="gradeLevel" name="gradeLevel">
+                            <option value="">Select Grade Level</option>
+                            <option value="Elementary">Elementary School</option>
+                            <option value="Middle">Middle School</option>
+                            <option value="High">High School</option>
+                            <option value="College">College</option>
+                            <option value="Adult">Adult Education</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject Focus</label>
+                        <select id="subject" name="subject">
+                            <option value="">Select Subject</option>
+                            <option value="General Spanish">General Spanish</option>
+                            <option value="Conversational Spanish">Conversational Spanish</option>
+                            <option value="Business Spanish">Business Spanish</option>
+                            <option value="Spanish Literature">Spanish Literature</option>
+                            <option value="Spanish Culture">Spanish Culture</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-self: center;">Create Classroom</button>
+            </form>
+        </div>
+        
+        <!-- My Classrooms Tab -->
+        <div id="classrooms-tab" class="tab-content">
+            <div class="classrooms-grid" id="classroomsGrid">
+                <!-- Classrooms will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Student Management Tab -->
+        <div id="students-tab" class="tab-content">
+            <div id="studentsContent">
+                <!-- Student management will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Classroom Details Modal -->
+    <div id="classroomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Classroom Details</h2>
+                <p id="modalSubtitle">Manage your classroom settings and students</p>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeClassroomModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentTeacher = null;
+        let classrooms = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrCreateTeacher();
+            loadActiveTab();
+        });
+        
+        // Teacher management
+        async function loadOrCreateTeacher() {
+            const savedTeacher = localStorage.getItem('currentTeacher');
+            if (savedTeacher) {
+                currentTeacher = JSON.parse(savedTeacher);
+            } else {
+                // Create a default teacher for demo
+                try {
+                    const response = await fetch('/api/teachers', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: 'Demo Teacher',
+                            email: 'teacher@vocafow.com'
+                        })
+                    });
+                    const data = await response.json();
+                    currentTeacher = data.teacher;
+                    localStorage.setItem('currentTeacher', JSON.stringify(currentTeacher));
+                } catch (error) {
+                    console.error('Error creating teacher:', error);
+                }
+            }
+            
+            if (currentTeacher) {
+                loadClassrooms();
+            }
+        }
+        
+        // Tab management
+        function switchTab(tabName) {
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Save active tab
+            localStorage.setItem('activeClassroomTab', tabName);
+            
+            // Load tab-specific data
+            if (tabName === 'classrooms') {
+                loadClassrooms();
+            } else if (tabName === 'students') {
+                loadStudentManagement();
+            }
+        }
+        
+        function loadActiveTab() {
+            const savedTab = localStorage.getItem('activeClassroomTab');
+            if (savedTab && ['create', 'classrooms', 'students'].includes(savedTab)) {
+                document.querySelector(`[onclick="switchTab('${savedTab}')"]`).click();
+            }
+        }
+        
+        // Classroom management
+        async function createClassroom(event) {
+            event.preventDefault();
+            
+            if (!currentTeacher) {
+                alert('Please set up teacher account first');
+                return;
+            }
+            
+            const formData = new FormData(event.target);
+            
+            try {
+                const response = await fetch(`/api/classrooms?teacher_id=${currentTeacher.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        description: formData.get('description'),
+                        grade_level: formData.get('gradeLevel'),
+                        subject: formData.get('subject')
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Classroom created successfully!');
+                    event.target.reset();
+                    document.querySelector('[onclick="switchTab(\'classrooms\')"]').click();
+                } else {
+                    alert('Error creating classroom: ' + data.detail);
+                }
+            } catch (error) {
+                console.error('Error creating classroom:', error);
+                alert('Error creating classroom');
+            }
+        }
+        
+        async function loadClassrooms() {
+            if (!currentTeacher) return;
+            
+            try {
+                const response = await fetch(`/api/teachers/${currentTeacher.id}/classrooms`);
+                const data = await response.json();
+                classrooms = data.classrooms || [];
+                displayClassrooms();
+            } catch (error) {
+                console.error('Error loading classrooms:', error);
+                classrooms = [];
+                displayClassrooms();
+            }
+        }
+        
+        function displayClassrooms() {
+            const container = document.getElementById('classroomsGrid');
+            
+            if (classrooms.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>No classrooms yet</h3>
+                        <p>Create your first classroom to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = classrooms.map(classroom => `
+                <div class="classroom-card">
+                    <div class="classroom-header">
+                        <div>
+                            <div class="classroom-title">${classroom.name}</div>
+                            <div class="classroom-meta">
+                                <span class="join-code">🔑 ${classroom.join_code}</span>
+                                ${classroom.grade_level ? `<span>📚 ${classroom.grade_level}</span>` : ''}
+                                ${classroom.subject ? `<span>📖 ${classroom.subject}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    ${classroom.description ? `<div class="classroom-description">${classroom.description}</div>` : ''}
+                    <div class="classroom-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${classroom.student_count || 0}</div>
+                            <div class="stat-label">Students</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${classroom.assignment_count || 0}</div>
+                            <div class="stat-label">Assignments</div>
+                        </div>
+                    </div>
+                    <div class="classroom-actions">
+                        <button class="btn btn-primary btn-small" onclick="viewClassroom('${classroom.id}')">View Details</button>
+                        <button class="btn btn-secondary btn-small" onclick="manageAssignments('${classroom.id}')">Assignments</button>
+                        <button class="btn btn-secondary btn-small" onclick="copyJoinCode('${classroom.join_code}')">Copy Code</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function viewClassroom(classroomId) {
+            const classroom = classrooms.find(c => c.id === classroomId);
+            if (!classroom) return;
+            
+            try {
+                const response = await fetch(`/api/classrooms/${classroomId}/students`);
+                const data = await response.json();
+                const students = data.students || [];
+                
+                document.getElementById('modalTitle').textContent = classroom.name;
+                document.getElementById('modalSubtitle').textContent = 'Classroom Details and Students';
+                
+                document.getElementById('modalBody').innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 10px;">Classroom Information</h3>
+                        <p><strong>Join Code:</strong> <span class="join-code">${classroom.join_code}</span></p>
+                        ${classroom.description ? `<p><strong>Description:</strong> ${classroom.description}</p>` : ''}
+                        ${classroom.grade_level ? `<p><strong>Grade Level:</strong> ${classroom.grade_level}</p>` : ''}
+                        ${classroom.subject ? `<p><strong>Subject:</strong> ${classroom.subject}</p>` : ''}
+                        <p><strong>Created:</strong> ${new Date(classroom.created_at).toLocaleDateString()}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 style="margin-bottom: 10px;">Enrolled Students (${students.length})</h3>
+                        ${students.length === 0 ? 
+                            '<p style="color: #666; font-style: italic;">No students enrolled yet. Share the join code with your students!</p>' :
+                            `<div class="students-list">
+                                ${students.map(student => `
+                                    <div class="student-item">
+                                        <div>
+                                            <div class="student-name">${student.name}</div>
+                                            ${student.email ? `<div class="student-email">${student.email}</div>` : ''}
+                                        </div>
+                                        <div style="font-size: 12px; color: #64748b;">
+                                            Enrolled ${new Date(student.enrolled_at).toLocaleDateString()}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>`
+                        }
+                    </div>
+                `;
+                
+                document.getElementById('classroomModal').classList.add('active');
+            } catch (error) {
+                console.error('Error loading classroom details:', error);
+                alert('Error loading classroom details');
+            }
+        }
+        
+        function manageAssignments(classroomId) {
+            // Redirect to teacher dashboard with classroom context
+            window.location.href = `/teacher?classroom=${classroomId}`;
+        }
+        
+        function copyJoinCode(joinCode) {
+            navigator.clipboard.writeText(joinCode).then(() => {
+                alert('Join code copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy join code');
+            });
+        }
+        
+        function closeClassroomModal() {
+            document.getElementById('classroomModal').classList.remove('active');
+        }
+        
+        async function loadStudentManagement() {
+            if (!currentTeacher) return;
+            
+            const container = document.getElementById('studentsContent');
+            
+            if (classrooms.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No classrooms available</h3>
+                        <p>Create classrooms first to manage students</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Load all students across all classrooms
+            try {
+                const allStudents = new Map();
+                
+                for (const classroom of classrooms) {
+                    const response = await fetch(`/api/classrooms/${classroom.id}/students`);
+                    const data = await response.json();
+                    const students = data.students || [];
+                    
+                    students.forEach(student => {
+                        if (!allStudents.has(student.id)) {
+                            allStudents.set(student.id, {
+                                ...student,
+                                classrooms: []
+                            });
+                        }
+                        allStudents.get(student.id).classrooms.push(classroom);
+                    });
+                }
+                
+                const studentsArray = Array.from(allStudents.values());
+                
+                if (studentsArray.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No students enrolled</h3>
+                            <p>Share join codes with your students to get started</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <h3 style="margin-bottom: 20px;">All Students (${studentsArray.length})</h3>
+                    <div class="students-list" style="max-height: none;">
+                        ${studentsArray.map(student => `
+                            <div class="student-item">
+                                <div>
+                                    <div class="student-name">${student.name}</div>
+                                    ${student.email ? `<div class="student-email">${student.email}</div>` : ''}
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                                        Enrolled in: ${student.classrooms.map(c => c.name).join(', ')}
+                                    </div>
+                                </div>
+                                <div style="font-size: 12px; color: #64748b;">
+                                    ${student.grade_level ? `Grade: ${student.grade_level}` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading students:', error);
+                container.innerHTML = '<p>Error loading students</p>';
+            }
+        }
+    </script>
+</body>
+</html>

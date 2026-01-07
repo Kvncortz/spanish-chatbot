@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Classroom - VocaFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .enroll-container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .enroll-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .enroll-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .enroll-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .enroll-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #f8fafc;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .join-code-input {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f8fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            margin-top: 20px;
+            display: block;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+        
+        .classroom-preview {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .classroom-preview.active {
+            display: block;
+        }
+        
+        .preview-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .preview-details {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+        
+        .success-message {
+            background: #f0fdf4;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .success-message.active {
+            display: block;
+        }
+        
+        .home-btn {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .enroll-container {
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+        }
+        
+        .logged-user-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .logged-user-info p {
+            margin: 4px 0;
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        .logged-user-info strong {
+            color: #2d3748;
+        }
+        
+        .login-required-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .login-required-message h3 {
+            color: #667eea;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        
+        .login-required-message p {
+            color: #4a5568;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="home-btn">Home</a>
+    
+    <div class="enroll-container">
+        <div class="enroll-header">
+            <h1>Join Classroom</h1>
+            <p>Enter your teacher's join code to access your Spanish assignments</p>
+        </div>
+        
+        <div class="enroll-form">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <form onsubmit="enrollInClassroom(event)">
+                <div class="form-group">
+                    <label for="joinCode">Classroom Join Code</label>
+                    <input 
+                        type="text" 
+                        id="joinCode" 
+                        name="joinCode" 
+                        class="join-code-input"
+                        maxlength="6"
+                        placeholder="ABC123"
+                        required
+                        oninput="this.value = this.value.toUpperCase(); checkJoinCode();"
+                    >
+                </div>
+                
+                <div class="classroom-preview" id="classroomPreview">
+                    <div class="preview-title" id="previewTitle">Loading classroom...</div>
+                    <div class="preview-details" id="previewDetails"></div>
+                </div>
+                
+                <!-- Student info fields - only show if not logged in -->
+                <div id="studentInfoFields">
+                    <div class="form-group">
+                        <label for="studentName">Your Name</label>
+                        <input 
+                            type="text" 
+                            id="studentName" 
+                            name="studentName" 
+                            placeholder="Enter your full name"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentEmail">Email (Optional)</label>
+                        <input 
+                            type="email" 
+                            id="studentEmail" 
+                            name="studentEmail" 
+                            placeholder="your.email@school.edu"
+                        >
+                    </div>
+                </div>
+                
+                <!-- Logged in user info display -->
+                <div id="loggedInInfo" style="display: none;">
+                    <div class="logged-user-info">
+                        <p><strong>Joining as:</strong> <span id="loggedInUserName"></span></p>
+                        <p><strong>Email:</strong> <span id="loggedInUserEmail"></span></p>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Join Classroom</button>
+            </form>
+            
+            <a href="/student-dashboard" class="btn btn-secondary">View My Classrooms</a>
+        </div>
+    </div>
+    
+    <script>
+        let currentStudent = null;
+        let currentClassroom = null;
+        let joinCodeTimeout = null;
+        
+        // Load current student from sessionStorage
+        function loadCurrentStudent() {
+            const savedStudent = sessionStorage.getItem('currentStudent');
+            if (savedStudent) {
+                currentStudent = JSON.parse(savedStudent);
+                updateUIForLoggedInUser();
+            } else {
+                updateUIForNewUser();
+                // Redirect to login if not authenticated
+                showLoginRequired();
+            }
+        }
+        
+        // Show login required message
+        function showLoginRequired() {
+            const enrollContainer = document.querySelector('.enroll-container');
+            enrollContainer.innerHTML = `
+                <div class="enroll-header">
+                    <h1>Login Required</h1>
+                    <p>You need to create an account or log in to join a classroom</p>
+                </div>
+                
+                <div class="enroll-form">
+                    <div class="login-required-message">
+                        <h3>🔐 Authentication Required</h3>
+                        <p>To join a classroom, you must have a student account.</p>
+                        <div style="margin-top: 20px;">
+                            <a href="/student-signup" class="btn btn-primary">Create Account</a>
+                            <a href="/student-login" class="btn btn-secondary">Log In</a>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <a href="/" class="btn btn-outline">← Back to Home</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Update UI for logged in user
+        function updateUIForLoggedInUser() {
+            // Hide student info fields
+            document.getElementById('studentInfoFields').style.display = 'none';
+            
+            // Remove required attribute from hidden fields
+            document.getElementById('studentName').removeAttribute('required');
+            document.getElementById('studentEmail').removeAttribute('required');
+            
+            // Show logged in info
+            const loggedInInfo = document.getElementById('loggedInInfo');
+            loggedInInfo.style.display = 'block';
+            document.getElementById('loggedInUserName').textContent = currentStudent.name;
+            document.getElementById('loggedInUserEmail').textContent = currentStudent.email || 'No email';
+            
+            // Update header message
+            document.querySelector('.enroll-header p').textContent = 'Enter your teacher\'s join code to join another classroom';
+        }
+        
+        // Update UI for new user
+        function updateUIForNewUser() {
+            // Show student info fields
+            document.getElementById('studentInfoFields').style.display = 'block';
+            
+            // Add required attribute back for new users
+            document.getElementById('studentName').setAttribute('required', '');
+            
+            // Hide logged in info
+            document.getElementById('loggedInInfo').style.display = 'none';
+            
+            // Keep original header message
+            document.querySelector('.enroll-header p').textContent = 'Enter your teacher\'s join code to access your Spanish assignments';
+        }
+        
+        // Check join code and show classroom preview
+        async function checkJoinCode() {
+            const joinCode = document.getElementById('joinCode').value.trim();
+            const preview = document.getElementById('classroomPreview');
+            const errorDiv = document.getElementById('errorMessage');
+            
+            // Clear previous timeout
+            if (joinCodeTimeout) {
+                clearTimeout(joinCodeTimeout);
+            }
+            
+            // Hide preview and error if code is too short
+            if (joinCode.length < 6) {
+                preview.classList.remove('active');
+                errorDiv.classList.remove('active');
+                return;
+            }
+            
+            // Wait a moment before checking to avoid excessive API calls
+            joinCodeTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/classrooms/join/${joinCode}`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        currentClassroom = data.classroom;
+                        showClassroomPreview(currentClassroom);
+                        errorDiv.classList.remove('active');
+                    } else {
+                        preview.classList.remove('active');
+                        showError('Invalid join code. Please check with your teacher.');
+                        currentClassroom = null;
+                    }
+                } catch (error) {
+                    console.error('Error checking join code:', error);
+                    preview.classList.remove('active');
+                    showError('Error checking join code. Please try again.');
+                    currentClassroom = null;
+                }
+            }, 500);
+        }
+        
+        function showClassroomPreview(classroom) {
+            const preview = document.getElementById('classroomPreview');
+            const title = document.getElementById('previewTitle');
+            const details = document.getElementById('previewDetails');
+            
+            title.textContent = classroom.name;
+            
+            let detailsHtml = '';
+            if (classroom.description) {
+                detailsHtml += `<p>${classroom.description}</p>`;
+            }
+            detailsHtml += `<p><strong>Teacher:</strong> ${classroom.teacher_name}</p>`;
+            if (classroom.grade_level) {
+                detailsHtml += `<p><strong>Grade Level:</strong> ${classroom.grade_level}</p>`;
+            }
+            if (classroom.subject) {
+                detailsHtml += `<p><strong>Subject:</strong> ${classroom.subject}</p>`;
+            }
+            
+            details.innerHTML = detailsHtml;
+            preview.classList.add('active');
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('active');
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('active');
+        }
+        
+        async function enrollInClassroom(event) {
+            event.preventDefault();
+            
+            console.log('Enroll function called');
+            console.log('Current student:', currentStudent);
+            console.log('Current classroom:', currentClassroom);
+            
+            if (!currentClassroom) {
+                showError('Please enter a valid join code');
+                return;
+            }
+            
+            const formData = new FormData(event.target);
+            console.log('Form data:', Object.fromEntries(formData));
+            
+            // Use logged-in student info if available, otherwise use form data
+            const studentName = currentStudent ? currentStudent.name : formData.get('studentName');
+            const studentEmail = currentStudent ? currentStudent.email : formData.get('studentEmail');
+            
+            console.log('Using student name:', studentName);
+            console.log('Using student email:', studentEmail);
+            
+            try {
+                const payload = {
+                    join_code: formData.get('joinCode'),
+                    student_name: studentName,
+                    student_email: studentEmail,
+                    student_grade: currentStudent ? currentStudent.grade_level : null
+                };
+                
+                console.log('Sending payload:', payload);
+                
+                const response = await fetch('/api/enroll', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok) {
+                    // Save student info (only if new student was created)
+                    if (!currentStudent) {
+                        currentStudent = {
+                            id: data.student_id,
+                            name: studentName,
+                            email: studentEmail
+                        };
+                        sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
+                    }
+                    
+                    if (data.temp_password) {
+                        showSuccess(`Account created and joined ${data.classroom.name}! Your temporary password is: ${data.temp_password}. Please change it after your first login.`);
+                    } else {
+                        showSuccess(`Successfully joined ${data.classroom.name}! Redirecting to your classrooms...`);
+                    }
+                    
+                    // Redirect after a delay
+                    setTimeout(() => {
+                        window.location.href = '/student-dashboard';
+                    }, 3000);
+                } else {
+                    console.log('Enrollment failed:', data);
+                    showError(data.detail || 'Error joining classroom');
+                }
+            } catch (error) {
+                console.error('Error enrolling:', error);
+                showError('Error joining classroom. Please try again.');
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentStudent();
+        });
+    </script>
+</body>
+</html>
