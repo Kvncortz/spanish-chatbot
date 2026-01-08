@@ -148,7 +148,7 @@ class DatabaseManager:
                 )
             """)
             
-            # Assignments table (updated to include classroom_id)
+            # Assignments table (updated to include classroom_id and avatar features)
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS assignments (
                     id TEXT PRIMARY KEY,
@@ -157,23 +157,78 @@ class DatabaseManager:
                     description TEXT,
                     instructions TEXT,
                     level TEXT NOT NULL,
+                    level_standard TEXT DEFAULT 'ACTFL',  -- ACTFL, CEFR, etc.
                     duration INTEGER NOT NULL,
                     due_date TIMESTAMP,
                     prompt TEXT,
                     vocab TEXT,  -- JSON array of vocabulary words
                     min_vocab_words INTEGER DEFAULT 0,
+                    -- Avatar and learning features
+                    avatar_role TEXT,  -- doctor, waiter, travel agent, etc.
+                    student_objective TEXT,  -- what student should accomplish
+                    avatar_characteristics TEXT,  -- JSON array of traits (patient, encouraging, etc.)
+                    voice_speed REAL DEFAULT 1.0,  -- speech rate multiplier
+                    speak_slowly BOOLEAN DEFAULT FALSE,  -- hablar lento y claro
+                    theme TEXT,  -- conversation context and vocabulary focus
                     is_active BOOLEAN DEFAULT TRUE,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (classroom_id) REFERENCES classrooms (id)
                 )
             """)
             
-            # Add min_vocab_words column if it doesn't exist (for existing databases)
+            # Add new assignment columns for avatar features (for existing databases)
             try:
-                cursor.execute("ALTER TABLE assignments ADD COLUMN min_vocab_words INTEGER DEFAULT 0")
+                cursor.execute("ALTER TABLE assignments ADD COLUMN level_standard TEXT DEFAULT 'ACTFL'")
             except sqlite3.OperationalError as e:
                 if "duplicate column name" in str(e):
-                    # Column already exists, which is fine
+                    pass
+                else:
+                    raise e
+            
+            try:
+                cursor.execute("ALTER TABLE assignments ADD COLUMN avatar_role TEXT")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" in str(e):
+                    pass
+                else:
+                    raise e
+            
+            try:
+                cursor.execute("ALTER TABLE assignments ADD COLUMN student_objective TEXT")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" in str(e):
+                    pass
+                else:
+                    raise e
+            
+            try:
+                cursor.execute("ALTER TABLE assignments ADD COLUMN avatar_characteristics TEXT")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" in str(e):
+                    pass
+                else:
+                    raise e
+            
+            try:
+                cursor.execute("ALTER TABLE assignments ADD COLUMN voice_speed REAL DEFAULT 1.0")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" in str(e):
+                    pass
+                else:
+                    raise e
+            
+            try:
+                cursor.execute("ALTER TABLE assignments ADD COLUMN speak_slowly BOOLEAN DEFAULT FALSE")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" in str(e):
+                    pass
+                else:
+                    raise e
+            
+            try:
+                cursor.execute("ALTER TABLE assignments ADD COLUMN theme TEXT")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" in str(e):
                     pass
                 else:
                     raise e
@@ -474,6 +529,15 @@ class DatabaseManager:
             row = cursor.fetchone()
             return dict(row) if row else None
     
+    def get_student_by_id(self, student_id: str) -> Optional[Dict]:
+        """Get student by ID"""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM students WHERE id = ?", (student_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+    
     def authenticate_student(self, email: str, password: str) -> Optional[Dict]:
         """Authenticate student with email and password"""
         student = self.get_student_by_email(email)
@@ -540,19 +604,24 @@ class DatabaseManager:
     # Assignment operations
     def create_assignment(self, classroom_id: str, title: str, description: str, 
                          instructions: str, level: str, duration: int, 
-                         due_date: str = None, prompt: str = None, vocab: List[str] = None, min_vocab_words: int = 0) -> str:
-        """Create a new assignment"""
+                         due_date: str = None, prompt: str = None, vocab: List[str] = None, min_vocab_words: int = 0,
+                         level_standard: str = 'ACTFL', avatar_role: str = None, student_objective: str = None,
+                         avatar_characteristics: List[str] = None, voice_speed: float = 1.0, speak_slowly: bool = False, theme: str = None) -> str:
+        """Create a new assignment with avatar and learning features"""
         assignment_id = str(uuid.uuid4())
         vocab_json = json.dumps(vocab) if vocab else None
+        characteristics_json = json.dumps(avatar_characteristics) if avatar_characteristics else None
         
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT INTO assignments (id, classroom_id, title, description, instructions, 
-                                       level, duration, due_date, prompt, vocab, min_vocab_words)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                       level, level_standard, duration, due_date, prompt, vocab, min_vocab_words,
+                                       avatar_role, student_objective, avatar_characteristics, voice_speed, speak_slowly, theme)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (assignment_id, classroom_id, title, description, instructions, 
-                  level, duration, due_date, prompt, vocab_json, min_vocab_words))
+                  level, level_standard, duration, due_date, prompt, vocab_json, min_vocab_words,
+                  avatar_role, student_objective, characteristics_json, voice_speed, speak_slowly, theme))
             conn.commit()
         return assignment_id
     

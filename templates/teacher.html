@@ -439,23 +439,97 @@
         .level-badge {
             padding: 4px 8px;
             border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            flex-shrink: 0;
+            min-width: 80px;
+            text-align: center;
         }
         
-        .level-beginner {
-            background: #d4edda;
-            color: #155724;
+        /* ACTFL Level Badges */
+        .level-novice_low {
+            background: #f59e0b;
+            color: white;
         }
         
-        .level-intermediate {
-            background: #fff3cd;
-            color: #856404;
+        .level-novice_mid {
+            background: #facc15;
+            color: white;
+        }
+        
+        .level-novice_high {
+            background: #84cc16;
+            color: white;
+        }
+        
+        .level-intermediate_low {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .level-intermediate_mid {
+            background: #10b981;
+            color: white;
+        }
+        
+        .level-intermediate_high {
+            background: #06b6d4;
+            color: white;
         }
         
         .level-advanced {
-            background: #f8d7da;
-            color: #721c24;
+            background: #3b82f6;
+            color: white;
+        }
+        
+        /* CEFR Level Badges */
+        .level-a1 {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .level-a2 {
+            background: #facc15;
+            color: white;
+        }
+        
+        .level-b1 {
+            background: #84cc16;
+            color: white;
+        }
+        
+        .level-b2 {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .level-c1 {
+            background: #06b6d4;
+            color: white;
+        }
+        
+        .level-c2 {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        /* Legacy Level Badges */
+        .level-beginner {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .level-intermediate {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .level-advanced {
+            background: #3b82f6;
+            color: white;
         }
         
         .voice-indicator {
@@ -496,97 +570,6 @@
             color: #6c757d;
         }
         
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
-        
-        .empty-state h3 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 0;
-        }
-        
-        .modal-header h3 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #666;
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-        
-        .modal-close:hover {
-            background: #f1f5f9;
-            color: #333;
-        }
-        
-        .message {
-            margin-bottom: 15px;
-            padding: 12px 15px;
-            border-radius: 12px;
-            max-width: 80%;
-        }
         
         .message.user {
             background: #e3f2fd;
@@ -781,15 +764,33 @@
             border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            text-align: center;
+            text-align: left;
+            overflow: hidden;
+        }
+        
+        .classroom-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .classroom-card:hover::before {
+            opacity: 1;
         }
         
         .classroom-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
         }
         
         .classroom-card .classroom-checkbox {
@@ -852,31 +853,57 @@
         }
         
         .classroom-header {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            padding-left: 40px;
         }
         
         .classroom-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+            line-height: 1.2;
         }
         
         .classroom-meta {
             display: flex;
-            justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            font-size: 13px;
+            gap: 6px;
+            font-size: 12px;
             color: #64748b;
-            margin-bottom: 16px;
+            margin-bottom: 0;
+        }
+        
+        .classroom-meta span {
+            padding: 6px 12px;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            font-size: 12px;
+            line-height: 1.2;
+        }
+        
+        .join-code {
+            background: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
+            letter-spacing: 0.5px;
         }
         
         .classroom-description {
             color: #4a5568;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.5;
             margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
         }
         
         .classroom-stats {
@@ -890,7 +917,14 @@
             text-align: center;
             padding: 12px;
             background: #f8fafc;
-            border-radius: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         
         .stat-number {
@@ -898,18 +932,29 @@
             font-weight: 700;
             color: #667eea;
             margin-bottom: 4px;
+            line-height: 1;
         }
         
         .stat-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .classroom-actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
+        }
+        
+        .classroom-actions .btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+            font-weight: 600;
         }
         
         .join-code {
@@ -922,6 +967,36 @@
             font-size: 14px;
             font-weight: 600;
             letter-spacing: 1px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            overflow: visible;
+            position: relative;
+            z-index: 10000;
         }
         
         /* Fix spacing for classroom creation modal */
@@ -945,6 +1020,340 @@
         
         .modal-form .modal-actions {
             margin-top: 30px;
+        }
+        
+        /* Classroom Modal Specific Styles */
+        .classroom-modal {
+            max-width: 700px;
+            width: 90%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .classroom-modal .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+        }
+        
+        .modal-icon {
+            font-size: 48px;
+            background: rgba(255, 255, 255, 0.25);
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+        }
+        
+        .modal-title-section h2 {
+            margin: 0 0 6px 0;
+            font-size: 26px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-title-section p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            pointer-events: auto;
+        }
+        
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        #conversationModal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        #conversationModal .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 20px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        #conversationModal .modal-close:hover {
+            background: #f1f5f9;
+            color: #333;
+        }
+        
+        #conversationModal .modal-body {
+            padding: 24px;
+        }
+        
+        .classroom-modal .modal-form {
+            padding: 0;
+        }
+        
+        .form-section {
+            padding: 32px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 24px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: inline-block;
+        }
+        
+        .classroom-modal .form-group {
+            margin-bottom: 28px;
+        }
+        
+        .classroom-modal .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .classroom-modal .form-group label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 15px;
+        }
+        
+        .classroom-modal .form-group input,
+        .classroom-modal .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+        
+        .classroom-modal .form-group input:focus,
+        .classroom-modal .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .classroom-modal .form-group small {
+            display: block;
+            margin-top: 8px;
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        /* Toggle Switch Styles */
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .toggle-label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 15px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: #667eea;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+        
+        .toggle-switch:hover {
+            background: #cbd5e1;
+        }
+        
+        .toggle-switch.active:hover {
+            background: #5a67d8;
+        }
+        
+        .toggle-description {
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.4;
+        }
+        
+        .classroom-modal .modal-actions {
+            padding: 30px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 0;
+        }
+        
+        .classroom-modal .btn {
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .classroom-modal .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .classroom-modal .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        
+        .classroom-modal .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .classroom-modal .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-icon {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .classroom-modal {
+                max-width: 95%;
+                margin: 20px;
+            }
+            
+            .classroom-modal .modal-header {
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .modal-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 32px;
+            }
+            
+            .modal-close-btn {
+                position: static;
+                margin-top: 10px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .classroom-modal .modal-actions {
+                padding: 20px;
+                flex-direction: column;
+            }
+            
+            .classroom-modal .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
         
         /* Custom Notification System */
@@ -1096,6 +1505,1243 @@
             background: #f3f4f6;
             color: #666;
         }
+
+        /* Assignment Wizard Styles */
+        .assignment-wizard {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .wizard-progress {
+            margin-bottom: 40px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .step.active .step-title {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .step.completed .step-title {
+            color: #10b981;
+        }
+
+        .wizard-content {
+            min-height: 400px;
+            margin-bottom: 30px;
+        }
+
+        .wizard-step {
+            display: none;
+        }
+
+        .wizard-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .step-header h2 {
+            color: #1f2937;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .characteristics-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 10px;
+            align-items: stretch;
+        }
+
+        .characteristic-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            flex: 1 1 0;
+            min-width: 0;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .characteristic-item:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+        }
+
+        .characteristic-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .characteristic-item input[type="checkbox"]:checked + span {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .characteristic-item:has(input:checked) {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .voice-speed-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        .speed-label {
+            font-weight: 500;
+        }
+
+        .speed-value {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .review-section {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .review-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .review-value {
+            color: #6b7280;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .wizard-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .wizard-navigation .btn {
+            min-width: 120px;
+        }
+
+        /* Improved Date Picker Styles */
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .date-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .time-input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            background: white;
+            min-width: 120px;
+        }
+
+        .time-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .time-input:placeholder-shown {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .date-clear-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .date-clear-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .date-clear-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Date input styling for WebKit browsers */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
+
+        input[type="date"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            display: none;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+        }
+
+        /* Time input styling */
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
+
+        input[type="time"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            display: none;
+        }
+
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+        }
+
+        /* Custom Date Picker Styles */
+        .date-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .date-picker-input, .time-picker-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .date-display, .time-display {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            background: white;
+            cursor: pointer;
+            color: #374151;
+        }
+
+        .date-display:hover, .time-display:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+        }
+
+        .date-display:focus, .time-display:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .date-picker-icon, .time-picker-icon {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .date-clear-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .date-clear-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .date-clear-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Date Picker Container */
+        .date-picker-container {
+            position: relative;
+        }
+
+        .date-picker-input-wrapper {
+            position: relative;
+        }
+
+        .date-picker-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .time-picker-input-wrapper {
+            position: relative;
+        }
+
+        .time-picker-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Date Picker Modal */
+        .date-picker {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: auto;
+            width: 320px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .date-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .date-nav-btn {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .date-nav-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .currentMonth {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .date-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            padding: 16px;
+        }
+
+        .date-picker-grid .day-header {
+            text-align: center;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 8px 0;
+        }
+
+        .date-picker-grid .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+            color: #374151;
+        }
+
+        .date-picker-grid .day:hover {
+            background: #f9fafb;
+        }
+
+        .date-picker-grid .day.selected {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .date-picker-grid .day.other-month {
+            color: #d1d5db;
+        }
+
+        .date-picker-grid .day.today {
+            background: #fef3c7;
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        /* Time Picker Container */
+        .time-picker-container {
+            position: relative;
+        }
+
+        /* Time Picker Modal */
+        .time-picker {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: auto;
+            width: 320px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .time-picker-header {
+            text-align: center;
+            padding: 16px 20px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-period-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .time-picker-grid {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .time-section {
+            flex: 1;
+        }
+
+        .time-section-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .time-picker-period {
+            display: flex;
+            gap: 8px;
+        }
+
+        .time-period-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .time-period-btn:hover {
+            border-color: #667eea;
+            background: #f8fafc;
+        }
+
+        .time-period-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .time-picker-hours {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .time-picker-minutes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .time-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .time-option {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin: 4px;
+            background: white;
+            color: #374151;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .time-option:hover {
+            border-color: #667eea;
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        .time-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .time-picker-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            gap: 12px;
+        }
+
+        .time-picker-footer .btn {
+            flex: 1;
+        }
+
+        /* Validation Notification Styles */
+        .validation-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        .validation-content {
+            background: white;
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.15);
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .validation-icon {
+            font-size: 20px;
+            color: #ef4444;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .validation-message {
+            flex: 1;
+        }
+
+        .validation-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .validation-text {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .validation-close {
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .validation-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Custom Dropdown Component */
+        .custom-dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            color: #374151;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .dropdown-trigger:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-trigger.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .dropdown-arrow {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-trigger.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Integrated Toggle Switch */
+        .dropdown-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .toggle-switch-small {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+        }
+
+        .toggle-switch-small input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider-small {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.3s;
+            border-radius: 20px;
+        }
+
+        .toggle-slider-small:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider-small {
+            background-color: #667eea;
+        }
+
+        input:checked + .toggle-slider-small:before {
+            transform: translateX(16px);
+        }
+
+        .toggle-label-small {
+            font-weight: 600;
+            color: #374151;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Toggle Switch in Custom Input Mode */
+        .dropdown-toggle-custom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            align-self: flex-start;
+        }
+
+        .dropdown-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dropdown-section {
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .dropdown-section:last-child {
+            border-bottom: none;
+        }
+
+        /* Specific fix for classroom modal dropdown */
+        .classroom-modal .dropdown-options {
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10001;
+            bottom: calc(100% + 8px);
+            top: auto;
+        }
+
+        .dropdown-section-title {
+            padding: 12px 16px 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a202c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .dropdown-option {
+            padding: 12px 16px;
+            color: #374151;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: white;
+        }
+
+        .dropdown-option:hover {
+            background: #f1f5f9;
+            color: #667eea;
+        }
+
+        .dropdown-option.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Persona Header with Inline Toggle */
+        .persona-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .persona-toggle-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 10px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .toggle-option-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Enhanced Form Group Spacing */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 12px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* Dropdown Container */
+        .persona-dropdown-container {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .persona-dropdown-container.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        /* Custom Avatar Container */
+        .custom-avatar-container {
+            animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .custom-avatar-input-wrapper {
+            width: 100%;
+        }
+
+        .custom-avatar-input-large {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #374151;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+        }
+
+        .custom-avatar-input-large:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .custom-avatar-input-large:focus {
+            outline: none;
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .custom-avatar-hint {
+            font-size: 13px;
+            color: #6b7280;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 8px;
+        }
+
+        .dropdown-option:last-child {
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+
+        .dropdown-section:last-child .dropdown-option:last-child {
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+
+        .dropdown-section:first-child .dropdown-option:first-child {
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+
+        .custom-persona-input {
+            margin-top: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-avatar-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #374151;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .custom-avatar-field:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+
+        .custom-avatar-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+
+        .custom-persona-input small {
+            color: #6b7280;
+            font-size: 12px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 300px;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .assignment-wizard {
+                padding: 20px;
+            }
+
+            .progress-steps {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .step {
+                flex: 0 0 auto;
+                min-width: 60px;
+            }
+
+            .step-title {
+                font-size: 12px;
+            }
+
+            .review-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .review-actions {
+                flex-direction: column;
+            }
+
+            .wizard-navigation {
+                flex-direction: column;
+            }
+
+            .wizard-navigation .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1112,11 +2758,11 @@
         <button class="logout-btn-absolute" onclick="logout()">Logout</button>
         
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('classrooms')">Classroom Management</button>
-            <button class="nav-tab" onclick="switchTab('create')">Create Assignment</button>
-            <button class="nav-tab" onclick="switchTab('assignments')">My Assignments</button>
-            <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
-            <button class="nav-tab" onclick="switchTab('profile')">Teacher Profile</button>
+            <button class="nav-tab active" data-tab="classrooms" onclick="switchTab('classrooms')">Classroom Management</button>
+            <button class="nav-tab" data-tab="create" onclick="switchTab('create')">Create Assignment</button>
+            <button class="nav-tab" data-tab="assignments" onclick="switchTab('assignments')">My Assignments</button>
+            <button class="nav-tab" data-tab="analytics" onclick="switchTab('analytics')">Analytics</button>
+            <button class="nav-tab" data-tab="profile" onclick="switchTab('profile')">Teacher Profile</button>
         </div>
         
         <!-- Classroom Management Tab -->
@@ -1172,80 +2818,485 @@
         
         <!-- Create Assignment Tab -->
         <div id="create-tab" class="tab-content">
-            <form class="assignment-form" onsubmit="createAssignment(event)">
-                <div class="form-section">
-                    <div class="form-section-title">Basic Information</div>
-                    <div class="form-group">
-                        <label for="assignmentTitle">Assignment Title</label>
-                        <input type="text" id="assignmentTitle" name="title" required placeholder="e.g., Ordering Food at a Restaurant">
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="assignmentClassroom">Classroom</label>
-                            <select id="assignmentClassroom" name="classroom_id" required>
-                                <option value="">Select Classroom</option>
-                            </select>
+            <!-- Assignment Wizard -->
+            <div class="assignment-wizard">
+                <!-- Progress Indicator -->
+                <div class="wizard-progress">
+                    <div class="progress-steps">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Persona</div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="assignmentLevel">Difficulty Level</label>
-                            <select id="assignmentLevel" name="level" required>
-                                <option value="">Select Level</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Act</div>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="assignmentDuration">Duration (minutes)</label>
-                            <input type="number" id="assignmentDuration" name="duration" min="1" max="60" step="1" value="5" required>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Recipient</div>
                         </div>
-                        <div class="form-group">
-                            <label for="assignmentDueDate">Due Date (Optional)</label>
-                            <input type="datetime-local" id="assignmentDueDate" name="due_date">
+                        <div class="step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Theme</div>
+                        </div>
+                        <div class="step" data-step="5">
+                            <div class="step-number">5</div>
+                            <div class="step-title">Structure</div>
+                        </div>
+                        <div class="step" data-step="6">
+                            <div class="step-number">6</div>
+                            <div class="step-title">Review</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="form-section">
-                    <div class="form-section-title">Content Details</div>
-                    <div class="form-group">
-                        <label for="assignmentDescription">Assignment Description</label>
-                        <textarea id="assignmentDescription" name="description" required placeholder="Describe what students should practice and accomplish in this assignment..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="assignmentInstructions">Student Instructions</label>
-                        <textarea id="assignmentInstructions" name="instructions" required placeholder="Clear instructions for students on how to complete this assignment..."></textarea>
-                    </div>
+
+                <!-- Wizard Content -->
+                <div class="wizard-content">
+                    <form id="assignmentWizardForm" class="assignment-form" onsubmit="createAssignment(event)">
+                        <!-- Step 1: Persona -->
+                        <div class="wizard-step active" data-step="1">
+                            <div class="step-header">
+                                <h2>Step 1: Persona - Who should the AI be?</h2>
+                                <p>Define the avatar role and personality traits for the conversation.</p>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-group">
+                                    <div class="persona-header">
+                                        <label for="assignmentPersona">Select Avatar Role</label>
+                                        <!-- Toggle Switch in Upper Right -->
+                                        <div class="persona-toggle-inline">
+                                            <div class="toggle-option-inline">
+                                                <label class="toggle-switch-small">
+                                                    <input type="checkbox" id="useCustomAvatar" onchange="togglePersonaMode()">
+                                                    <span class="toggle-slider-small"></span>
+                                                </label>
+                                                <span class="toggle-label-small">Custom</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="persona-selector">
+                                        <!-- Integrated Dropdown with Toggle -->
+                                        <div id="personaDropdownContainer" class="persona-dropdown-container">
+                                            <div class="custom-dropdown" id="personaDropdown">
+                                                <div class="dropdown-trigger" onclick="togglePersonaDropdown()">
+                                                    <span id="selectedPersona">Choose a persona...</span>
+                                                    <div class="dropdown-arrow"></div>
+                                                </div>
+                                                <div class="dropdown-options" id="personaOptions" style="display: none;">
+                                                    <div class="dropdown-section">
+                                                        <div class="dropdown-section-title">Everyday Scenarios</div>
+                                                        <div class="dropdown-option" data-value="friend">Friend</div>
+                                                        <div class="dropdown-option" data-value="family_member">Family Member</div>
+                                                        <div class="dropdown-option" data-value="classmate">Classmate</div>
+                                                        <div class="dropdown-option" data-value="neighbor">Neighbor</div>
+                                                    </div>
+                                                    <div class="dropdown-section">
+                                                        <div class="dropdown-section-title">Professional Services</div>
+                                                        <div class="dropdown-option" data-value="doctor">Doctor/Medical Professional</div>
+                                                        <div class="dropdown-option" data-value="waiter">Waiter/Restaurant Staff</div>
+                                                        <div class="dropdown-option" data-value="travel_agent">Travel Agent</div>
+                                                        <div class="dropdown-option" data-value="hotel_clerk">Hotel Clerk</div>
+                                                        <div class="dropdown-option" data-value="shopkeeper">Shopkeeper/Retail Worker</div>
+                                                        <div class="dropdown-option" data-value="bank_teller">Bank Teller</div>
+                                                        <div class="dropdown-option" data-value="police_officer">Police Officer</div>
+                                                        <div class="dropdown-option" data-value="receptionist">Receptionist</div>
+                                                    </div>
+                                                    <div class="dropdown-section">
+                                                        <div class="dropdown-section-title">Educational Settings</div>
+                                                        <div class="dropdown-option" data-value="teacher">Teacher</div>
+                                                        <div class="dropdown-option" data-value="tour_guide">Tour Guide</div>
+                                                        <div class="dropdown-option" data-value="librarian">Librarian</div>
+                                                        <div class="dropdown-option" data-value="coach">Sports Coach</div>
+                                                    </div>
+                                                    <div class="dropdown-section">
+                                                        <div class="dropdown-section-title">Travel & Hospitality</div>
+                                                        <div class="dropdown-option" data-value="flight_attendant">Flight Attendant</div>
+                                                        <div class="dropdown-option" data-value="taxi_driver">Taxi Driver</div>
+                                                        <div class="dropdown-option" data-value="concierge">Concierge</div>
+                                                        <div class="dropdown-option" data-value="chef">Chef</div>
+                                                    </div>
+                                                    <div class="dropdown-section">
+                                                        <div class="dropdown-section-title">Creative & Entertainment</div>
+                                                        <div class="dropdown-option" data-value="artist">Artist</div>
+                                                        <div class="dropdown-option" data-value="musician">Musician</div>
+                                                        <div class="dropdown-option" data-value="actor">Actor/Actress</div>
+                                                        <div class="dropdown-option" data-value="photographer">Photographer</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Custom Avatar Input (hidden by default) -->
+                                        <div id="customAvatarContainer" class="custom-avatar-container" style="display: none;">
+                                            <div class="custom-avatar-input-wrapper">
+                                                <input type="text" id="customPersona" name="custom_avatar_role" placeholder="e.g., Barista at a cozy cafe, Veterinarian assistant, Personal trainer" class="custom-avatar-input-large" data-validation-message="Please fill out this required section">
+                                                <div class="custom-avatar-hint">Be specific about the role and setting for better AI responses</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Hidden select for form submission -->
+                                        <select id="assignmentPersona" name="avatar_role" required style="display: none;">
+                                            <option value="">Choose a persona...</option>
+                                            <option value="friend">Friend</option>
+                                            <option value="family_member">Family Member</option>
+                                            <option value="classmate">Classmate</option>
+                                            <option value="neighbor">Neighbor</option>
+                                            <option value="doctor">Doctor/Medical Professional</option>
+                                            <option value="waiter">Waiter/Restaurant Staff</option>
+                                            <option value="travel_agent">Travel Agent</option>
+                                            <option value="hotel_clerk">Hotel Clerk</option>
+                                            <option value="shopkeeper">Shopkeeper/Retail Worker</option>
+                                            <option value="bank_teller">Bank Teller</option>
+                                            <option value="police_officer">Police Officer</option>
+                                            <option value="receptionist">Receptionist</option>
+                                            <option value="teacher">Teacher</option>
+                                            <option value="tour_guide">Tour Guide</option>
+                                            <option value="librarian">Librarian</option>
+                                            <option value="coach">Sports Coach</option>
+                                            <option value="flight_attendant">Flight Attendant</option>
+                                            <option value="taxi_driver">Taxi Driver</option>
+                                            <option value="concierge">Concierge</option>
+                                            <option value="chef">Chef</option>
+                                            <option value="artist">Artist</option>
+                                            <option value="musician">Musician</option>
+                                            <option value="actor">Actor/Actress</option>
+                                            <option value="photographer">Photographer</option>
+                                            <option value="custom">Custom Avatar</option>
+                                        </select>
+                                    </div>
+                                    <small>The persona sets the AI's tone, expertise, and communication style for authentic conversations.</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentPersonaTraits">Persona Characteristics</label>
+                                    <div class="characteristics-grid">
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="patient">
+                                            <span>Patient</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="encouraging">
+                                            <span>Encouraging</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="professional">
+                                            <span>Professional</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="friendly">
+                                            <span>Friendly</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="formal">
+                                            <span>Formal</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="casual">
+                                            <span>Casual</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="helpful">
+                                            <span>Helpful</span>
+                                        </label>
+                                        <label class="characteristic-item">
+                                            <input type="checkbox" name="avatar_characteristics" value="humorous">
+                                            <span>Humorous</span>
+                                        </label>
+                                    </div>
+                                    <small>Personality traits shape how the persona interacts and responds to students.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Act -->
+                        <div class="wizard-step" data-step="2">
+                            <div class="step-header">
+                                <h2>Step 2: Act - What should students do?</h2>
+                                <p>Define the clear action objectives and instructions for students.</p>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-group">
+                                    <label for="assignmentStudentObjective">Student Action Objective</label>
+                                    <textarea id="assignmentStudentObjective" name="student_objective" required placeholder="e.g., Order a meal at a restaurant, Ask for directions to the museum, Make a doctor's appointment, Buy clothes at a store, Check into a hotel..." style="min-height: 100px;"></textarea>
+                                    <small>Specify the clear action or task students must accomplish. This directs the AI to create purposeful conversations.</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentInstructions">Student Instructions</label>
+                                    <textarea id="assignmentInstructions" name="instructions" required placeholder="e.g., You are a tourist in Madrid and want to order lunch. Use polite phrases and ask about ingredients. Try to order a drink and dessert too." style="min-height: 100px;"></textarea>
+                                    <small>Clear instructions help students understand their role and what's expected of them.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Recipient -->
+                        <div class="wizard-step" data-step="3">
+                            <div class="step-header">
+                                <h2>Step 3: Recipient - Who are the students?</h2>
+                                <p>Define the proficiency level and learner context for appropriate difficulty.</p>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="assignmentStandard">Proficiency Standard</label>
+                                        <div class="custom-dropdown">
+                                            <div class="dropdown-trigger" onclick="toggleDropdown('assignmentStandardDropdown')">
+                                                <span id="assignmentStandardDisplay">Select Standard</span>
+                                                <div class="dropdown-arrow"></div>
+                                            </div>
+                                            <div class="dropdown-options" id="assignmentStandardDropdown" style="display: none;">
+                                                <div class="dropdown-option" data-value="Basic">Basic</div>
+                                                <div class="dropdown-option" data-value="ACTFL">ACTFL (American Council on the Teaching of Foreign Languages)</div>
+                                                <div class="dropdown-option" data-value="CEFR">CEFR (Common European Framework of Reference)</div>
+                                            </div>
+                                        </div>
+                                        <select id="assignmentStandard" name="level_standard" required style="display: none;">
+                                            <option value="">Select Standard</option>
+                                            <option value="Basic">Basic</option>
+                                            <option value="ACTFL">ACTFL (American Council on the Teaching of Foreign Languages)</option>
+                                            <option value="CEFR">CEFR (Common European Framework of Reference)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="assignmentLevel">Difficulty Level</label>
+                                        <div class="custom-dropdown">
+                                            <div class="dropdown-trigger" onclick="toggleDropdown('assignmentLevelDropdown')">
+                                                <span id="assignmentLevelDisplay">Select Level</span>
+                                                <div class="dropdown-arrow"></div>
+                                            </div>
+                                            <div class="dropdown-options" id="assignmentLevelDropdown" style="display: none;">
+                                                <!-- Options will be populated dynamically based on proficiency standard -->
+                                            </div>
+                                        </div>
+                                        <select id="assignmentLevel" name="level" required style="display: none;">
+                                            <option value="">Select Level</option>
+                                            <!-- Options will be populated dynamically based on proficiency standard -->
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentDescription">Learner Context</label>
+                                    <textarea id="assignmentDescription" name="description" required placeholder="e.g., High school Spanish students in their second year, comfortable with present tense but practicing past tense. Need confidence building in real-world conversations." style="min-height: 100px;"></textarea>
+                                    <small>Describing your learners helps tailor difficulty, engagement strategies, and support level.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Theme -->
+                        <div class="wizard-step" data-step="4">
+                            <div class="step-header">
+                                <h2>Step 4: Theme - What's the conversation context?</h2>
+                                <p>Set the conversational context, vocabulary focus, and assignment details.</p>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-group">
+                                    <label for="assignmentTitle">Assignment Title</label>
+                                    <input type="text" id="assignmentTitle" name="title" required placeholder="e.g., Ordering Food at a Spanish Restaurant">
+                                    <small>A clear title focuses the conversation on the specific context and vocabulary.</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentTheme">Theme & Vocabulary Focus</label>
+                                    <textarea id="assignmentTheme" name="theme" placeholder="e.g., Restaurant dining, food vocabulary, ordering phrases, making requests, paying the bill" style="min-height: 80px;"></textarea>
+                                    <small>Define the conversational context and key vocabulary areas to focus on.</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentVocab">Key Vocabulary Words</label>
+                                    <textarea id="assignmentVocab" name="vocab" placeholder="e.g., menú, camarero, cuenta, propina, delicioso, picante, bebida, postre, por favor, gracias" style="min-height: 80px;"></textarea>
+                                    <small>Important words students should practice using (comma-separated). These will be tracked in their conversation logs.</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="minVocabWords">Minimum Vocabulary Words Required</label>
+                                    <input type="number" id="minVocabWords" name="min_vocab_words" min="0" max="20" step="1" value="0" placeholder="Number of vocabulary words students must use">
+                                    <small>Set to 0 for no minimum requirement. Students will be tracked on how many unique vocabulary words they use.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Structure -->
+                        <div class="wizard-step" data-step="5">
+                            <div class="step-header">
+                                <h2>Step 5: Structure - How should the conversation flow?</h2>
+                                <p>Set duration, voice settings, and assignment logistics.</p>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="assignmentDuration">Conversation Duration</label>
+                                        <input type="number" id="assignmentDuration" name="duration" min="1" max="60" step="1" value="5" required>
+                                        <small>Minutes for the conversation. Shorter for beginners, longer for advanced students.</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="assignmentDueDate">Due Date (Optional)</label>
+                                        <div class="date-picker-container">
+                                            <div class="date-picker-input-wrapper">
+                                                <div class="date-picker-label">Calendar</div>
+                                                <div class="date-picker-input" onclick="toggleDatePicker()">
+                                                    <input type="text" id="assignmentDueDateDisplay" readonly placeholder="Select date" class="date-display">
+                                                    <!-- Hidden Date Picker -->
+                                                    <div id="datePicker" class="date-picker" style="display: none;">
+                                                        <div class="date-picker-header">
+                                                            <button type="button" onclick="changeMonth(-1)" class="date-nav-btn">‹</button>
+                                                            <span id="currentMonth">January 2024</span>
+                                                            <button type="button" onclick="changeMonth(1)" class="date-nav-btn">›</button>
+                                                        </div>
+                                                        <div class="date-picker-grid" id="datePickerGrid">
+                                                            <!-- Calendar days will be generated here -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="time-picker-container">
+                                                <div class="time-picker-input-wrapper">
+                                                    <div class="time-picker-label">Clock</div>
+                                                    <div style="position: relative;">
+                                                        <input type="text" id="assignmentDueTimeDisplay" readonly placeholder="Select time" class="time-display" onclick="toggleTimePicker()">
+                                                        <!-- Hidden Time Picker -->
+                                                        <div id="timePicker" class="time-picker" style="display: none;">
+                                                            <div class="time-picker-header">
+                                                                <span id="timePickerTitle">Select Time</span>
+                                                                <!-- AM/PM Toggle in Upper Right -->
+                                                                <div class="time-period-toggle">
+                                                                    <label class="toggle-switch-small">
+                                                                        <input type="checkbox" id="amPmToggle" onchange="toggleAmPm()">
+                                                                        <span class="toggle-slider-small"></span>
+                                                                    </label>
+                                                                    <span class="toggle-label-small" id="amPmLabel">AM</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="time-picker-grid">
+                                                                <!-- Hours -->
+                                                                <div class="time-picker-section">
+                                                                    <div class="time-picker-label">Hours</div>
+                                                                    <div class="time-picker-hours" id="hoursGrid">
+                                                                        <!-- Hours will be generated here -->
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Minutes -->
+                                                                <div class="time-picker-section">
+                                                                    <div class="time-picker-label">Minutes</div>
+                                                                    <div class="time-picker-minutes" id="minutesGrid">
+                                                                        <!-- Minutes will be generated here -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="date-clear-btn" onclick="clearDueDate()">✕</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="assignmentClassroom">Classroom</label>
+                                    <div class="custom-dropdown">
+                                        <div class="dropdown-trigger" onclick="toggleDropdown('assignmentClassroomDropdown')">
+                                            <span id="assignmentClassroomDisplay">Select Classroom</span>
+                                            <div class="dropdown-arrow"></div>
+                                        </div>
+                                        <div class="dropdown-options" id="assignmentClassroomDropdown" style="display: none;">
+                                            <!-- Options will be populated dynamically -->
+                                        </div>
+                                    </div>
+                                    <select id="assignmentClassroom" name="classroom_id" required style="display: none;">
+                                        <option value="">Select Classroom</option>
+                                    </select>
+                                    <small>Assign this to a specific class of students.</small>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="assignmentVoiceSpeed">Voice Speed</label>
+                                        <input type="range" id="assignmentVoiceSpeed" name="voice_speed" min="0.5" max="2.0" step="0.1" value="1.0" style="width: 100%;">
+                                        <div class="voice-speed-display">
+                                            <span class="speed-label">Slower</span>
+                                            <span class="speed-value" id="voiceSpeedValue">1.0x</span>
+                                            <span class="speed-label">Faster</span>
+                                        </div>
+                                        <small>Adjust speech rate for learner comprehension.</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="assignmentSpeakSlowly" name="speak_slowly">
+                                                <span>Speak Slowly & Clearly ("Hablar lento y claro")</span>
+                                            </label>
+                                        </div>
+                                        <small>Avatar will speak more slowly and clearly for better comprehension.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Review -->
+                        <div class="wizard-step" data-step="6">
+                            <div class="step-header">
+                                <h2>Step 6: Review & Create Assignment</h2>
+                                <p>Review all your selections and create the assignment.</p>
+                            </div>
+                            
+                            <div class="review-section">
+                                <div class="review-grid">
+                                    <div class="review-label">Avatar Role:</div>
+                                    <div class="review-value" id="reviewRole">-</div>
+                                    
+                                    <div class="review-label">Student Objective:</div>
+                                    <div class="review-value" id="reviewObjective">-</div>
+                                    
+                                    <div class="review-label">Proficiency Level:</div>
+                                    <div class="review-value" id="reviewLevel">-</div>
+                                    
+                                    <div class="review-label">Assignment Title:</div>
+                                    <div class="review-value" id="reviewTitle">-</div>
+                                    
+                                    <div class="review-label">Vocabulary Words:</div>
+                                    <div class="review-value" id="reviewVocab">-</div>
+                                    
+                                    <div class="review-label">Voice Settings:</div>
+                                    <div class="review-value" id="reviewVoice">-</div>
+                                    
+                                    <div class="review-label">Duration:</div>
+                                    <div class="review-value" id="reviewDuration">-</div>
+                                    
+                                    <div class="review-label">Due Date:</div>
+                                    <div class="review-value" id="reviewDueDate">-</div>
+                                    
+                                    <div class="review-label">Classroom:</div>
+                                    <div class="review-value" id="reviewClassroom">-</div>
+                                </div>
+                            </div>
+                            
+                            <div class="review-actions">
+                                <button type="button" class="btn btn-secondary" onclick="editStep(1)">Edit Persona</button>
+                                <button type="button" class="btn btn-secondary" onclick="editStep(2)">Edit Act</button>
+                                <button type="button" class="btn btn-secondary" onclick="editStep(3)">Edit Recipient</button>
+                                <button type="button" class="btn btn-secondary" onclick="editStep(4)">Edit Theme</button>
+                                <button type="button" class="btn btn-secondary" onclick="editStep(5)">Edit Structure</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="form-section">
-                    <div class="form-section-title">Advanced Options</div>
-                    <div class="form-group">
-                        <label for="assignmentPrompt">Custom Prompt (Optional)</label>
-                        <textarea id="assignmentPrompt" name="prompt" placeholder="Override the default system prompt with custom instructions for the AI..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="assignmentVocab">Key Vocabulary (Optional)</label>
-                        <textarea id="assignmentVocab" name="vocab" placeholder="Enter important vocabulary words or phrases (comma-separated). These will be tracked in student logs..."></textarea>
-                        <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Example: zapatos, talla, color, precio, comprar, tienda</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="minVocabWords">Minimum Vocabulary Words Required</label>
-                        <input type="number" id="minVocabWords" name="min_vocab_words" min="0" max="20" step="1" value="0" placeholder="Number of vocabulary words students must use">
-                        <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Set to 0 for no minimum requirement. Students will be tracked on how many unique vocabulary words they use.</small>
-                    </div>
+
+                <!-- Navigation Buttons -->
+                <div class="wizard-navigation">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+                    <button type="submit" class="btn btn-primary" id="createBtn" style="display: none;" form="assignmentWizardForm">Create Assignment</button>
                 </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-self: center;">Create Assignment</button>
-            </form>
+            </div>
         </div>
         
         <!-- My Assignments Tab -->
@@ -1354,6 +3405,9 @@
                     <!-- Conversation will be loaded here -->
                 </div>
             </div>
+            <div class="modal-footer" style="padding: 20px; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeConversationModal()">Close</button>
+            </div>
         </div>
     </div>
     
@@ -1375,46 +3429,79 @@
     
     <!-- Create Classroom Modal -->
     <div id="createClassroomModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content classroom-modal">
             <div class="modal-header">
-                <h2>Create New Classroom</h2>
-                <p>Set up a new classroom for your students</p>
+                <div class="modal-title-section">
+                    <h2>Create New Classroom</h2>
+                    <p>Set up a new classroom for your Spanish students</p>
+                </div>
+                <button class="modal-close-btn" onclick="closeCreateClassroomModal()">✕</button>
             </div>
             <form class="modal-form" onsubmit="createClassroom(event)">
-                <div class="form-group">
-                    <label for="modalClassroomName">Classroom Name</label>
-                    <input type="text" id="modalClassroomName" name="name" required placeholder="e.g., Spanish 101 - Fall 2024">
+                <div class="form-section">
+                    <div class="section-title">Basic Information</div>
+                    
+                    <div class="form-group">
+                        <label for="modalClassroomName">Classroom Name</label>
+                        <input type="text" id="modalClassroomName" name="name" required placeholder="e.g., Spanish 101 - Fall 2024">
+                        <small>Choose a descriptive name for your classroom</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modalClassroomDescription">Description</label>
+                        <textarea id="modalClassroomDescription" name="description" placeholder="Describe your classroom and learning objectives..." rows="3"></textarea>
+                        <small>Help students understand what they'll learn in this class</small>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="modalClassroomDescription">Description</label>
-                    <textarea id="modalClassroomDescription" name="description" placeholder="Describe your classroom and learning objectives..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="modalGradeLevel">Spanish Course Level</label>
-                    <select id="modalGradeLevel" name="gradeLevel">
-                        <option value="">Select Spanish Level</option>
-                        <option value="Spanish 1">Spanish 1</option>
-                        <option value="Spanish 2">Spanish 2</option>
-                        <option value="Spanish 3">Spanish 3</option>
-                        <option value="Spanish 4">Spanish 4</option>
-                        <option value="Spanish 5">Spanish 5</option>
-                        <option value="AP Spanish">AP Spanish</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="checkbox" id="modalAdvanced" name="advanced" style="width: auto; margin: 0;">
-                        <span>Honors Level</span>
-                    </label>
-                    <small style="color: #718096; font-size: 13px; margin-top: 4px; display: block;">Check if this is an honors level course</small>
+                <div class="form-section">
+                    <div class="section-title">Course Details</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="modalGradeLevel">Spanish Course Level</label>
+                            <div class="custom-dropdown">
+                                <div class="dropdown-trigger" onclick="toggleDropdown('modalGradeLevelDropdown')">
+                                    <span id="modalGradeLevelDisplay">Select Spanish Level</span>
+                                    <div class="dropdown-arrow"></div>
+                                </div>
+                                <div class="dropdown-options" id="modalGradeLevelDropdown" style="display: none;">
+                                    <div class="dropdown-option" data-value="Spanish 1">Spanish 1</div>
+                                    <div class="dropdown-option" data-value="Spanish 2">Spanish 2</div>
+                                    <div class="dropdown-option" data-value="Spanish 3">Spanish 3</div>
+                                    <div class="dropdown-option" data-value="Spanish 4">Spanish 4</div>
+                                    <div class="dropdown-option" data-value="Spanish 5">Spanish 5</div>
+                                    <div class="dropdown-option" data-value="AP Spanish">AP Spanish</div>
+                                </div>
+                            </div>
+                            <select id="modalGradeLevel" name="gradeLevel" style="display: none;">
+                                <option value="">Select Spanish Level</option>
+                                <option value="Spanish 1">Spanish 1</option>
+                                <option value="Spanish 2">Spanish 2</option>
+                                <option value="Spanish 3">Spanish 3</option>
+                                <option value="Spanish 4">Spanish 4</option>
+                                <option value="Spanish 5">Spanish 5</option>
+                                <option value="AP Spanish">AP Spanish</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="toggle-group">
+                                <label class="toggle-label">Honors Level</label>
+                                <div class="toggle-switch" id="modalAdvancedToggle" onclick="toggleModalAdvanced()"></div>
+                                <small class="toggle-description">Check if this is an honors level course</small>
+                            </div>
+                            <input type="checkbox" id="modalAdvanced" name="advanced" style="display: none;">
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeCreateClassroomModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Classroom</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">+</span>
+                        Create Classroom
+                    </button>
                 </div>
             </form>
         </div>
@@ -1433,13 +3520,906 @@
         let currentTeacher = null;
         let classrooms = [];
         
+        // Wizard State Management
+        let currentStep = 1;
+        const totalSteps = 6;
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadOrCreateTeacher();
             loadActiveTab();
+            
+            // Initialize wizard
+            initializeWizard();
+            
+            // Handle proficiency standard changes
+            const standardSelect = document.getElementById('assignmentStandard');
+            if (standardSelect) {
+                standardSelect.addEventListener('change', function() {
+                    loadProficiencyLevels();
+                });
+                // Set initial state
+                loadProficiencyLevels();
+            }
+            
+            // Handle voice speed slider
+            const voiceSpeedSlider = document.getElementById('assignmentVoiceSpeed');
+            const voiceSpeedValue = document.getElementById('voiceSpeedValue');
+            if (voiceSpeedSlider && voiceSpeedValue) {
+                voiceSpeedSlider.addEventListener('input', function() {
+                    voiceSpeedValue.textContent = this.value + 'x';
+                });
+            }
         });
         
-        // Custom notification system
+        // Wizard Functions
+        function initializeWizard() {
+            updateStepDisplay();
+            updateNavigationButtons();
+        }
+        
+        function updateStepDisplay() {
+            // Hide all steps
+            document.querySelectorAll('.wizard-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show current step
+            document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.add('active');
+            
+            // Update progress indicators
+            document.querySelectorAll('.step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+            
+            // Update review step if on step 6
+            if (currentStep === 6) {
+                updateReviewStep();
+            }
+        }
+        
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const createBtn = document.getElementById('createBtn');
+            
+            // Show/hide previous button
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+            
+            // Show/hide next vs create button
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                createBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                createBtn.style.display = 'none';
+            }
+        }
+        
+        function nextStep() {
+            if (validateCurrentStep()) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStepDisplay();
+                    updateNavigationButtons();
+                }
+            }
+        }
+        
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+                updateNavigationButtons();
+            }
+        }
+        
+        function editStep(stepNumber) {
+            currentStep = stepNumber;
+            updateStepDisplay();
+            updateNavigationButtons();
+        }
+        
+        function validateCurrentStep() {
+            const currentStepElement = document.querySelector(`.wizard-step[data-step="${currentStep}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    // Find the label for this field
+                    const label = field.previousElementSibling;
+                    const fieldName = label ? label.textContent.replace(':', '').trim() : 'Required field';
+                    
+                    // Show nice validation notification
+                    showValidationError(fieldName, field);
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function showValidationError(fieldName, field) {
+            // Check if field has custom validation message
+            const customMessage = field.getAttribute('data-validation-message');
+            const messageText = customMessage || 'Please fill out this required section';
+            
+            // Create validation notification
+            const notification = document.createElement('div');
+            notification.className = 'validation-notification';
+            notification.innerHTML = `
+                <div class="validation-content">
+                    <div class="validation-icon">⚠️</div>
+                    <div class="validation-message">
+                        <div class="validation-title">Missing Required Field</div>
+                        <div class="validation-text">${messageText}</div>
+                    </div>
+                    <button class="validation-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Highlight the field
+            field.style.borderColor = '#ef4444';
+            field.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
+            
+            // Focus on the field
+            field.focus();
+            
+            // Remove highlight when user starts typing
+            field.addEventListener('input', function removeHighlight() {
+                field.style.borderColor = '';
+                field.style.boxShadow = '';
+                field.removeEventListener('input', removeHighlight);
+            });
+            
+            // Auto-remove notification after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+            
+            // Remove notification when close button is clicked
+            notification.querySelector('.validation-close').addEventListener('click', () => {
+                notification.remove();
+            });
+        }
+        
+        function updateReviewStep() {
+            const formData = new FormData(document.getElementById('assignmentWizardForm'));
+            
+            // Update review fields
+            document.getElementById('reviewRole').textContent = formData.get('avatar_role') || '-';
+            document.getElementById('reviewObjective').textContent = formData.get('student_objective') || '-';
+            document.getElementById('reviewLevel').textContent = `${formData.get('level_standard')} - ${formData.get('level')}` || '-';
+            document.getElementById('reviewTitle').textContent = formData.get('title') || '-';
+            
+            // Handle vocabulary
+            const vocab = formData.get('vocab');
+            document.getElementById('reviewVocab').textContent = vocab ? vocab.split(',').slice(0, 5).join(', ') + (vocab.split(',').length > 5 ? '...' : '') : '-';
+            
+            // Handle voice settings
+            const voiceSettings = [];
+            if (formData.get('voice_speed') !== '1.0') {
+                voiceSettings.push(`Speed: ${formData.get('voice_speed')}x`);
+            }
+            if (formData.get('speak_slowly')) {
+                voiceSettings.push('Speak slowly');
+            }
+            document.getElementById('reviewVoice').textContent = voiceSettings.length > 0 ? voiceSettings.join(', ') : 'Normal';
+            
+            document.getElementById('reviewDuration').textContent = formData.get('duration') ? `${formData.get('duration')} minutes` : '-';
+            
+            // Handle due date
+            const dueDate = formData.get('due_date');
+            const dueTime = formData.get('due_time');
+            let dueDateDisplay = 'No due date';
+            if (dueDate) {
+                const date = new Date(dueDate);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                if (dueTime) {
+                    dueDateDisplay = `${formattedDate} at ${dueTime}`;
+                } else {
+                    dueDateDisplay = formattedDate;
+                }
+            }
+            document.getElementById('reviewDueDate').textContent = dueDateDisplay;
+            
+            // Get classroom name
+            const classroomSelect = document.getElementById('assignmentClassroom');
+            const selectedOption = classroomSelect.options[classroomSelect.selectedIndex];
+            document.getElementById('reviewClassroom').textContent = selectedOption ? selectedOption.text : '-';
+        }
+        
+        // Date picker functions
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        let selectedDate = null;
+        let selectedTime = null;
+        
+        // Toggle persona mode between dropdown and custom input
+        function togglePersonaMode() {
+            const checkbox = document.getElementById('useCustomAvatar');
+            const dropdownContainer = document.getElementById('personaDropdownContainer');
+            const customContainer = document.getElementById('customAvatarContainer');
+            const hiddenSelect = document.getElementById('assignmentPersona');
+            const customInput = document.getElementById('customPersona');
+            
+            if (checkbox.checked) {
+                // Show custom input, hide dropdown
+                dropdownContainer.classList.add('hidden');
+                customContainer.style.display = 'block';
+                hiddenSelect.value = 'custom';
+                customInput.setAttribute('required', 'required');
+                customInput.setAttribute('data-validation-message', 'Please fill out this required section');
+            } else {
+                // Show dropdown, hide custom input
+                dropdownContainer.classList.remove('hidden');
+                customContainer.style.display = 'none';
+                hiddenSelect.value = '';
+                customInput.removeAttribute('required');
+                customInput.value = '';
+            }
+        }
+
+        // Custom persona toggle function (deprecated - replaced by togglePersonaMode)
+        function toggleCustomPersona() {
+            const personaSelect = document.getElementById('assignmentPersona');
+            const customInput = document.getElementById('customPersonaInput');
+            
+            if (personaSelect.value === 'custom') {
+                customInput.style.display = 'block';
+                // Make custom field required when custom is selected
+                document.getElementById('customPersona').setAttribute('required', 'required');
+            } else {
+                customInput.style.display = 'none';
+                // Remove required attribute when not custom
+                document.getElementById('customPersona').removeAttribute('required');
+                // Clear the custom field
+                document.getElementById('customPersona').value = '';
+            }
+        }
+
+        // Toggle custom avatar input field
+        function toggleCustomAvatarInput() {
+            const checkbox = document.getElementById('customAvatarCheckbox');
+            const customInput = document.getElementById('customPersona');
+            const customHint = document.getElementById('customPersona').nextElementSibling;
+            
+            if (checkbox.checked) {
+                customInput.style.display = 'block';
+                customHint.style.display = 'block';
+                customInput.setAttribute('required', 'required');
+            } else {
+                customInput.style.display = 'none';
+                customHint.style.display = 'none';
+                customInput.removeAttribute('required');
+                customInput.value = '';
+            }
+        }
+
+        // Custom dropdown functionality
+        function togglePersonaDropdown() {
+            const dropdown = document.getElementById('personaOptions');
+            const trigger = document.getElementById('personaDropdown');
+            const triggerElement = trigger.querySelector('.dropdown-trigger');
+            
+            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                dropdown.style.display = 'block';
+                triggerElement.classList.add('active');
+            } else {
+                dropdown.style.display = 'none';
+                triggerElement.classList.remove('active');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('personaOptions');
+            const trigger = document.getElementById('personaDropdown');
+            
+            if (!trigger.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+                trigger.querySelector('.dropdown-trigger').classList.remove('active');
+            }
+        });
+
+        // Handle dropdown option selection
+        function selectPersonaOption(value, text) {
+            const dropdown = document.getElementById('personaOptions');
+            const trigger = document.getElementById('personaDropdown');
+            const triggerElement = trigger.querySelector('.dropdown-trigger');
+            const display = triggerElement.querySelector('span');
+            
+            // Update display
+            display.textContent = text;
+            
+            // Update hidden select
+            const hiddenSelect = document.getElementById('assignmentPersona');
+            hiddenSelect.value = value;
+            
+            // Close dropdown
+            dropdown.style.display = 'none';
+            triggerElement.classList.remove('active');
+            
+            // Update selected state
+            const options = dropdown.querySelectorAll('.dropdown-option');
+            options.forEach(option => {
+                option.classList.toggle('selected', option.getAttribute('data-value') === value);
+            });
+        }
+
+        // Universal dropdown functions for all other dropdowns
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const trigger = dropdown.previousElementSibling;
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.dropdown-options').forEach(otherDropdown => {
+                if (otherDropdown.id !== dropdownId) {
+                    otherDropdown.style.display = 'none';
+                    otherDropdown.previousElementSibling.classList.remove('active');
+                }
+            });
+            
+            // Toggle current dropdown
+            if (dropdown.style.display === 'none') {
+                dropdown.style.display = 'block';
+                trigger.classList.add('active');
+            } else {
+                dropdown.style.display = 'none';
+                trigger.classList.remove('active');
+            }
+        }
+
+        function selectDropdownOption(dropdownId, value, text) {
+            console.log('selectDropdownOption called:', dropdownId, value, text);
+            const dropdown = document.getElementById(dropdownId);
+            
+            if (!dropdown) {
+                console.error('Dropdown not found:', dropdownId);
+                return;
+            }
+            
+            // Find the custom dropdown container (might be the dropdown itself or its parent)
+            const customDropdown = dropdown.classList.contains('dropdown-options') ? 
+                dropdown.parentElement : dropdown;
+            
+            const hiddenSelect = customDropdown.nextElementSibling;
+            const display = customDropdown.querySelector('.dropdown-trigger span');
+            
+            console.log('Elements found - dropdown:', dropdown.id, 'customDropdown:', customDropdown.className, 'hiddenSelect:', hiddenSelect?.id, 'display:', display?.id);
+            
+            if (!hiddenSelect) {
+                console.error('Hidden select not found for dropdown:', dropdownId);
+                return;
+            }
+            
+            if (!display) {
+                console.error('Display element not found for dropdown:', dropdownId);
+                return;
+            }
+            
+            console.log('Updating display from:', display.textContent, 'to:', text);
+            
+            // Update display
+            display.textContent = text;
+            
+            // Update hidden select
+            hiddenSelect.value = value;
+            
+            // Close dropdown
+            dropdown.style.display = 'none';
+            dropdown.previousElementSibling.classList.remove('active');
+            
+            // Update selected state
+            dropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                option.classList.toggle('selected', option.getAttribute('data-value') === value);
+            });
+        }
+
+        // Initialize all dropdowns
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize persona dropdown - SPECIFIC selector only
+            const personaOptions = document.querySelectorAll('#personaOptions .dropdown-option');
+            personaOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectPersonaOption(this.getAttribute('data-value'), this.textContent);
+                });
+            });
+            
+            // Proficiency Standard dropdown
+            document.querySelectorAll('#assignmentStandardDropdown .dropdown-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectDropdownOption('assignmentStandardDropdown', this.getAttribute('data-value'), this.textContent);
+                    // Trigger level loading when standard changes
+                    setTimeout(() => loadProficiencyLevels(), 100); // Small delay to ensure DOM updates
+                });
+            });
+            
+            // Modal dropdowns
+            document.querySelectorAll('#modalGradeLevelDropdown .dropdown-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectDropdownOption('modalGradeLevelDropdown', this.getAttribute('data-value'), this.textContent);
+                });
+            });
+            
+            document.querySelectorAll('#editAssignmentLevelDropdown .dropdown-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectDropdownOption('editAssignmentLevelDropdown', this.getAttribute('data-value'), this.textContent);
+                });
+            });
+            
+            // Click outside to close dropdowns
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.custom-dropdown')) {
+                    document.querySelectorAll('.dropdown-options').forEach(dropdown => {
+                        dropdown.style.display = 'none';
+                        dropdown.previousElementSibling.classList.remove('active');
+                    });
+                }
+            });
+        });
+
+        function initializeDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                dropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        selectDropdownOption(dropdownId, this.getAttribute('data-value'), this.textContent);
+                        
+                        // Special handling for level dropdown to trigger validation
+                        if (dropdownId === 'assignmentLevelDropdown') {
+                            // Trigger any validation or other events needed
+                            const event = new Event('change', { bubbles: true });
+                            document.getElementById('assignmentLevel').dispatchEvent(event);
+                        }
+                    });
+                });
+            }
+        }
+        
+        function toggleDatePicker() {
+            const datePicker = document.getElementById('datePicker');
+            const timePicker = document.getElementById('timePicker');
+            
+            // Close time picker if open
+            if (timePicker.style.display !== 'none') {
+                timePicker.style.display = 'none';
+            }
+            
+            // Toggle date picker
+            if (datePicker.style.display === 'none') {
+                datePicker.style.display = 'block';
+                generateCalendar();
+                updateMonthDisplay();
+            } else {
+                datePicker.style.display = 'none';
+            }
+        }
+        
+        function toggleTimePicker() {
+            const datePicker = document.getElementById('datePicker');
+            const timePicker = document.getElementById('timePicker');
+            
+            // Close date picker if open
+            if (datePicker.style.display !== 'none') {
+                datePicker.style.display = 'none';
+            }
+            
+            // Toggle time picker
+            if (timePicker.style.display === 'none') {
+                timePicker.style.display = 'block';
+                generateTimeOptions();
+            } else {
+                timePicker.style.display = 'none';
+            }
+        }
+        
+        function generateCalendar() {
+            const grid = document.getElementById('datePickerGrid');
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            let html = '';
+            
+            // Day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                html += `<div class="day-header">${day}</div>`;
+            });
+            
+            // Empty cells for first week
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div class="day other-month"></div>`;
+            }
+            
+            // Days of the month
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const isToday = date.toDateString() === today.toDateString();
+                const isOtherMonth = date.getMonth() !== currentMonth;
+                const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+                
+                let classes = 'day';
+                if (isToday) classes += ' today';
+                if (isOtherMonth) classes += ' other-month';
+                if (isSelected) classes += ' selected';
+                
+                html += `<div class="${classes}" onclick="selectDate(${currentYear}, ${currentMonth}, ${day})">${day}</div>`;
+            }
+            
+            grid.innerHTML = html;
+        }
+        
+        function updateMonthDisplay() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        }
+        
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar();
+            updateMonthDisplay();
+        }
+        
+        function selectDate(year, month, day) {
+            selectedDate = new Date(year, month, day);
+            updateDateDisplay();
+            toggleDatePicker();
+        }
+        
+        function updateDateDisplay() {
+            const display = document.getElementById('assignmentDueDateDisplay');
+            const timeDisplay = document.getElementById('assignmentDueTimeDisplay');
+            
+            if (selectedDate) {
+                const options = { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                };
+                display.value = selectedDate.toLocaleDateString('en-US', options);
+            } else {
+                display.value = '';
+            }
+            
+            if (selectedTime) {
+                timeDisplay.value = formatTime(selectedTime);
+            } else {
+                timeDisplay.value = '';
+            }
+        }
+        
+        function generateTimeOptions() {
+            const hoursGrid = document.getElementById('hoursGrid');
+            const minutesGrid = document.getElementById('minutesGrid');
+            
+            // Generate hours (1-12)
+            let hourHtml = '';
+            for (let hour = 1; hour <= 12; hour++) {
+                const isSelected = selectedTime && get12Hour(selectedTime.getHours()) === hour;
+                hourHtml += `<div class="time-option ${isSelected ? 'selected' : ''}" onclick="selectHour(${hour})">${hour}</div>`;
+            }
+            hoursGrid.innerHTML = hourHtml;
+            
+            // Generate minutes (0, 15, 30, 45)
+            const minuteValues = [0, 15, 30, 45];
+            let minuteHtml = '';
+            minuteValues.forEach(minute => {
+                const isSelected = selectedTime && selectedTime.getMinutes() === minute;
+                minuteHtml += `<div class="time-option ${isSelected ? 'selected' : ''}" onclick="selectMinute(${minute})">${minute.toString().padStart(2, '0')}</div>`;
+            });
+            minutesGrid.innerHTML = minuteHtml;
+            
+            // Update AM/PM toggle state
+            if (selectedTime) {
+                const isPM = selectedTime.getHours() >= 12;
+                const toggle = document.getElementById('amPmToggle');
+                const label = document.getElementById('amPmLabel');
+                toggle.checked = isPM;
+                label.textContent = isPM ? 'PM' : 'AM';
+            }
+        }
+        
+        function get12Hour(hour24) {
+            return hour24 % 12 || 12;
+        }
+        
+        function toggleAmPm() {
+            const toggle = document.getElementById('amPmToggle');
+            const label = document.getElementById('amPmLabel');
+            const isPM = toggle.checked;
+            
+            label.textContent = isPM ? 'PM' : 'AM';
+            
+            if (!selectedTime) {
+                selectedTime = new Date();
+                selectedTime.setHours(12, 0, 0, 0); // Default to 12:00
+            }
+            
+            const currentHour = selectedTime.getHours();
+            const current12Hour = get12Hour(currentHour);
+            
+            // Convert between AM/PM
+            if (isPM && currentHour < 12) {
+                selectedTime.setHours(current12Hour + 12);
+            } else if (!isPM && currentHour >= 12) {
+                selectedTime.setHours(current12Hour);
+            }
+            
+            // Don't regenerate options to keep picker open, just update display
+            updateTimeDisplay();
+        }
+        
+        function selectHour(hour) {
+            if (!selectedTime) {
+                selectedTime = new Date();
+                selectedTime.setHours(12, 0, 0, 0); // Default to 12:00
+            }
+            
+            const isPM = document.getElementById('amPmToggle').checked;
+            selectedTime.setHours(isPM && hour < 12 ? hour + 12 : hour);
+            
+            // Don't regenerate options to keep picker open, just update display
+            updateHourSelection(hour);
+            updateTimeDisplay();
+        }
+        
+        function selectMinute(minute) {
+            if (!selectedTime) {
+                selectedTime = new Date();
+                selectedTime.setHours(12, 0, 0, 0); // Default to 12:00
+            }
+            selectedTime.setMinutes(minute);
+            
+            // Don't regenerate options to keep picker open, just update display
+            updateMinuteSelection(minute);
+            updateTimeDisplay();
+        }
+        
+        function updateHourSelection(selectedHour) {
+            // Update only the hour selection without regenerating
+            document.querySelectorAll('.time-picker-hours .time-option').forEach(option => {
+                const hour = parseInt(option.textContent);
+                option.classList.toggle('selected', hour === selectedHour);
+            });
+        }
+        
+        function updateMinuteSelection(selectedMinute) {
+            // Update only the minute selection without regenerating
+            document.querySelectorAll('.time-picker-minutes .time-option').forEach(option => {
+                const minute = parseInt(option.textContent);
+                option.classList.toggle('selected', minute === selectedMinute);
+            });
+        }
+        
+        function updateTimeDisplay() {
+            if (selectedTime) {
+                const display = document.getElementById('assignmentDueTimeDisplay');
+                const hours = selectedTime.getHours();
+                const minutes = selectedTime.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours % 12 || 12;
+                display.value = `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+            }
+        }
+        
+        // Add click outside to close functionality
+        document.addEventListener('click', function(event) {
+            const datePicker = document.getElementById('datePicker');
+            const timePicker = document.getElementById('timePicker');
+            const dateInput = document.getElementById('assignmentDueDateDisplay');
+            const timeInput = document.getElementById('assignmentDueTimeDisplay');
+            
+            // Check if click is outside date picker and date input
+            if (datePicker.style.display !== 'none' && 
+                !datePicker.contains(event.target) && 
+                !dateInput.contains(event.target)) {
+                datePicker.style.display = 'none';
+            }
+            
+            // Check if click is outside time picker and time input
+            if (timePicker.style.display !== 'none' && 
+                !timePicker.contains(event.target) && 
+                !timeInput.contains(event.target)) {
+                timePicker.style.display = 'none';
+            }
+        });
+        
+        function formatHour(hour) {
+            const hour12 = hour % 12 || 12;
+            const ampm = hour < 12 ? 'AM' : 'PM';
+            return `${hour12}:00 ${ampm}`;
+        }
+        
+        function formatTime(time) {
+            const hours = time.getHours();
+            const minutes = time.getMinutes();
+            const ampm = hours < 12 ? 'AM' : 'PM';
+            const hour12 = hours % 12 || 12;
+            const minuteStr = minutes.toString().padStart(2, '0');
+            return `${hour12}:${minuteStr} ${ampm}`;
+        }
+        
+        function clearTime() {
+            selectedTime = null;
+            generateTimeOptions();
+            updateDateDisplay();
+        }
+        
+        function confirmTime() {
+            updateDateDisplay();
+            toggleTimePicker();
+        }
+        
+        function clearDueDate() {
+            selectedDate = null;
+            selectedTime = null;
+            updateDateDisplay();
+            
+            // Clear the hidden form fields
+            document.getElementById('assignmentDueDateDisplay').value = '';
+            document.getElementById('assignmentDueTimeDisplay').value = '';
+        }
+        
+        function combineDateTimeForSubmission() {
+            if (selectedDate) {
+                const date = new Date(selectedDate);
+                if (selectedTime) {
+                    date.setHours(selectedTime.getHours());
+                    date.setMinutes(selectedTime.getMinutes());
+                }
+                return date.toISOString();
+            }
+            return null;
+        }
+        
+        // Load proficiency levels based on standard
+        function loadProficiencyLevels() {
+            console.log('Loading proficiency levels...');
+            const standardSelect = document.getElementById('assignmentStandard');
+            const levelSelect = document.getElementById('assignmentLevel');
+            const levelDropdown = document.getElementById('assignmentLevelDropdown');
+            const levelDisplay = document.getElementById('assignmentLevelDisplay');
+            
+            if (!standardSelect || !levelSelect || !levelDropdown || !levelDisplay) {
+                console.error('Missing elements for level loading');
+                return;
+            }
+            
+            const standard = standardSelect.value;
+            console.log('Selected standard:', standard);
+            
+            // Clear existing options
+            levelSelect.innerHTML = '<option value="">Select Level</option>';
+            levelDropdown.innerHTML = '';
+            levelDisplay.textContent = 'Select Level';
+            
+            // Basic standard - only legacy options
+            if (standard === 'Basic' || standard === '') {
+                const basicOptions = [
+                    { value: 'beginner', text: 'Beginner' },
+                    { value: 'intermediate', text: 'Intermediate' },
+                    { value: 'advanced', text: 'Advanced' }
+                ];
+                
+                basicOptions.forEach(option => {
+                    levelSelect.innerHTML += `<option value="${option.value}">${option.text}</option>`;
+                    levelDropdown.innerHTML += `<div class="dropdown-option" data-value="${option.value}">${option.text}</div>`;
+                });
+            }
+            
+            // ACTFL standard - specific ACTFL levels
+            else if (standard === 'ACTFL') {
+                const actflOptions = [
+                    { value: 'novice_low', text: 'Novice Low' },
+                    { value: 'novice_mid', text: 'Novice Mid' },
+                    { value: 'novice_high', text: 'Novice High' },
+                    { value: 'intermediate_low', text: 'Intermediate Low' },
+                    { value: 'intermediate_mid', text: 'Intermediate Mid' },
+                    { value: 'intermediate_high', text: 'Intermediate High' },
+                    { value: 'advanced_low', text: 'Advanced Low' },
+                    { value: 'advanced_mid', text: 'Advanced Mid' },
+                    { value: 'advanced_high', text: 'Advanced High' },
+                    { value: 'superior', text: 'Superior' },
+                    { value: 'distinguished', text: 'Distinguished' }
+                ];
+                
+                actflOptions.forEach(option => {
+                    levelSelect.innerHTML += `<option value="${option.value}">${option.text}</option>`;
+                    levelDropdown.innerHTML += `<div class="dropdown-option" data-value="${option.value}">${option.text}</div>`;
+                });
+            }
+            
+            // CEFR standard - specific CEFR levels
+            else if (standard === 'CEFR') {
+                const cefrOptions = [
+                    { value: 'a1', text: 'A1 (Beginner)' },
+                    { value: 'a2', text: 'A2 (Elementary)' },
+                    { value: 'b1', text: 'B1 (Intermediate)' },
+                    { value: 'b2', text: 'B2 (Upper Intermediate)' },
+                    { value: 'c1', text: 'C1 (Advanced)' },
+                    { value: 'c2', text: 'C2 (Proficient)' }
+                ];
+                
+                cefrOptions.forEach(option => {
+                    levelSelect.innerHTML += `<option value="${option.value}">${option.text}</option>`;
+                    levelDropdown.innerHTML += `<div class="dropdown-option" data-value="${option.value}">${option.text}</div>`;
+                });
+            }
+            
+            console.log('Level dropdown HTML:', levelDropdown.innerHTML);
+            
+            // Reinitialize the level dropdown
+            initializeDropdown('assignmentLevelDropdown');
+            console.log('Level dropdown initialized');
+        }
+        
+        // Monitor avatar dropdown changes
+        const avatarDisplay = document.getElementById('selectedPersona');
+        if (avatarDisplay) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    console.log('Avatar display changed from:', mutation.oldValue, 'to:', avatarDisplay.textContent);
+                    console.trace('Avatar change stack trace');
+                });
+            });
+            
+            observer.observe(avatarDisplay, {
+                childList: true,
+                characterData: true,
+                subtree: true,
+                characterDataOldValue: true
+            });
+        }
+        function clearWizardForm() {
+            const form = document.getElementById('assignmentWizardForm');
+            if (form) {
+                form.reset();
+                
+                // Reset dropdown displays
+                document.getElementById('selectedPersona').textContent = 'Choose a persona...';
+                document.getElementById('assignmentStandardDisplay').textContent = 'Select Standard';
+                document.getElementById('assignmentLevelDisplay').textContent = 'Select Level';
+                document.getElementById('assignmentClassroomDisplay').textContent = 'Select Classroom';
+                
+                // Reset hidden selects
+                document.getElementById('assignmentPersona').value = '';
+                document.getElementById('assignmentStandard').value = '';
+                document.getElementById('assignmentLevel').value = '';
+                document.getElementById('assignmentClassroom').value = '';
+                
+                // Reset level dropdown to basic options
+                loadProficiencyLevels();
+                
+                console.log('Wizard form cleared');
+            }
+        }
         function showNotification(title, message, type = 'success') {
             const modal = document.getElementById('notificationModal');
             const titleElement = document.getElementById('notificationTitle');
@@ -1478,13 +4458,16 @@
             const savedTeacher = sessionStorage.getItem('currentTeacher');
             if (savedTeacher) {
                 currentTeacher = JSON.parse(savedTeacher);
+                console.log('Loaded teacher from sessionStorage:', currentTeacher.name, currentTeacher.id);
             } else {
+                console.log('No teacher found in sessionStorage, redirecting to login');
                 // Redirect to login page
                 window.location.href = '/teacher-login';
                 return;
             }
             
             if (currentTeacher) {
+                console.log('Teacher loaded, loading classrooms...');
                 loadClassrooms();
                 loadClassroomSelect();
             }
@@ -1564,11 +4547,14 @@
         
         // Switch between tabs
         async function switchTab(tabName) {
-            // Update nav tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
+            console.log('=== TAB SWITCH DEBUG ===');
+            console.log('Switching to tab:', tabName);
+            
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
             
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => {
@@ -1580,17 +4566,19 @@
             localStorage.setItem('activeTab', tabName);
             
             // Load tab-specific content
-            if (tabName === 'classrooms') {
-                loadClassrooms();
-            } else if (tabName === 'create') {
+            if (tabName === 'create') {
+                console.log('Loading create tab content');
                 // Form is already clean when switching to create tab
                 // No need to reset as it's always fresh
             } else if (tabName === 'assignments') {
-                loadAssignments();
+                console.log('Loading assignments tab...');
+                await loadAssignments();
             } else if (tabName === 'analytics') {
+                console.log('Loading analytics tab...');
                 await loadAnalytics();
             } else if (tabName === 'profile') {
-                loadTeacherProfile();
+                console.log('Loading profile tab...');
+                // Profile is already loaded
             }
         }
         
@@ -1624,6 +4612,18 @@
             
             const formData = new FormData(event.target);
             
+            // Debug what's being updated
+            console.log('=== TEACHER PROFILE UPDATE DEBUG ===');
+            console.log('Current teacher email:', currentTeacher.email);
+            console.log('New email from form:', formData.get('email'));
+            console.log('Form data:', {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                school: formData.get('school'),
+                title: formData.get('title'),
+                bio: formData.get('bio')
+            });
+            
             try {
                 const response = await fetch(`/api/teachers/${currentTeacher.id}`, {
                     method: 'PUT',
@@ -1640,10 +4640,13 @@
                 });
                 
                 const data = await response.json();
+                console.log('Server response:', data);
+                
                 if (response.ok) {
                     // Update current teacher data
                     currentTeacher = data.teacher;
                     localStorage.setItem('currentTeacher', JSON.stringify(currentTeacher));
+                    console.log('Updated teacher data:', currentTeacher);
                     
                     showNotification('Success', 'Profile updated successfully!', 'success');
                 } else {
@@ -1679,18 +4682,36 @@
         }
         
         async function loadClassroomSelect() {
-            if (!currentTeacher) return;
-            
             try {
+                if (!currentTeacher || !currentTeacher.id) {
+                    console.error('No teacher found for classroom loading');
+                    return;
+                }
+                
                 const response = await fetch(`/api/teachers/${currentTeacher.id}/classrooms`);
                 const data = await response.json();
                 const classrooms = data.classrooms || [];
                 
                 const select = document.getElementById('assignmentClassroom');
-                select.innerHTML = '<option value="">Select Classroom</option>' +
-                    classrooms.map(classroom => 
-                        `<option value="${classroom.id}">${classroom.name}</option>`
+                const dropdown = document.getElementById('assignmentClassroomDropdown');
+                const display = document.getElementById('assignmentClassroomDisplay');
+                
+                if (select && dropdown && display) {
+                    select.innerHTML = '<option value="">Select Classroom</option>' +
+                        classrooms.map(classroom => 
+                            `<option value="${classroom.id}">${classroom.name}</option>`
+                        ).join('');
+                        
+                    dropdown.innerHTML = classrooms.map(classroom => 
+                        `<div class="dropdown-option" data-value="${classroom.id}">${classroom.name}</div>`
                     ).join('');
+                        
+                    // Reinitialize the classroom dropdown
+                    initializeDropdown('assignmentClassroomDropdown');
+                } else {
+                    console.error('Classroom dropdown elements not found');
+                }
+                
             } catch (error) {
                 console.error('Error loading classroom select:', error);
             }
@@ -1721,9 +4742,12 @@
             
             container.innerHTML = classrooms.map(classroom => {
                 let levelInfo = '';
-                if (classroom.spanish_level) {
-                    levelInfo = classroom.spanish_level;
-                    if (classroom.is_advanced) {
+                // Use spanish_level if available, otherwise fall back to subject
+                const level = classroom.spanish_level || classroom.subject;
+                if (level) {
+                    levelInfo = level;
+                    // Handle both boolean and number types for is_advanced
+                    if (classroom.is_advanced === true || classroom.is_advanced === 1) {
                         levelInfo += ' (Honors)';
                     }
                 }
@@ -1734,8 +4758,8 @@
                         <div class="classroom-header">
                             <div class="classroom-title">${classroom.name}</div>
                             <div class="classroom-meta">
-                                <span class="join-code">🔑 ${classroom.join_code}</span>
-                                ${levelInfo ? `<span>🇪🇸 ${levelInfo}</span>` : ''}
+                                <span class="join-code">${classroom.join_code}</span>
+                                ${levelInfo ? `<span>${levelInfo}</span>` : ''}
                             </div>
                         </div>
                         ${classroom.description ? `<div class="classroom-description">${classroom.description}</div>` : ''}
@@ -1758,6 +4782,14 @@
             }).join('');
         }
         
+        function toggleModalAdvanced() {
+            const toggle = document.getElementById('modalAdvancedToggle');
+            const checkbox = document.getElementById('modalAdvanced');
+            
+            toggle.classList.toggle('active');
+            checkbox.checked = toggle.classList.contains('active');
+        }
+        
         function showCreateClassroomModal() {
             document.getElementById('createClassroomModal').classList.add('active');
         }
@@ -1766,6 +4798,11 @@
             document.getElementById('createClassroomModal').classList.remove('active');
             // Reset form
             document.querySelector('#createClassroomModal form').reset();
+            // Reset toggle
+            const toggle = document.getElementById('modalAdvancedToggle');
+            const checkbox = document.getElementById('modalAdvanced');
+            toggle.classList.remove('active');
+            checkbox.checked = false;
         }
         
         async function createClassroom(event) {
@@ -1827,16 +4864,19 @@
             
             // Update header info
             let levelInfo = '';
-            if (classroom.spanish_level) {
-                levelInfo = classroom.spanish_level;
-                if (classroom.is_advanced) {
+            // Use spanish_level if available, otherwise fall back to subject
+            const level = classroom.spanish_level || classroom.subject;
+            if (level) {
+                levelInfo = level;
+                // Handle both boolean and number types for is_advanced
+                if (classroom.is_advanced === true || classroom.is_advanced === 1) {
                     levelInfo += ' (Honors)';
                 }
             }
             
             document.getElementById('classroomDetailsInfo').innerHTML = `
-                <strong>${classroom.name}</strong> • 🔑 ${classroom.join_code}
-                ${levelInfo ? ` • 🇪🇸 ${levelInfo}` : ''}
+                <strong>${classroom.name}</strong> • ${classroom.join_code}
+                ${levelInfo ? ` • ${levelInfo}` : ''}
             `;
             
             try {
@@ -1984,72 +5024,107 @@
             }
         }
         
-        // Create assignment
+        // Create assignment (Wizard version)
         async function createAssignment(event) {
             event.preventDefault();
+            
+            console.log('=== CREATE ASSIGNMENT DEBUG ===');
             
             const formData = new FormData(event.target);
             const vocabText = formData.get('vocab') || '';
             const vocabList = vocabText.split(',').map(v => v.trim()).filter(v => v.length > 0);
             
+            // Get avatar characteristics checkboxes
+            const characteristics = [];
+            document.querySelectorAll('input[name="avatar_characteristics"]:checked').forEach(checkbox => {
+                characteristics.push(checkbox.value);
+            });
+            
+            // Handle custom avatar role
+            let avatarRole = formData.get('avatar_role');
+            if (avatarRole === 'custom') {
+                avatarRole = formData.get('custom_avatar_role');
+                console.log('Using custom avatar role:', avatarRole);
+            }
+            
+            // Combine date and time for due date
+            const dueDate = combineDateTimeForSubmission();
+            
+            console.log('Form data being submitted:');
+            console.log('  classroom_id:', formData.get('classroom_id'));
+            console.log('  title:', formData.get('title'));
+            console.log('  description:', formData.get('description'));
+            console.log('  instructions:', formData.get('instructions'));
+            console.log('  level:', formData.get('level'));
+            console.log('  level_standard:', formData.get('level_standard'));
+            console.log('  duration:', formData.get('duration'));
+            console.log('  due_date:', dueDate);
+            console.log('  vocab:', vocabList);
+            console.log('  avatar_role:', avatarRole);
+            console.log('  student_objective:', formData.get('student_objective'));
+            console.log('  avatar_characteristics:', characteristics);
+            console.log('  voice_speed:', formData.get('voice_speed'));
+            console.log('  speak_slowly:', formData.get('speak_slowly'));
+            console.log('  theme:', formData.get('theme'));
+            
+            const payload = {
+                classroom_id: formData.get('classroom_id'),
+                title: formData.get('title'),
+                description: formData.get('description'),
+                instructions: formData.get('instructions'),
+                level: formData.get('level'),
+                level_standard: formData.get('level_standard'),
+                duration: parseInt(formData.get('duration')),
+                due_date: dueDate,
+                vocab: vocabList,
+                min_vocab_words: parseInt(formData.get('min_vocab_words')) || 0,
+                avatar_role: avatarRole,
+                student_objective: formData.get('student_objective'),
+                avatar_characteristics: characteristics,
+                voice_speed: parseFloat(formData.get('voice_speed')),
+                speak_slowly: formData.get('speak_slowly') === 'on',
+                theme: formData.get('theme')
+            };
+            
+            console.log('Full payload:', JSON.stringify(payload, null, 2));
+            
             try {
+                console.log('Sending request to /api/classroom-assignments...');
                 const response = await fetch('/api/classroom-assignments', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        classroom_id: formData.get('classroom_id'),
-                        title: formData.get('title'),
-                        description: formData.get('description'),
-                        instructions: formData.get('instructions'),
-                        level: formData.get('level'),
-                        duration: parseInt(formData.get('duration')),
-                        due_date: formData.get('due_date') || null,
-                        prompt: formData.get('prompt'),
-                        vocab: vocabList,
-                        min_vocab_words: parseInt(formData.get('min_vocab_words')) || 0
-                    })
+                    body: JSON.stringify(payload)
                 });
                 
+                console.log('Response status:', response.status);
                 const data = await response.json();
+                console.log('Response data:', data);
+                
                 if (response.ok) {
-                    // Reset form
+                    console.log('Assignment created successfully!');
+                    // Reset wizard to step 1
+                    currentStep = 1;
+                    updateStepDisplay();
+                    updateNavigationButtons();
                     event.target.reset();
                     
                     // Show success message
-                    const successDiv = document.createElement('div');
-                    successDiv.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: #10b981;
-                        color: white;
-                        padding: 12px 20px;
-                        border-radius: 8px;
-                        z-index: 10001;
-                        font-weight: 500;
-                        font-size: 14px;
-                    `;
-                    successDiv.textContent = 'Assignment created successfully!';
-                    document.body.appendChild(successDiv);
-                    
-                    // Remove success message after 3 seconds
-                    setTimeout(() => {
-                        successDiv.remove();
-                    }, 3000);
-                    
-                    // Reload assignments from database
-                    await loadAssignments();
+                    showNotification('Success!', 'Assignment created successfully!');
                     
                     // Switch to assignments tab
-                    document.querySelector('[onclick="switchTab(\'assignments\')"]').click();
+                    setTimeout(() => {
+                        console.log('Switching to assignments tab...');
+                        document.querySelector('[data-tab="assignments"]').click();
+                    }, 1500);
                 } else {
-                    alert('Error creating assignment: ' + data.detail);
+                    console.error('Server error:', data);
+                    showNotification('Error', data.detail || 'Failed to create assignment', 'error');
                 }
             } catch (error) {
-                console.error('Error creating assignment:', error);
-                alert('Error creating assignment');
+                console.error('Network error:', error);
+                showNotification('Error', 'Failed to create assignment', 'error');
             }
         }
         
@@ -2074,17 +5149,24 @@
         async function loadAssignments() {
             if (!currentTeacher) {
                 console.log('No current teacher found');
+                document.getElementById('assignmentsList').innerHTML = `
+                    <div class="empty-state">
+                        <h3>No teacher logged in</h3>
+                        <p>Please log in to view assignments</p>
+                    </div>
+                `;
                 return;
             }
             
-            console.log('Loading assignments for teacher:', currentTeacher.id);
+            console.log('Loading assignments for teacher:', currentTeacher.id, currentTeacher.name);
             
             try {
                 const response = await fetch(`/api/teachers/${currentTeacher.id}/assignments`);
+                console.log('API response status:', response.status);
                 const data = await response.json();
                 console.log('Assignments response:', data);
                 assignments = data.assignments || [];
-                console.log('Assignments loaded:', assignments);
+                console.log('Assignments loaded:', assignments.length);
                 displayAssignments();
             } catch (error) {
                 console.error('Error loading assignments:', error);
@@ -2096,7 +5178,12 @@
         function displayAssignments() {
             const container = document.getElementById('assignmentsList');
             
+            console.log('=== DISPLAY ASSIGNMENTS DEBUG ===');
+            console.log('Total assignments to display:', assignments.length);
+            console.log('Assignments data:', assignments);
+            
             if (assignments.length === 0) {
+                console.log('No assignments found, showing empty state');
                 container.innerHTML = `
                     <div class="empty-state">
                         <h3>No assignments yet</h3>
@@ -2109,25 +5196,29 @@
                 return;
             }
             
+            console.log('Rendering assignment cards...');
             container.innerHTML = assignments.map(assignment => {
                 const studentText = assignment.completion_count === 1 ? 'student' : 'students';
+                console.log('Rendering assignment:', assignment.title, 'ID:', assignment.id);
                 return `
                 <div class="assignment-card">
                     <div class="assignment-header">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <input type="checkbox" class="assignment-checkbox" value="${assignment.id}" onchange="updateAssignmentsToggleBtn()">
-                            <div>
-                                <div class="assignment-title">${assignment.title}</div>
-                                <div class="assignment-meta">
-                                    <span class="level-badge level-${assignment.level}">${assignment.level}</span>
-                                    <span>⏱️ ${assignment.duration} min</span>
-                                    <span>📚 ${assignment.classroom_name}</span>
-                                    <span>${assignment.completion_count} ${studentText} completed</span>
+                        <div style="display: flex; align-items: flex-start; justify-content: space-between; width: 100%;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                                <input type="checkbox" class="assignment-checkbox" value="${assignment.id}" onchange="updateAssignmentsToggleBtn()">
+                                <div>
+                                    <div class="assignment-title">${assignment.title}</div>
+                                    <div class="assignment-meta">
+                                        <span>⏱️ ${assignment.duration} min</span>
+                                    </div>
                                 </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <span class="level-badge level-${assignment.level}">${assignment.level}</span>
+                                <span style="font-size: 12px; color: #6b7280;">${assignment.completion_count} ${studentText} completed</span>
                             </div>
                         </div>
                     </div>
-                    <div class="assignment-description">${assignment.description}</div>
                     <div class="assignment-actions">
                         <button class="btn btn-primary btn-small" onclick="shareAssignment('${assignment.id}')">Share</button>
                         <button class="btn btn-secondary btn-small" onclick="viewAssignmentLogs('${assignment.id}')">View Logs</button>
@@ -2295,20 +5386,35 @@
             
             // Set classroom dropdown
             const classroomSelect = document.getElementById('editAssignmentClassroom');
+            const classroomDropdown = document.getElementById('editAssignmentClassroomDropdown');
+            const classroomDisplay = document.getElementById('editAssignmentClassroomDisplay');
+            
             if (classroomSelect) {
                 // Clear existing options
                 classroomSelect.innerHTML = '<option value="">Select Classroom</option>';
+                classroomDropdown.innerHTML = '';
                 
                 // Add classroom options
                 classrooms.forEach(classroom => {
-                    const option = document.createElement('option');
-                    option.value = classroom.id;
-                    option.textContent = classroom.name;
-                    classroomSelect.appendChild(option);
+                    classroomSelect.innerHTML += `<option value="${classroom.id}">${classroom.name}</option>`;
+                    classroomDropdown.innerHTML += `<div class="dropdown-option" data-value="${classroom.id}">${classroom.name}</div>`;
                 });
                 
-                // Set the value to the assignment's classroom
-                classroomSelect.value = assignment.classroom_id;
+                // Set current classroom
+                classroomSelect.value = assignment.classroom_id || '';
+                
+                // Update display and dropdown selection
+                const currentClassroom = classrooms.find(c => c.id === assignment.classroom_id);
+                if (currentClassroom) {
+                    classroomDisplay.textContent = currentClassroom.name;
+                    // Update selected state in dropdown
+                    classroomDropdown.querySelectorAll('.dropdown-option').forEach(option => {
+                        option.classList.toggle('selected', option.getAttribute('data-value') === assignment.classroom_id);
+                    });
+                }
+                
+                // Reinitialize the classroom dropdown
+                initializeDropdown('editAssignmentClassroomDropdown');
             }
             
             console.log('Showing modal...');
@@ -2424,10 +5530,6 @@
             console.log('Assignments:', assignments.length);
             console.log('Logs:', logs.length);
             
-            // Debug: Show first few logs and assignments
-            console.log('First 3 logs:', logs.slice(0, 3));
-            console.log('First 3 assignments:', assignments.slice(0, 3));
-            
             // Update stats
             const uniqueStudents = new Set(logs.map(log => log.studentName)).size;
             const completedAssignments = logs.filter(log => log.completed).length;
@@ -2435,6 +5537,16 @@
             const voiceUsageCount = logs.filter(log => log.voiceUsed).length;
             const avgCompletionRate = logs.length > 0 ? Math.round((completedAssignments / logs.length) * 100) : 0;
             const voiceUsageRate = logs.length > 0 ? Math.round((voiceUsageCount / logs.length) * 100) : 0;
+            
+            // Count only active assignments
+            const activeAssignments = assignments.filter(assignment => {
+                // Handle different possible values for is_active
+                const isActive = assignment.is_active;
+                
+                // Consider it active if is_active is not explicitly false
+                return isActive !== false && isActive !== 0 && isActive !== 'false';
+            });
+            console.log('Total assignments:', assignments.length, 'Active assignments:', activeAssignments.length);
             
             // Calculate vocabulary performance metrics
             const vocabRequirementsMet = logs.filter(log => {
@@ -2455,7 +5567,7 @@
                 voiceUsageRate
             });
             
-            document.getElementById('totalAssignments').textContent = assignments.length;
+            document.getElementById('totalAssignments').textContent = activeAssignments.length;
             document.getElementById('totalStudents').textContent = uniqueStudents;
             document.getElementById('avgCompletion').textContent = avgCompletionRate + '%';
             document.getElementById('voiceUsage').textContent = voiceUsageRate + '%';
@@ -2880,8 +5992,8 @@
                             computedMaxWidth: window.getComputedStyle(modalContent).maxWidth
                         });
                         
-                        // Force exact same styling as main modal uses
-                        modalContent.style.width = '800px';
+                        // Match student dashboard modal dimensions exactly
+                        modalContent.style.width = '';
                         modalContent.style.maxWidth = '90%';
                         modalContent.style.maxHeight = '90vh';
                         modalContent.style.overflowY = 'auto';
@@ -3027,7 +6139,18 @@
             `;
             
             // Show modal
-            document.getElementById('conversationModal').classList.add('active');
+            const conversationModal = document.getElementById('conversationModal');
+            const modalContent = conversationModal.querySelector('.modal-content');
+            
+            // Match student dashboard modal dimensions exactly
+            if (modalContent) {
+                modalContent.style.width = '';
+                modalContent.style.maxWidth = '90%';
+                modalContent.style.maxHeight = '90vh';
+                modalContent.style.overflowY = 'auto';
+            }
+            
+            conversationModal.classList.add('active');
         }
         
         function closeConversationModal() {
@@ -3231,7 +6354,16 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="editAssignmentClassroom">Classroom</label>
-                            <select id="editAssignmentClassroom" name="classroom_id" disabled>
+                            <div class="custom-dropdown">
+                                <div class="dropdown-trigger" onclick="toggleDropdown('editAssignmentClassroomDropdown')">
+                                    <span id="editAssignmentClassroomDisplay">Select Classroom</span>
+                                    <div class="dropdown-arrow"></div>
+                                </div>
+                                <div class="dropdown-options" id="editAssignmentClassroomDropdown" style="display: none;">
+                                    <!-- Options will be populated dynamically -->
+                                </div>
+                            </div>
+                            <select id="editAssignmentClassroom" name="classroom_id" disabled style="display: none;">
                                 <option value="">Select Classroom</option>
                             </select>
                             <small style="color: #718096; font-size: 13px; margin-top: 6px; display: block;">Classroom cannot be changed when editing</small>
@@ -3239,7 +6371,19 @@
                         
                         <div class="form-group">
                             <label for="editAssignmentLevel">Difficulty Level</label>
-                            <select id="editAssignmentLevel" name="level" required>
+                            <div class="custom-dropdown">
+                                <div class="dropdown-trigger" onclick="toggleDropdown('editAssignmentLevelDropdown')">
+                                    <span id="editAssignmentLevelDisplay">Select Level</span>
+                                    <div class="dropdown-arrow"></div>
+                                </div>
+                                <div class="dropdown-options" id="editAssignmentLevelDropdown" style="display: none;">
+                                    <div class="dropdown-option" data-value="">Select Level</div>
+                                    <div class="dropdown-option" data-value="beginner">Beginner</div>
+                                    <div class="dropdown-option" data-value="intermediate">Intermediate</div>
+                                    <div class="dropdown-option" data-value="advanced">Advanced</div>
+                                </div>
+                            </div>
+                            <select id="editAssignmentLevel" name="level" required style="display: none;">
                                 <option value="">Select Level</option>
                                 <option value="beginner">Beginner</option>
                                 <option value="intermediate">Intermediate</option>

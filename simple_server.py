@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from openai import OpenAI
+import google.generativeai as genai
 import asyncio
 from dotenv import load_dotenv
 from datetime import datetime
@@ -27,15 +28,30 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 NARAKEET_API_KEY = os.getenv("NARAKEET_API_KEY")  # Optional: for best Spanish voices
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")  # Optional: for better Spanish voices
 TTS_SERVICE = os.getenv("TTS_SERVICE", "openai")  # Options: "openai", "elevenlabs", "narakeet"
 
+# Initialize Google AI for LearnLM
+if GOOGLE_API_KEY:
+    import google.genai as genai
+    # Create client for new API
+    client = genai.Client(api_key=GOOGLE_API_KEY)
+    # Store client for use in functions
+    learnlm_client = client
+    print("LearnLM client initialized with Gemini 2.5 Pro")
+else:
+    learnlm_client = None
+    print("Warning: GOOGLE_API_KEY not set - LearnLM features disabled")
+
 # Debug environment variables
-print(f"=== TTS Configuration ===")
+print(f"=== AI Configuration ===")
 print(f"OPENAI_API_KEY present: {bool(OPENAI_API_KEY)}")
+print(f"GOOGLE_API_KEY present: {bool(GOOGLE_API_KEY)}")
 print(f"ELEVENLABS_API_KEY present: {bool(ELEVENLABS_API_KEY)}")
 print(f"TTS_SERVICE: {TTS_SERVICE}")
+print(f"LearnLM available: {bool(learnlm_client)}")
 print(f"========================")
 
 @app.get("/home")
@@ -91,6 +107,8 @@ class ClassroomCreate(BaseModel):
     description: str = ""
     grade_level: str = ""
     subject: str = ""
+    spanish_level: str = ""
+    is_advanced: bool = False
 
 class ClassroomUpdate(BaseModel):
     name: Optional[str] = None
@@ -115,22 +133,38 @@ class AssignmentCreate(BaseModel):
     description: str
     instructions: str
     level: str
+    level_standard: str = 'ACTFL'  # ACTFL, CEFR, etc.
     duration: int
     due_date: Optional[str] = None
     prompt: Optional[str] = None
     vocab: Optional[List[str]] = None
     min_vocab_words: int = 0
+    # Avatar and learning features
+    avatar_role: Optional[str] = None  # doctor, waiter, travel agent, etc.
+    student_objective: Optional[str] = None  # what student should accomplish
+    avatar_characteristics: Optional[List[str]] = None  # patient, encouraging, etc.
+    voice_speed: float = 1.0  # speech rate multiplier
+    speak_slowly: bool = False  # hablar lento y claro
+    theme: Optional[str] = None  # conversation context and vocabulary focus
 
 class AssignmentUpdate(BaseModel):
     title: str
     description: str
     instructions: str
     level: str
+    level_standard: str = 'ACTFL'  # ACTFL, CEFR, etc.
     duration: int
     due_date: Optional[str] = None
     prompt: Optional[str] = None
     vocab: Optional[List[str]] = None
     min_vocab_words: int = 0
+    # Avatar and learning features
+    avatar_role: Optional[str] = None  # doctor, waiter, travel agent, etc.
+    student_objective: Optional[str] = None  # what student should accomplish
+    avatar_characteristics: Optional[List[str]] = None  # patient, encouraging, etc.
+    voice_speed: float = 1.0  # speech rate multiplier
+    speak_slowly: bool = False  # hablar lento y claro
+    theme: Optional[str] = None  # conversation context and vocabulary focus
 
 # API endpoints for assignments and logs
 @app.post("/api/assignments")
@@ -580,7 +614,7 @@ async def student_login(credentials: dict):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/classrooms")
-async def create_classroom(classroom: ClassroomCreate, teacher_id: str, spanish_level: str = "", is_advanced: bool = False):
+async def create_classroom(classroom: ClassroomCreate, teacher_id: str):
     """Create a new classroom"""
     try:
         classroom_id = db.create_classroom(
@@ -589,8 +623,8 @@ async def create_classroom(classroom: ClassroomCreate, teacher_id: str, spanish_
             description=classroom.description,
             grade_level=classroom.grade_level,
             subject=classroom.subject,
-            spanish_level=spanish_level,
-            is_advanced=is_advanced
+            spanish_level=classroom.spanish_level,
+            is_advanced=classroom.is_advanced
         )
         classroom_data = db.get_classroom_by_id(classroom_id)
         return {"classroom": classroom_data}
@@ -746,14 +780,44 @@ async def create_classroom_assignment(assignment: AssignmentCreate):
             description=assignment.description,
             instructions=assignment.instructions,
             level=assignment.level,
+            level_standard=assignment.level_standard,
             duration=assignment.duration,
             due_date=assignment.due_date,
             prompt=assignment.prompt,
             vocab=assignment.vocab,
-            min_vocab_words=assignment.min_vocab_words
+            min_vocab_words=assignment.min_vocab_words,
+            avatar_role=assignment.avatar_role,
+            student_objective=assignment.student_objective,
+            avatar_characteristics=assignment.avatar_characteristics,
+            voice_speed=assignment.voice_speed,
+            speak_slowly=assignment.speak_slowly,
+            theme=getattr(assignment, 'theme', None)  # Add theme field
         )
-        assignment_data = db.get_assignment_by_id(assignment_id)
-        return {"assignment": assignment_data}
+        
+        # Get the assignment data without the JOIN to avoid classroom dependency issues
+        with sqlite3.connect(db.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT * FROM assignments WHERE id = ? AND is_active = TRUE
+            """, (assignment_id,))
+            row = cursor.fetchone()
+            if row:
+                assignment_data = dict(row)
+                if assignment_data['vocab']:
+                    assignment_data['vocab'] = json.loads(assignment_data['vocab'])
+                # Add classroom info if possible
+                try:
+                    classroom = db.get_classroom_by_id(assignment_data['classroom_id'])
+                    if classroom:
+                        assignment_data['classroom_name'] = classroom['name']
+                except:
+                    pass  # Continue without classroom info
+                return {"assignment": assignment_data}
+            else:
+                return {"assignment": None}
+        
+        return {"assignment": None}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -843,12 +907,12 @@ async def delete_assignment(assignment_id: str):
             cursor = conn.cursor()
             
             # Soft delete the assignment
-            cursor.execute("UPDATE assignments SET is_active = FALSE WHERE id = ?", (assignment_id,))
+            cursor.execute("UPDATE assignments SET is_active = 0 WHERE id = ?", (assignment_id,))
             
             # Soft delete all assignment sessions for this assignment
             cursor.execute("""
                 UPDATE assignment_sessions 
-                SET is_active = FALSE 
+                SET is_active = 0 
                 WHERE assignment_id = ?
             """, (assignment_id,))
             
@@ -870,6 +934,194 @@ async def get_classroom_analytics(classroom_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Helper function to get AI response (LearnLM or OpenAI fallback)
+async def get_ai_response(conversation_history: list, level: str = "intermediate") -> str:
+    """Get response from LearnLM or fallback to OpenAI"""
+    try:
+        # Try LearnLM first if available
+        if learnlm_client:
+            print("Using LearnLM for educational conversation")
+            
+            # Convert conversation format for LearnLM
+            formatted_history = []
+            for msg in conversation_history:
+                if msg["role"] == "user":
+                    formatted_history.append(f"Student: {msg['content']}")
+                elif msg["role"] == "assistant":
+                    formatted_history.append(f"Tutor: {msg['content']}")
+            
+            # Create level-specific prompt
+            level_guidance = {
+                "beginner": "Use simple vocabulary, short sentences, and speak slowly. Be very encouraging and patient.",
+                "intermediate": "Use moderate vocabulary and grammar. Provide gentle corrections and scaffold support.",
+                "advanced": "Use complex vocabulary and nuanced expressions. Challenge with sophisticated grammar and cultural context."
+            }
+            
+            system_prompt = f"""You are an expert Spanish language learning tutor following learning science principles.
+
+PARTS FRAMEWORK:
+- P: Persona - Adopt the specified avatar role (doctor, waiter, travel agent, etc.) with the given characteristics (patient, encouraging, professional, etc.)
+- A: Act - Guide students to accomplish the specific learning objective through scaffolded conversation
+- R: Recipient - Adapt to the student's proficiency level based on the specified standard (ACTFL/CEFR) and level (Novice/Intermediate/Advanced)
+- T: Theme - Focus on the conversational context and vocabulary relevant to the avatar role
+- S: Structure - Use appropriate speech patterns, vocabulary complexity, and grammatical structures for the student level
+
+LEARNING PRINCIPLES:
+- Stimulate curiosity through engaging scenarios
+- Provide scaffolding and guided questioning
+- Facilitate productive struggle without giving answers directly
+- Offer immediate, constructive feedback
+- Encourage active participation and authentic communication
+- Manage cognitive load with appropriate complexity
+- Adapt responses based on student performance
+
+VOICE CHARACTERISTICS:
+- Speak slowly and clearly when requested
+- Adjust speech rate and complexity based on student comprehension
+- Use appropriate intonation and pacing for the avatar role
+
+Always maintain the avatar persona while providing pedagogical support. Balance authentic communication with language learning objectives.
+
+{level_guidance.get(level, "")}
+
+Current conversation:
+{' '.join(formatted_history)}
+
+Provide a natural, educational response in Spanish that:
+1. Matches the {level} proficiency level
+2. Is pedagogically sound
+3. Encourages continued learning
+4. Maintains the conversation flow
+5. Uses appropriate vocabulary and grammar
+
+Response:"""
+            
+            response = learnlm_client.models.generate_content(
+                model='models/gemini-flash-latest',
+                contents=system_prompt
+            )
+            bot_response = response.text
+            print(f"LearnLM response: '{bot_response}'")
+            return bot_response
+            
+    except Exception as e:
+        print(f"LearnLM failed: {e}")
+    
+    # Fallback to OpenAI
+    print("Falling back to OpenAI")
+    try:
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        
+        if level == "advanced":
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=conversation_history,
+                max_tokens=250,
+                temperature=0.7,
+                presence_penalty=0.4,
+                frequency_penalty=0.2
+            )
+        else:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=conversation_history,
+                max_tokens=120,
+                temperature=0.8,
+                presence_penalty=0.6,
+                frequency_penalty=0.3
+            )
+        
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"OpenAI fallback also failed: {e}")
+        return "Lo siento, estoy teniendo problemas técnicos. ¿Puedes repetir eso?"
+
+# Helper function to build PARTS framework prompt
+def build_parts_prompt(assignment_data: dict, level: str) -> str:
+    """Build a structured prompt using Google's PARTS framework from teacher input"""
+    
+    # Extract PARTS elements from assignment data
+    persona = assignment_data.get('avatar_role', 'friendly conversation partner')
+    characteristics = assignment_data.get('avatar_characteristics', [])
+    student_objective = assignment_data.get('student_objective', 'practice Spanish conversation')
+    recipient_level = assignment_data.get('level', level)
+    recipient_standard = assignment_data.get('level_standard', 'ACTFL')
+    description = assignment_data.get('description', '')
+    theme = assignment_data.get('theme', assignment_data.get('title', 'Spanish conversation'))
+    instructions = assignment_data.get('instructions', '')
+    vocab_list = assignment_data.get('vocab', [])
+    voice_settings = {
+        'speak_slowly': assignment_data.get('speak_slowly', False),
+        'voice_speed': assignment_data.get('voice_speed', 1.0)
+    }
+    
+    # Build Persona section
+    persona_traits = f" with {', '.join(characteristics)} traits" if characteristics else ""
+    persona_section = f"P: Persona - You are a {persona}{persona_traits} in a Spanish conversation setting."
+    
+    # Build Act section  
+    act_section = f"A: Act - Guide the student to {student_objective}. {instructions}"
+    
+    # Build Recipient section
+    recipient_section = f"R: Recipient - {recipient_level} level Spanish student ({recipient_standard} standard). {description}"
+    
+    # Build Theme section
+    theme_section = f"T: Theme - {theme}"
+    if vocab_list:
+        theme_section += f". Key vocabulary to incorporate: {', '.join(vocab_list)}"
+    
+    # Build Structure section
+    structure_elements = []
+    if voice_settings['speak_slowly']:
+        structure_elements.append("speak slowly and clearly")
+    if voice_settings['voice_speed'] != 1.0:
+        structure_elements.append(f"adjust speech rate to {voice_settings['voice_speed']}x normal speed")
+    
+    structure_section = f"S: Structure - Use natural conversation flow"
+    if structure_elements:
+        structure_section += f" with {', '.join(structure_elements)}"
+    
+    # Combine all PARTS into a comprehensive prompt
+    parts_prompt = f"""You are an expert Spanish language learning tutor following learning science principles.
+
+PARTS FRAMEWORK:
+{persona_section}
+{act_section}  
+{recipient_section}
+{theme_section}
+{structure_section}
+
+LEARNING PRINCIPLES:
+- Stimulate curiosity through engaging scenarios
+- Provide scaffolding and guided questioning
+- Facilitate productive struggle without giving answers directly
+- Offer immediate, constructive feedback
+- Encourage active participation and authentic communication
+- Manage cognitive load with appropriate complexity
+- Adapt responses based on student performance
+
+VOICE CHARACTERISTICS:
+- Speak slowly and clearly when requested
+- Adjust speech rate and complexity based on student comprehension
+- Use appropriate intonation and pacing for the avatar role
+
+CONTENT GUIDELINES:
+- Maintain the persona throughout the conversation
+- Focus on helping students achieve their objective
+- Use vocabulary and grammar appropriate for {recipient_level} level
+- Incorporate key vocabulary naturally when relevant
+- Provide scaffolded support and encouragement
+
+SAFETY GUIDELINES:
+- Keep all content appropriate for educational settings
+- No references to alcohol, drugs, violence, or inappropriate topics
+- Redirect inappropriate questions to suitable alternatives
+- Maintain professional and supportive tone
+
+Always maintain the avatar persona while providing pedagogical support. Balance authentic communication with language learning objectives."""
+    
+    return parts_prompt
+
 @app.websocket("/ws/{level}")
 async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
     await websocket.accept()
@@ -885,10 +1137,13 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
         # Initialize OpenAI client
         client = OpenAI(api_key=OPENAI_API_KEY)
         
-        # TTS function using ElevenLabs for best Spanish voices
-        async def generate_speech(text: str, level: str = "intermediate") -> bytes:
-            print(f"Generating speech for text: '{text[:50]}...' with level: {level}")
+        # TTS function using ElevenLabs for best Spanish voices with voice speed control
+        async def generate_speech(text: str, level: str = "intermediate", voice_speed: float = 1.0, speak_slowly: bool = False) -> bytes:
+            print(f"Generating speech for text: '{text[:50]}...' with level: {level}, speed: {voice_speed}, speak_slowly: {speak_slowly}")
             print(f"TTS_SERVICE: {TTS_SERVICE}, ELEVENLABS_API_KEY present: {bool(ELEVENLABS_API_KEY)}")
+            
+            # Adjust speed based on speak_slowly parameter
+            adjusted_speed = voice_speed * 0.8 if speak_slowly else voice_speed
             
             # Prioritize ElevenLabs when API key is available for best Spanish voices
             if ELEVENLABS_API_KEY:
@@ -901,7 +1156,7 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
                     }
                     
                     voice_id = voice_map.get(level, "29vD33N1CtxCmqQRPOHJ")
-                    print(f"Using ElevenLabs voice: {voice_id}")
+                    print(f"Using ElevenLabs voice: {voice_id} with speed: {adjusted_speed}")
                     
                     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
                     headers = {
@@ -916,7 +1171,8 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
                             "stability": 0.75,
                             "similarity_boost": 0.75,
                             "style": 0.0,
-                            "use_speaker_boost": True
+                            "use_speaker_boost": True,
+                            "rate": adjusted_speed  # Control speech rate
                         }
                     }
                     
@@ -935,14 +1191,83 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
                 model="tts-1",
                 voice="shimmer",
                 input=text,
-                speed=1.1
+                speed=adjusted_speed
             )
             print("OpenAI TTS successful")
             return speech_response.content
         
-        # Define level-specific prompts and icebreakers
+        # Define level-specific prompts and icebreakers with ACTFL/CEFR standards
         level_configs = {
+            # ACTFL Standards
+            "novice_low": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un tutor amigable de español para principiantes. Usa palabras y frases muy simples, presente indicativo, vocabulario básico. Habla lentamente y repite si es necesario. Enfócate en comunicación survival.",
+                "icebreakers": ["Hola", "¿Cómo estás?", "Me llamo...", "¿Cómo te llamas?"]
+            },
+            "novice_mid": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un tutor amigable de español. Usa frases cortas y simples, presente indicativo, vocabulario cotidiano. Haz preguntas básicas y da respuestas directas.",
+                "icebreakers": ["¡Hola! ¿Qué tal?", "¿Cómo estás hoy?", "¿De dónde eres?", "¿Qué te gusta hacer?"]
+            },
+            "novice_high": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un conversacional español amigable. Usa frases simples, presente y algún pretérito, vocabulario familiar. Mantén conversaciones breves sobre temas conocidos.",
+                "icebreakers": ["¡Hola! ¿Cómo estás?", "¿Qué tal tu día?", "¿Qué has hecho hoy?", "¿Tienes hobbies?"]
+            },
+            "intermediate_low": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un conversacional español natural. Usa presente, pretérito, futuro simple. Habla sobre temas personales, rutinas, experiencias. Sé espontáneo pero claro.",
+                "icebreakers": ["¡Hola! ¿Qué tal tu día?", "¿Qué te gustaría hacer hoy?", "¿Has practicado español antes?", "¿Qué tiempo hace donde estás?"]
+            },
+            "intermediate_mid": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un conversacional español fluido. Usa varios tiempos verbales, vocabulario amplio. Habla sobre opiniones, experiencias, planes futuros. Sé natural y expresivo.",
+                "icebreakers": ["¡Hola! ¿Cómo estás?", "¿Qué tal todo por aquí?", "¿Qué planes tienes para hoy?", "¿Algo interesante últimamente?"]
+            },
+            "intermediate_high": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un conversacional español avanzado. Usa todos los tiempos, vocabulario rico, expresiones idiomáticas simples. Habla sobre temas abstractos, opiniones, narrativas.",
+                "icebreakers": ["¡Hola! ¿Qué tal?", "¿Cómo va todo?", "¿Qué te cuenta la vida?", "¿Algo nuevo o interesante?"]
+            },
+            "advanced": {
+                "standard": "ACTFL",
+                "system_prompt": "Eres un conversacional español nativo. Usa lenguaje complejo, subjuntivo, condicional, vocabulario extenso, expresiones idiomáticas. Habla sobre cualquier tema con naturalidad y matices.",
+                "icebreakers": ["¡Hola! ¿Qué tal todo?", "¿Cómo vamos?", "¿Qué novedades tienes?", "¿Cómo te encuentras hoy?"]
+            },
+            # CEFR Standards
+            "a1": {
+                "standard": "CEFR",
+                "system_prompt": "Eres un tutor de español básico. Presente simple, vocabulario elemental, frases muy cortas. Enfócate en presentaciones, información personal, entorno inmediato.",
+                "icebreakers": ["Hola", "Me llamo...", "¿Cómo te llamas?", "¿De dónde eres?"]
+            },
+            "a2": {
+                "standard": "CEFR",
+                "system_prompt": "Eres un conversacional español elemental. Frases simples, rutinas, descripciones básicas. Habla sobre familia, trabajo, tiempo libre, viajes locales.",
+                "icebreakers": ["¡Hola! ¿Qué tal?", "¿Cómo estás?", "¿Qué haces?", "¿Dónde vives?"]
+            },
+            "b1": {
+                "standard": "CEFR",
+                "system_prompt": "Eres un conversacional español intermedio. Experiencias, sueños, opiniones. Conecta ideas, explica razones. Habla sobre temas familiares y personales con algo de fluidez.",
+                "icebreakers": ["¡Hola! ¿Cómo estás?", "¿Qué tal tu semana?", "¿Qué te gusta hacer?", "¿Has viajado mucho?"]
+            },
+            "b2": {
+                "standard": "CEFR",
+                "system_prompt": "Eres un conversacional español avanzado. Argumentos, discusiones abstractas, matices. Habla con fluidez y espontaneidad sobre temas complejos.",
+                "icebreakers": ["¡Hola! ¿Qué tal?", "¿Cómo va todo?", "¿Qué opinas sobre...?", "¿Algo interesante últimamente?"]
+            },
+            "c1": {
+                "standard": "CEFR",
+                "system_prompt": "Eres un conversacional español experto. Lenguaje flexible, efectivo, social/profesional. Usa estructuras complejas, vocabulario preciso, expresiones idiomáticas.",
+                "icebreakers": ["¡Hola! ¿Qué tal?", "¿Cómo te encuentras?", "¿Qué te parece la situación actual?", "¿Alguna reflexión interesante?"]
+            },
+            "c2": {
+                "standard": "CEFR",
+                "system_prompt": "Eres un conversacional español nativo-culto. Comprende todo, distingue matices finos. Habla con precisión, fluidez, naturalidad sobre cualquier tema.",
+                "icebreakers": ["¡Hola! ¿Qué tal?", "¿Cómo vamos?", "¿Qué te parece...?", "¿Algún pensamiento profundo hoy?"]
+            },
+            # Legacy backward compatibility
             "beginner": {
+                "standard": "ACTFL",
                 "system_prompt": "Eres un amigo español amigable para estudiantes de secundaria. Habla de forma natural sobre temas apropiados para menores de edad. Usa vocabulario simple y presente indicativo. Mantén las frases cortas y naturales. Sé breve y amigable. NO saludes repetidamente ni des lecciones. REGLAS DE CONTENIDO ESTRICTAS: NUNCA, BAJO NINGUNA CIRCUNSTANCIA, menciones alcohol, vino, cerveza, bebidas alcoholicas, drogas, temas sexuales, violencia, o cualquier contenido inapropiado. Si un estudiante pregunta sobre bebidas alcoholicas, responde 'Lo siento, solo puedo sugerir bebidas sin alcohol como agua, jugos o refrescos'. Si un estudiante pregunta sobre temas inapropiados, redirige educativamente a temas apropiados. Solo sugiere bebidas sin alcohol (agua, jugos, refrescos).",
                 "icebreakers": [
                     "¡Hola! ¿Qué tal tu día?",
@@ -961,60 +1286,19 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
                     "Qué tal el clima donde vives?",
                     "¿Qué haces normalmente los fines de semana?"
                 ]
-            },
-            "intermediate": {
-                "system_prompt": "Eres un amigo español conversacional para estudiantes de secundaria. Habla sobre temas apropiados para menores de edad de forma espontánea. Usa presente, pretérito y futuro simple. Mantén una conversación fluida y amigable. Usa lenguaje informal pero educado (tú/tú). Sé breve y natural. NO saludos repetidos ni correcciones. REGLAS DE CONTENIDO ESTRICTAS: NUNCA, BAJO NINGUNA CIRCUNSTANCIA, menciones alcohol, vino, cerveza, bebidas alcoholicas, drogas, temas sexuales, violencia, o cualquier contenido inapropiado. Si un estudiante pregunta sobre bebidas alcoholicas, responde 'Lo siento, solo puedo sugerir bebidas sin alcohol como agua, jugos, refrescos, té o café'. Si un estudiante pregunta sobre temas inapropiados, redirige educativamente a temas apropiados. Solo sugiere bebidas sin alcohol (jugos, refrescos, té, agua).",
-                "icebreakers": [
-                    "¡Hola! ¿Cómo estás hoy?",
-                    "¿Qué tal tu día hasta ahora?",
-                    "¿Qué te gustaría hacer hoy?",
-                    "¿Has practicado español antes?",
-                    "¿Qué tiempo hace donde estás?",
-                    "¿Qué has visto en Netflix últimamente?",
-                    "¿Cuál es tu canción favorita ahora?",
-                    "¿Has visto alguna película buena recientemente?",
-                    "¿Qué planes tienes para el fin de semana?",
-                    "¿Qué opinas sobre las nuevas series de streaming?",
-                    "¿Has escuchado música buena últimamente?",
-                    "¿Qué tipo de videos ves en internet?",
-                    "¿Cuál es tu meme favorito este mes?",
-                    "¿Has viajado a algún lugar interesante?",
-                    "¿Qué libro estás leyendo?",
-                    "¿Cuál es tu videojuego favorito?",
-                    "¿Qué piensas sobre los estrenos recientes?",
-                    "¿Has probado algún restaurante nuevo?",
-                    "¿Qué celebridad sigues en redes sociales?"
-                ]
-            },
-            "advanced": {
-                "system_prompt": "Eres un profesional nativo de un país hispanohablante con experiencia en atención al cliente. Habla de forma sofisticada y natural, usando un vocabulario rico y variado. Usa 'usted' para el contexto formal de hotel/restaurant, pero hazlo de manera fluida y natural, no rígida. Incorpora expresiones idiomáticas, modismos cultos, y frases más elaboradas. Usa todos los tiempos verbales incluyendo subjuntivo y condicional de forma espontánea. Mantén un tono profesional pero cálido y auténtico, como lo haría un profesional bien educado en España, México o Argentina. Usa conectores complejos y frases bien estructuradas. REGLAS DE CONTENIDO ESTRICTAS: NUNCA, BAJO NINGUNA CIRCUNSTANCIA, menciones alcohol, vino, cerveza, bebidas alcoholicas, drogas, temas sexuales, violencia, o cualquier contenido inapropiado para menores de edad. Si un estudiante pregunta sobre bebidas alcoholicas, responde con elegancia 'Le sugiero opciones sin alcohol como té infusiones o agua mineral'. Si un estudiante pregunta sobre temas inapropiados, redirige con diplomacia y naturalidad.",
-                "icebreakers": [
-                    "¡Buenas tardes! Encantado de ayudarle con su registro.",
-                    "¡Hola! Bienvenido a nuestro establecimiento. ¿En qué puedo asistirle hoy?",
-                    "¡Muy buenos días! ¿Cómo puedo servirle en su visita?",
-                    "¡Hola! Qué gusto verle por aquí. ¿Necesita alguna asistencia?",
-                    "¡Buenas! ¿Qué tal su día? Espero poder ayudarle con lo que necesite.",
-                    "¡Hola! Bienvenido. ¿En qué le puedo ser útil hoy?",
-                    "¡Muy buenas! ¿Qué le trae por nuestro establecimiento?",
-                    "¡Hola! Qué placer atenderle. ¿Hay algo específico en lo que pueda ayudarle?",
-                    "¡Buenas tardes! ¿Cómo está? Espero que su estancia sea excelente.",
-                    "¡Hola! Bienvenido. ¿En qué puedo hacer su experiencia más agradable?",
-                    "¡Muy buenos días! ¿Listo para comenzar su registro? Estoy a su disposición.",
-                    "¡Hola! Qué bueno tenerle con nosotros. ¿Necesita algo para empezar?",
-                    "¡Buenas! ¿Cómo puedo facilitar su estancia con nosotros?",
-                    "¡Hola! Encantado de atenderle. ¿Qué necesita exactamente?",
-                    "¡Muy buenas! ¿Listo para su check-in? Estoy aquí para ayudarle.",
-                    "¡Hola! Bienvenido. ¿Hay algo que pueda hacer por usted hoy?",
-                    "¡Buenas tardes! ¿Cómo puedo hacer su registro más eficiente?",
-                    "¡Hola! Qué gusto atenderle. ¿Necesita ayuda con algo específico?",
-                    "¡Muy buenas! ¿En qué puedo asistirle para que su visita sea perfecta?",
-                    "¡Hola! Bienvenido. ¿Listo para comenzar? Estoy a su completa disposición."
-                ]
             }
         }
         
-        # Get config for selected level, default to intermediate
-        config = level_configs.get(level, level_configs["intermediate"])
+        # Get config for selected level, default to intermediate_mid
+        print(f"DEBUG: Looking for level '{level}' in level_configs")
+        print(f"DEBUG: Available levels: {list(level_configs.keys())}")
+        
+        if level in level_configs:
+            config = level_configs[level]
+            print(f"DEBUG: Found config for level '{level}'")
+        else:
+            config = level_configs["intermediate_mid"]
+            print(f"DEBUG: Level '{level}' not found, using intermediate_mid as fallback")
         print(f"Using {level} level configuration")
         
         # Check if this is an assignment session
@@ -1033,7 +1317,6 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
             setup_message = json.loads(setup_data)
             if setup_message.get("type") == "assignment_setup":
                 assignment_data = setup_message.get("assignment")
-                is_assignment = True
                 print(f"Received assignment setup: {assignment_data.get('title', 'Unknown')}")
                 
                 # Extract assignment level for voice selection
@@ -1043,133 +1326,51 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
                 # Use assignment level for voice selection
                 level = assignment_level
                 
-                # Use custom prompt if provided, otherwise create contextual prompt
-                if assignment_data.get("prompt"):
-                    # Give the bot only what it needs: custom prompt + vocabulary + level guidance
-                    level_guidance = level_configs.get(level, {}).get("system_prompt", "")
-                    
-                    # Get vocabulary list for the bot to incorporate
-                    vocab_list = assignment_data.get("vocab", [])
-                    vocab_instruction = ""
-                    if vocab_list:
-                        vocab_instruction = f"\n\nVocabulary to incorporate: {', '.join(vocab_list)}. Try to use these words naturally in the conversation."
-                    
-                    # Create bot prompt with only bot-relevant information
-                    assignment_prompt = f"""{assignment_data['prompt']}{vocab_instruction}
-
-Level Guidance: {level_guidance}"""
-                    
-                    print(f"Using bot-focused prompt: custom prompt + vocabulary + level guidance")
-                    print(f"Bot prompt preview: {assignment_prompt[:300]}...")
-                else:
-                    # Create contextual prompt based on assignment
-                    vocab_list = assignment_data.get("vocab", [])
-                    vocab_instruction = ""
-                    if vocab_list:
-                        vocab_instruction = f" Intenta incorporar naturalmente estas palabras de vocabulario: {', '.join(vocab_list)}."
-                    
-                    assignment_prompt = f"Eres un ayudante de español para una tarea de secundaria. Contexto: {assignment_data.get('description', '')}. Instrucciones: {assignment_data.get('instructions', '')}.{vocab_instruction} Mantén la conversación enfocada en este contexto. Sé amigable y natural. Usa el nivel de español apropiado para {level}. IMPORTANTE: Solo responde a los mensajes del estudiante. No inventes respuestas ni continúes la conversación por tu cuenta. Espera siempre a que el estudiante hable primero. REGLAS DE CONTENIDO ESTRICTAS: NUNCA, BAJO NINGUNA CIRCUNSTANCIA, menciones alcohol, vino, cerveza, bebidas alcoholicas, drogas, temas sexuales, violencia, o cualquier contenido inapropiado para menores de edad. Si un estudiante pregunta sobre bebidas alcoholicas, responde 'Lo siento, solo puedo sugerir bebidas sin alcohol como agua, jugos, refrescos, té o café'. Si un estudiante pregunta sobre temas inapropiados, redirige educativamente a temas apropiados. Mantén toda conversación 100% apropiada para un entorno educativo de secundaria."
-                    print(f"Using generated contextual prompt")
+                # Always use PARTS framework prompt from teacher's input
+                assignment_prompt = build_parts_prompt(assignment_data, level)
+                print(f"Using PARTS framework prompt")
                 
-                # Create contextual icebreaker based on assignment
-                if assignment_data.get("prompt"):
-                    # Generate contextual opening based on teacher's prompt
-                    try:
-                        # Get level guidance for AI generation
-                        level_guidance = level_configs.get(level, {}).get("system_prompt", "")
-                        
-                        # Translate teacher's prompt to Spanish if needed
-                        teacher_prompt = assignment_data['prompt']
-                        # Check if prompt is likely in English (simple heuristic)
-                        if any(word in teacher_prompt.lower() for word in ['the ', 'you are', ' and ', ' is ', ' to ']):
-                            try:
-                                translation_response = client.chat.completions.create(
-                                    model="gpt-3.5-turbo",
-                                    messages=[
-                                        {"role": "system", "content": "Translate the following text to Spanish. Only return the translation, no extra text."},
-                                        {"role": "user", "content": teacher_prompt}
-                                    ],
-                                    max_tokens=200,
-                                    temperature=0.3
-                                )
-                                spanish_prompt = translation_response.choices[0].message.content.strip()
-                                print(f"Translated teacher prompt: {teacher_prompt} -> {spanish_prompt}")
-                            except Exception as e:
-                                print(f"Error translating prompt: {e}")
-                                spanish_prompt = teacher_prompt  # Fallback to original
-                        else:
-                            spanish_prompt = teacher_prompt
-                        
-                        # Use OpenAI to generate an appropriate opening line
-                        opening_prompt = f"""Based on this scenario and level guidance, generate a natural Spanish opening line that the AI should say to start the conversation:
+                # Generate contextual icebreaker using Gemini 3 with PARTS prompt
+                try:
+                    # Use the assignment's persona and objective to generate opening
+                    icebreaker_prompt = f"""Based on this assignment setup, generate a natural Spanish opening line that starts the conversation:
 
-Scenario: {spanish_prompt}
-
-Level Guidance: {level_guidance}
+Assignment Details:
+- Persona: {assignment_data.get('avatar_role', 'conversation partner')}
+- Student Objective: {assignment_data.get('student_objective', 'practice Spanish')}
+- Context: {assignment_data.get('description', '')}
+- Instructions: {assignment_data.get('instructions', '')}
 
 Requirements:
 - Generate ONLY the opening line (no extra text)
 - Make it natural and appropriate for the scenario
-- Follow the level guidance above for vocabulary, formality, and style
+- Match the {level} proficiency level
 - Keep it concise and conversational
-- Do not include any explanations or greetings like "Here is an opening line:"
-- Just provide the exact Spanish text the AI should say
+- Stay in character as the persona
+- Just provide the exact Spanish text to start the conversation
 
 Opening line:"""
 
-                        response = client.chat.completions.create(
-                            model="gpt-3.5-turbo",
-                            messages=[
-                                {"role": "user", "content": opening_prompt}
-                            ],
-                            max_tokens=50,
-                            temperature=0.7
+                    if learnlm_client:
+                        response = learnlm_client.models.generate_content(
+                            model='models/gemini-flash-latest',
+                            contents=icebreaker_prompt
                         )
+                        icebreaker = response.text.strip()
+                        print(f"Generated icebreaker with Gemini Flash: {icebreaker}")
+                    else:
+                        # Fallback to default icebreaker
+                        import random
+                        icebreaker = random.choice(config["icebreakers"])
+                        print(f"Using fallback icebreaker: {icebreaker}")
                         
-                        generated_opening = response.choices[0].message.content.strip()
-                        icebreaker = generated_opening
-                        print(f"Generated contextual opening: {icebreaker}")
-                        
-                    except Exception as e:
-                        print(f"Error generating opening: {e}")
-                        # Fallback to generic opening
-                        icebreaker = "¡Hola! Estoy listo para comenzar."
-                    
-                elif assignment_data.get("description"):
-                    # Generate opening based on description
-                    try:
-                        opening_prompt = f"""Based on this assignment description, generate a natural Spanish opening line:
-
-Description: {assignment_data.get('description', '')}
-Instructions: {assignment_data.get('instructions', '')}
-
-Requirements:
-- Generate ONLY the opening line
-- Make it natural and appropriate for {level} level Spanish
-- Keep it concise and conversational
-
-Opening line:"""
-
-                        response = client.chat.completions.create(
-                            model="gpt-3.5-turbo",
-                            messages=[
-                                {"role": "user", "content": opening_prompt}
-                            ],
-                            max_tokens=50,
-                            temperature=0.7
-                        )
-                        
-                        generated_opening = response.choices[0].message.content.strip()
-                        icebreaker = generated_opening
-                        print(f"Generated description-based opening: {icebreaker}")
-                        
-                    except Exception as e:
-                        print(f"Error generating opening: {e}")
-                        icebreaker = "¡Hola! Estoy listo para ayudarte."
-                else:
+                except Exception as e:
+                    print(f"Error generating icebreaker: {e}")
+                    import random
                     icebreaker = random.choice(config["icebreakers"])
                 
-                print(f"Using assignment icebreaker: {icebreaker}")
+                # Continue with assignment mode
+                is_assignment = True
             else:
                 # Not an assignment setup, treat as practice mode
                 print("No assignment setup received, using practice mode")
@@ -1242,28 +1443,8 @@ Opening line:"""
                     # Only add user message to history, not bot responses yet
                     conversation_history.append({"role": "user", "content": user_message})
                     
-                    # Get response from OpenAI with level-specific parameters
-                    # Advanced level needs more tokens for complex responses
-                    if level == "advanced":
-                        response = client.chat.completions.create(
-                            model="gpt-3.5-turbo",
-                            messages=conversation_history,
-                            max_tokens=250,  # More tokens for advanced discussions
-                            temperature=0.7,  # Slightly lower for more coherent long responses
-                            presence_penalty=0.4,  # Lower to avoid repetition in long texts
-                            frequency_penalty=0.2
-                        )
-                    else:
-                        response = client.chat.completions.create(
-                            model="gpt-3.5-turbo",
-                            messages=conversation_history,
-                            max_tokens=120,
-                            temperature=0.8,
-                            presence_penalty=0.6,
-                            frequency_penalty=0.3
-                        )
-                    
-                    bot_response = response.choices[0].message.content
+                    # Get response from LearnLM (with OpenAI fallback)
+                    bot_response = await get_ai_response(conversation_history, level)
                     print(f"Generated bot response: '{bot_response}'")
                     
                     # Content filtering - check for prohibited content
@@ -1302,28 +1483,8 @@ Opening line:"""
                         # Add transcribed message to history
                         conversation_history.append({"role": "user", "content": user_message})
                         
-                        # Get response from OpenAI with level-specific parameters
-                        # Advanced level needs more tokens for complex responses
-                        if level == "advanced":
-                            response = client.chat.completions.create(
-                                model="gpt-3.5-turbo",
-                                messages=conversation_history,
-                                max_tokens=250,  # More tokens for advanced discussions
-                                temperature=0.7,  # Slightly lower for more coherent long responses
-                                presence_penalty=0.4,  # Lower to avoid repetition in long texts
-                                frequency_penalty=0.2
-                            )
-                        else:
-                            response = client.chat.completions.create(
-                                model="gpt-3.5-turbo",
-                                messages=conversation_history,
-                                max_tokens=120,
-                                temperature=0.8,
-                                presence_penalty=0.6,
-                                frequency_penalty=0.3
-                            )
-                        
-                        bot_response = response.choices[0].message.content
+                        # Get response from LearnLM (with OpenAI fallback)
+                        bot_response = await get_ai_response(conversation_history, level)
                         print(f"Sending response: {bot_response}")
                         
                         # Content filtering - check for prohibited content

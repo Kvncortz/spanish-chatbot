@@ -787,7 +787,6 @@
             </div>
             <div class="modal-footer" style="padding: 20px; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; justify-content: flex-end;">
                 <button class="btn btn-secondary" onclick="closeConversationModal()">Close</button>
-                <button class="btn btn-primary" onclick="retryConversation()">Retry</button>
             </div>
         </div>
     </div>
@@ -1077,13 +1076,26 @@
                                     ${assignment.completed ? '<span class="completed-badge">✓ Completed</span>' : ''}
                                 </div>
                                 <div class="assignment-description">${assignment.description}</div>
-                                <button class="btn btn-primary btn-small" 
-                                    data-assignment-id="${assignment.id}" 
-                                    data-assignment-title="${assignment.title.replace(/"/g, '&quot;')}"
-                                    data-completed="${assignment.completed}"
-                                    onclick="handleAssignmentClick(this)">
-                                    ${assignment.completed ? 'Review' : 'Start'}
-                                </button>
+                                <div class="assignment-actions" style="display: flex; gap: 8px; margin-top: 12px;">
+                                    ${assignment.completed ? `
+                                        <button class="btn btn-primary btn-small review-btn" 
+                                            data-assignment-id="${assignment.id}" 
+                                            data-assignment-title="${assignment.title.replace(/"/g, '&quot;')}">
+                                            Review
+                                        </button>
+                                        <button class="btn btn-secondary btn-small retry-btn" 
+                                            data-assignment-id="${assignment.id}" 
+                                            data-assignment-title="${assignment.title.replace(/"/g, '&quot;')}">
+                                            Retry
+                                        </button>
+                                    ` : `
+                                        <button class="btn btn-primary btn-small start-btn" 
+                                            data-assignment-id="${assignment.id}" 
+                                            data-assignment-title="${assignment.title.replace(/"/g, '&quot;')}">
+                                            Start
+                                        </button>
+                                    `}
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -1091,17 +1103,26 @@
             `).join('');
         }
         
-        // Handle assignment button clicks
-        function handleAssignmentClick(button) {
-            const assignmentId = button.dataset.assignmentId;
-            const assignmentTitle = button.dataset.assignmentTitle;
-            const isCompleted = button.dataset.completed === 'true';
-            
-            if (isCompleted) {
+        // Add event delegation for assignment buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('review-btn')) {
+                const assignmentId = e.target.dataset.assignmentId;
+                const assignmentTitle = e.target.dataset.assignmentTitle;
                 viewAssignmentReview(assignmentId, assignmentTitle);
-            } else {
+            } else if (e.target.classList.contains('retry-btn')) {
+                const assignmentId = e.target.dataset.assignmentId;
+                const assignmentTitle = e.target.dataset.assignmentTitle;
+                retryAssignment(assignmentId, assignmentTitle);
+            } else if (e.target.classList.contains('start-btn')) {
+                const assignmentId = e.target.dataset.assignmentId;
                 startAssignment(assignmentId);
             }
+        });
+        
+        // Retry assignment function
+        function retryAssignment(assignmentId, assignmentTitle) {
+            // Redirect to the assignment page to retry
+            window.location.href = `/student?assignment=${assignmentId}`;
         }
         
         // Practice tab functions
@@ -1200,18 +1221,6 @@
             }
         }
         
-        // Retry conversation
-        function retryConversation() {
-            if (window.currentSessionData) {
-                const { sessionId, assignmentTitle } = window.currentSessionData;
-                closeConversationModal();
-                // Wait a moment for modal to close, then reopen
-                setTimeout(() => {
-                    viewStudentConversation(sessionId, assignmentTitle);
-                }, 300);
-            }
-        }
-        
         // Submit session for grading
         async function submitForGrading(sessionId, buttonElement) {
             try {
@@ -1276,6 +1285,13 @@
                 // Group sessions by completion status and show attempts
                 const completedSessions = assignmentSessions.filter(s => s.completed);
                 const incompleteSessions = assignmentSessions.filter(s => !s.completed);
+                
+                // Sort completed sessions by completion time (most recent first)
+                completedSessions.sort((a, b) => {
+                    const dateA = new Date(a.end_time || a.completed_at || a.created_at);
+                    const dateB = new Date(b.end_time || b.completed_at || b.created_at);
+                    return dateB.getTime() - dateA.getTime(); // Descending order (newest first)
+                });
                 
                 if (completedSessions.length === 0) {
                     alert('No completed sessions found for this assignment.');
