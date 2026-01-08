@@ -15,45 +15,104 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #fefefe;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0;
         }
         
         .signup-container {
-            width: 90%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 100%;
+            height: 100vh;
+            background: transparent;
+            display: grid;
+            grid-template-columns: 40% 60%;
             overflow: hidden;
         }
         
-        .signup-header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 30px;
+        .signup-left {
+            padding: 60px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            background: transparent;
+        }
+        
+        .signup-right {
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+        }
+        
+        .illustration {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0;
+            position: relative;
+        }
+        
+        .illustration img {
+            width: 100%;
+            max-width: 700px;
+            height: 100vh;
+            object-fit: contain;
+            object-position: top center;
+        }
+        
+        .illustration-placeholder {
+            max-width: 500px;
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 18px;
             text-align: center;
+            padding: 40px;
+            border: 2px dashed #d1d5db;
+        }
+        
+        .signup-header {
+            background: transparent;
+            color: #0f172a;
+            padding: 0;
+            text-align: left;
+            border-bottom: none;
+            margin-bottom: 32px;
         }
         
         .signup-header h1 {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.03em;
+            color: #0f172a;
+            line-height: 1.15;
         }
         
         .signup-header p {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 17px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 8px;
         }
         
         .signup-form {
-            padding: 30px;
-            max-height: 60vh;
-            overflow-y: auto;
+            padding: 0;
         }
         
         .form-group {
@@ -62,28 +121,35 @@
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2d3748;
+            margin-bottom: 6px;
+            font-weight: 400;
             font-size: 14px;
+            color: #4b5563;
+            letter-spacing: 0;
         }
         
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 11px 0;
+            border: none;
+            border-bottom: 1px solid #e5e7eb;
+            border-radius: 0;
             font-size: 15px;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            background: #f8fafc;
+            transition: all 0.2s ease;
+            background: transparent;
+            color: #1f2937;
         }
         
-        .form-group input:focus, .form-group select:focus {
+        .form-group input::placeholder {
+            color: #d1d5db;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: #f093fb;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
+            border-bottom-color: #0ea5e9;
+            box-shadow: none;
         }
         
         .form-row {
@@ -94,13 +160,13 @@
         
         .btn {
             width: 100%;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
+            padding: 12px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 2px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -108,27 +174,37 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(240, 147, 251, 0.3);
+            width: 100%;
+            padding: 13px 24px;
+            background: #7dd3fc;
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 16px;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+            background: #38bdf8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(125, 211, 252, 0.4);
         }
         
         .btn-secondary {
-            background: #f8fafc;
-            color: #4a5568;
-            border: 2px solid #e2e8f0;
+            background: #ffffff;
+            color: #374151;
+            border: 1.5px solid #7dd3fc;
             margin-top: 12px;
+            border-radius: 8px;
         }
         
         .btn-secondary:hover {
-            background: white;
-            border-color: #cbd5e0;
-            transform: translateY(-1px);
+            background: #f0f9ff;
+            border-color: #38bdf8;
+            color: #0ea5e9;
         }
         
         .error-message {
@@ -152,10 +228,10 @@
         }
         
         .password-requirements {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 6px;
-            line-height: 1.4;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+            font-weight: 300;
         }
         
         .back-link {
@@ -164,7 +240,7 @@
         }
         
         .back-link a {
-            color: #f093fb;
+            color: #0ea5e9;
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -174,24 +250,47 @@
             text-decoration: underline;
         }
         
+        @media (max-width: 968px) {
+            .signup-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .signup-right {
+                display: none;
+            }
+            
+            .signup-left {
+                padding: 40px 32px;
+            }
+            
+            .signup-header h1 {
+                font-size: 28px;
+            }
+        }
+        
         @media (max-width: 600px) {
             .form-row {
                 grid-template-columns: 1fr;
+            }
+            
+            .signup-left {
+                padding: 32px 24px;
             }
         }
     </style>
 <body>
     <div class="signup-container">
-        <div class="signup-header">
-            <h1>Student Sign Up</h1>
-            <p>Create your account to join classrooms and practice Spanish</p>
-        </div>
-        
-        <div class="signup-form">
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
+        <div class="signup-left">
+            <div class="signup-header">
+                <h1>Ready to start learning Spanish?</h1>
+                <p>Join your classroom and practice Spanish with interactive conversations</p>
+            </div>
             
-            <form id="signupForm">
+            <div class="signup-form">
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+                
+                <form id="signupForm">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
@@ -240,6 +339,13 @@
             
             <div class="back-link">
                 <a href="/student-login">← Already have an account? Sign In</a>
+            </div>
+        </div>
+        </div>
+        
+        <div class="signup-right">
+            <div class="illustration">
+                <img src="/static/images/Student sign in image.png" alt="Student reading and learning">
             </div>
         </div>
     </div>

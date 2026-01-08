@@ -15,37 +15,40 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to bottom right, #fef3f2, #fef9f3, #f0f9ff);
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 16px;
         }
         
         .chat-container {
-            width: 90%;
-            max-width: 800px;
-            height: 90vh;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1100px;
+            height: 95vh;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            border: 1px solid #f0f0f0;
         }
         
         .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+            background: linear-gradient(135deg, #fff7ed 0%, #fef3f2 50%, #f0f9ff 100%);
+            color: #0f172a;
+            padding: 28px 32px;
             text-align: center;
+            border-bottom: 2px solid #fed7aa;
         }
         
         .chat-header h1 {
-            margin: 0 0 15px 0;
-            font-size: 24px;
+            margin: 0 0 18px 0;
+            font-size: 26px;
             font-weight: 600;
+            letter-spacing: -0.025em;
         }
         
         .level-selector {
@@ -56,45 +59,48 @@
         }
         
         .level-btn {
-            padding: 8px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border-radius: 25px;
+            padding: 10px 24px;
+            border: 1.5px solid #e5e7eb;
+            background: #ffffff;
+            color: #374151;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             font-size: 14px;
             font-weight: 500;
         }
         
         .level-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            background: #fef3f2;
+            border-color: #fb923c;
+            color: #ea580c;
         }
         
         .level-btn.active {
-            background: white;
-            color: #667eea;
-            border-color: white;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            background: #ea580c;
+            color: #ffffff;
+            border-color: #ea580c;
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
         }
         
         .chat-box {
             flex: 1;
-            padding: 20px;
+            padding: 32px;
             overflow-y: auto;
-            background: #f8f9fa;
+            background: #fefefe;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 20px;
         }
         
         .message {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
+            max-width: 65%;
+            padding: 14px 18px;
+            border-radius: 12px;
             word-wrap: break-word;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.2s ease;
+            font-size: 15px;
+            line-height: 1.5;
         }
         
         .voice-message {
@@ -102,9 +108,9 @@
             align-items: center;
             gap: 12px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 8px 12px;
-            min-width: 200px;
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-width: 220px;
         }
         
         .voice-message.user-voice {
@@ -116,30 +122,49 @@
         }
         
         .play-button {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: none;
+            border: 2px solid;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             flex-shrink: 0;
+            font-size: 14px;
+        }
+        
+        .play-button svg {
+            margin-left: 2px;
         }
         
         .voice-message.user-voice .play-button {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
+            background: #0ea5e9;
+            color: #ffffff;
+            border-color: #0ea5e9;
+            box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3);
         }
         
         .voice-message.bot-voice .play-button {
-            background: #667eea;
-            color: white;
+            background: #ea580c;
+            color: #ffffff;
+            border-color: #ea580c;
+            box-shadow: 0 2px 6px rgba(234, 88, 12, 0.3);
         }
         
-        .play-button:hover {
-            transform: scale(1.1);
+        .voice-message.user-voice .play-button:hover {
+            background: #0284c7;
+            border-color: #0284c7;
+            transform: scale(1.08);
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.4);
+        }
+        
+        .voice-message.bot-voice .play-button:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: scale(1.08);
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.4);
         }
         
         .play-button.playing {
@@ -162,15 +187,15 @@
         }
         
         .voice-message.user-voice .waveform-bar {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.5);
         }
         
         .voice-message.bot-voice .waveform-bar {
-            background: rgba(102, 126, 234, 0.6);
+            background: rgba(234, 88, 12, 0.3);
         }
         
         .waveform-bar.active {
-            background: #667eea;
+            background: #ea580c;
             animation: wave 0.5s ease-in-out infinite;
         }
         
@@ -198,41 +223,43 @@
         
         .user-message {
             align-self: flex-end;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 18px 18px 4px 18px;
+            background: #0ea5e9;
+            color: #ffffff;
+            border-radius: 12px 12px 4px 12px;
+            border: 1px solid #0ea5e9;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
         }
         
         .bot-message {
             align-self: flex-start;
-            background: white;
-            color: #333;
-            border-radius: 18px 18px 18px 4px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #fff7ed 0%, #fef3f2 100%);
+            color: #1f2937;
+            border-radius: 12px 12px 12px 4px;
+            border: 1px solid #fed7aa;
+            box-shadow: 0 2px 6px rgba(234, 88, 12, 0.1);
         }
         
         .input-area {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e9ecef;
+            padding: 24px 32px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
         }
         
         .input-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 24px;
-            padding: 8px 8px 8px 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 14px;
+            background: #ffffff;
+            border: 2px solid #fed7aa;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.15s ease;
         }
         
         .input-wrapper:focus-within {
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #fb923c;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
         }
         
         #messageInput {
@@ -241,8 +268,8 @@
             background: transparent;
             outline: none;
             font-size: 15px;
-            color: #2d3748;
-            padding: 8px 4px;
+            color: #1f2937;
+            padding: 6px 4px;
         }
         
         #messageInput::placeholder {
@@ -250,32 +277,38 @@
         }
         
         #voiceButton {
-            width: 44px;
-            height: 44px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            width: 48px;
+            height: 48px;
+            border: 2px solid #ea580c;
+            border-radius: 12px;
+            background: #ea580c;
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.15s ease;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
         }
         
         #voiceButton:hover:not(:disabled) {
+            background: #dc2626;
+            border-color: #dc2626;
             transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
         }
         
         #voiceButton:active:not(:disabled) {
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
         
         #voiceButton.recording {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            background: #dc2626;
+            border-color: #dc2626;
+            color: #ffffff;
             animation: recordPulse 1.5s ease-in-out infinite;
         }
         
@@ -339,12 +372,12 @@
         }
         
         .chat-box::-webkit-scrollbar-thumb {
-            background: #667eea;
+            background: #d1d5db;
             border-radius: 10px;
         }
         
         .chat-box::-webkit-scrollbar-thumb:hover {
-            background: #764ba2;
+            background: #9ca3af;
         }
         
         .mode-content.active {
@@ -382,27 +415,24 @@
         
         .home-btn-absolute {
             position: absolute;
-            top: 24px;
-            left: 24px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
+            top: 20px;
+            left: 20px;
+            padding: 9px 18px;
+            background: #ffffff;
+            color: #374151;
             text-decoration: none;
             border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+            border: 1.5px solid #fed7aa;
             z-index: 10;
         }
         
         .home-btn-absolute:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: #fef3f2;
+            color: #ea580c;
+            border-color: #fb923c;
         }
     </style>
 </head>
@@ -586,7 +616,9 @@
                 messageDiv.innerHTML = `
                     <div class="voice-message bot-voice" id="${messageId}">
                         <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
-                            ▶️
+                            <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </button>
                         <div class="waveform">
                             ${generateWaveformBars()}
@@ -595,16 +627,17 @@
                     </div>
                     <button class="transcript-btn" onclick="toggleTranscript(this)" style="
                         margin-top: 8px;
-                        padding: 4px 8px;
-                        background: rgba(102, 126, 234, 0.1);
-                        border: 1px solid rgba(102, 126, 234, 0.3);
-                        border-radius: 12px;
-                        color: #667eea;
-                        font-size: 12px;
+                        padding: 6px 10px;
+                        background: #ffffff;
+                        border: 1px solid #d1d5db;
+                        border-radius: 2px;
+                        color: #374151;
+                        font-size: 11px;
                         cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">📝 Mostrar transcripción</button>
-                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(102, 126, 234, 0.05); border-radius: 8px; font-size: 13px; color: #666; font-style: italic;">${content}</div>
+                        transition: all 0.15s ease;
+                        font-weight: 500;
+                    ">Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 10px; background: #f9fafb; border-radius: 2px; font-size: 13px; color: #6b7280; border: 1px solid #e5e7eb;">${content}</div>
                 `;
                 
                 // Pre-load audio to get duration immediately
@@ -617,7 +650,9 @@
                 messageDiv.innerHTML = `
                     <div class="voice-message user-voice" id="${messageId}">
                         <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
-                            ▶️
+                            <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </button>
                         <div class="waveform">
                             ${generateWaveformBars()}
@@ -626,16 +661,17 @@
                     </div>
                     <button class="transcript-btn" onclick="toggleTranscript(this)" style="
                         margin-top: 8px;
-                        padding: 4px 8px;
-                        background: rgba(255, 255, 255, 0.2);
+                        padding: 6px 10px;
+                        background: rgba(255, 255, 255, 0.15);
                         border: 1px solid rgba(255, 255, 255, 0.3);
-                        border-radius: 12px;
-                        color: white;
-                        font-size: 12px;
+                        border-radius: 2px;
+                        color: #ffffff;
+                        font-size: 11px;
                         cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">📝 Mostrar transcripción</button>
-                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 13px; color: rgba(255, 255, 255, 0.9); font-style: italic;">${content}</div>
+                        transition: all 0.15s ease;
+                        font-weight: 500;
+                    ">Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; font-size: 13px; color: rgba(255, 255, 255, 0.95); border: 1px solid rgba(255, 255, 255, 0.2);">${content}</div>
                 `;
                 
                 // Pre-load audio to get duration immediately
@@ -699,13 +735,11 @@
             if (isHidden) {
                 // Show transcript
                 transcriptDiv.style.display = 'block';
-                button.textContent = '📝 Ocultar transcripción';
-                button.style.background = 'rgba(102, 126, 234, 0.2)';
+                button.textContent = 'Ocultar transcripción';
             } else {
                 // Hide transcript
                 transcriptDiv.style.display = 'none';
-                button.textContent = '📝 Mostrar transcripción';
-                button.style.background = 'rgba(102, 126, 234, 0.1)';
+                button.textContent = 'Mostrar transcripción';
             }
         }
         
@@ -731,16 +765,16 @@
                 // Stop current playback
                 currentAudio.pause();
                 currentAudio = null;
-                button.textContent = '▶️';
+                button.innerHTML = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
                 button.classList.remove('playing');
                 waveformBars.forEach(bar => bar.classList.remove('active'));
                 return;
             }
             
-            if (button.textContent === '⏸️') {
+            if (button.querySelector('svg') && button.innerHTML.includes('M3 2')) {
                 // Pause current audio
                 currentAudio.pause();
-                button.textContent = '▶️';
+                button.innerHTML = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
                 button.classList.remove('playing');
                 waveformBars.forEach(bar => bar.classList.remove('active'));
                 return;
@@ -785,7 +819,7 @@
                 });
                 
                 currentAudio.addEventListener('ended', () => {
-                    button.textContent = '▶️';
+                    button.innerHTML = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
                     button.classList.remove('playing');
                     waveformBars.forEach(bar => bar.classList.remove('active'));
                     currentAudio = null;
@@ -798,7 +832,7 @@
                 
                 // Start playing
                 currentAudio.play().then(() => {
-                    button.textContent = '⏸️';
+                    button.innerHTML = '<svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="2" width="3" height="10" rx="1" fill="currentColor"/><rect x="6" y="2" width="3" height="10" rx="1" fill="currentColor"/></svg>';
                     button.classList.add('playing');
                     
                     // Animate waveform during playback
