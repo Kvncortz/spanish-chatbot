@@ -15,41 +15,95 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #fefefe;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         
         .assignment-container {
-            width: 90%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1100px;
+            height: 95vh;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f0f0f0;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: containerFadeIn 0.5s ease;
+        }
+        
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         
         .assignment-header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 30px;
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 50%, #f0f9ff 100%);
+            color: #0f172a;
+            padding: 28px 32px;
+            text-align: center;
+            border-bottom: 2px solid #93c5fd;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .assignment-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
         }
         
         .assignment-header h1 {
-            font-size: 24px;
+            margin: 0 0 18px 0;
+            font-size: 26px;
             font-weight: 600;
-            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+            color: #0f172a;
         }
         
         .assignment-meta {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             font-size: 14px;
-            opacity: 0.9;
+            color: #374151;
             flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .assignment-detail-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .assignment-detail-item {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+        
+        .assignment-detail-label {
+            font-weight: 600;
+            color: #0f172a;
         }
         
         .assignment-info {
@@ -61,23 +115,31 @@
         }
         
         .info-section h3 {
-            color: #333;
-            font-size: 18px;
+            color: #0f172a;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
         }
         
         .info-section p {
-            color: #666;
+            color: #4b5563;
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
         
         .student-form {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 15px;
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 8px;
             margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .student-form:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .form-group {
@@ -87,42 +149,71 @@
         .form-group label {
             display: block;
             font-weight: 500;
-            color: #333;
-            margin-bottom: 5px;
+            color: #374151;
+            margin-bottom: 6px;
             font-size: 14px;
         }
         
         .form-group input {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
+            padding: 11px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            background: #ffffff;
         }
         
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
         
         .start-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 16px;
+            background: #0ea5e9;
+            color: #ffffff;
+            border: 1px solid #0ea5e9;
+            padding: 14px 28px;
+            border-radius: 6px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .start-btn:hover:not(:disabled)::before {
+            width: 300px;
+            height: 300px;
         }
         
         .start-btn:hover:not(:disabled) {
+            background: #0284c7;
+            border-color: #0284c7;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 6px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .start-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
         }
         
         .start-btn:disabled {
@@ -132,13 +223,11 @@
         
         .chat-container {
             display: none;
-            height: 35vh;
+            flex: 1;
             flex-direction: column;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
+            background: #fefefe;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-top: 20px;
+            min-height: 0;
         }
         
         .chat-container.active {
@@ -147,70 +236,104 @@
         
         .chat-box {
             flex: 1;
-            padding: 15px;
+            padding: 32px;
             overflow-y: auto;
-            overflow-x: hidden;
-            background: #f8fafc;
+            background: #fefefe;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            max-height: calc(35vh - 100px);
+            gap: 20px;
+        }
+        
+        .input-area {
+            padding: 24px 32px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            display: none;
+        }
+        
+        .input-area.show {
+            display: flex;
+            flex-shrink: 0;
         }
         
         .input-wrapper {
-            display: none; /* Hide the old input wrapper */
-        }
-        
-        .main-input-wrapper {
-            padding: 10px;
-            background: white;
-            border-top: 1px solid rgba(240, 147, 251, 0.2);
             display: flex;
-            gap: 12px;
             align-items: center;
-            margin-top: 0;
-        }
-        
-        .main-input-wrapper input {
-            flex: 1;
+            gap: 14px;
+            background: #ffffff;
+            border: 2px solid #bfdbfe;
+            border-radius: 12px;
             padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 25px;
-            font-size: 16px;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: #60a5fa;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+        
+        #mainMessageInput {
+            flex: 1;
+            border: none;
+            background: transparent;
             outline: none;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-            color: #2d3748;
+            font-size: 15px;
+            color: #1f2937;
+            padding: 6px 4px;
+            min-height: 24px;
         }
         
-        .main-input-wrapper input::placeholder {
-            color: #94a3b8;
-        }
-        
-        .main-input-wrapper input:focus {
-            border-color: #f093fb;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
+        #mainMessageInput::placeholder {
+            color: #a0aec0;
         }
         
         .main-input-wrapper button {
             width: 48px;
             height: 48px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            background: #3b82f6;
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .main-input-wrapper button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .main-input-wrapper button:hover:not(:disabled)::after {
+            width: 100px;
+            height: 100px;
         }
         
         .main-input-wrapper button:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+            background: #2563eb;
+            border-color: #2563eb;
+            transform: scale(1.08);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+        
+        .main-input-wrapper button:active:not(:disabled) {
+            transform: scale(0.95);
         }
         
         .main-input-wrapper button:disabled {
@@ -219,43 +342,66 @@
         }
         
         .main-input-wrapper button.recording {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #dc2626;
+            border-color: #dc2626;
             animation: pulse 1.5s ease-in-out infinite;
         }
         
         .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
+            max-width: 65%;
+            padding: 14px 18px;
+            border-radius: 12px;
             word-wrap: break-word;
-            animation: messageSlide 0.3s ease-out;
+            animation: messageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
         }
         
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
+        @keyframes messageSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(15px) scale(0.95);
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
             }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .bot-message {
             align-self: flex-start;
-            background: white;
-            color: #2d3748;
-            border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+            color: #1f2937;
+            border-radius: 12px 12px 12px 4px;
+            border: 1px solid #93c5fd;
+            box-shadow: 0 2px 6px rgba(14, 165, 233, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .bot-message:hover {
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+            transform: translateX(2px);
         }
         
         .user-message {
             align-self: flex-end;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-bottom-right-radius: 4px;
+            background: #0ea5e9;
+            color: #ffffff;
+            border-radius: 12px 12px 4px 12px;
+            border: 1px solid #0ea5e9;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .user-message:hover {
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+            transform: translateX(-2px);
         }
         
         .voice-message {
@@ -266,39 +412,89 @@
         }
         
         .voice-message.bot-voice {
-            background: rgba(102, 126, 234, 0.05);
-            border-radius: 12px;
-            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-width: 220px;
         }
         
         .voice-message.user-voice {
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 10px 14px;
+            min-width: 220px;
         }
         
         .play-button {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            border: 2px solid;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
             font-size: 14px;
-            transition: all 0.2s ease;
+            position: relative;
         }
         
-        .play-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+        .play-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(14, 165, 233, 0.2);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
         }
         
-        .play-button:active {
-            transform: scale(0.95);
+        .play-button svg {
+            margin-left: 2px;
+        }
+        
+        .voice-message.user-voice .play-button {
+            background: #0ea5e9;
+            color: #ffffff;
+            border-color: #0ea5e9;
+            box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3);
+        }
+        
+        .voice-message.bot-voice .play-button {
+            background: #0ea5e9;
+            color: #ffffff;
+            border-color: #0ea5e9;
+            box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3);
+        }
+        
+        .voice-message.user-voice .play-button:hover {
+            background: #0284c7;
+            border-color: #0284c7;
+            transform: scale(1.12);
+            box-shadow: 0 6px 14px rgba(14, 165, 233, 0.4);
+        }
+        
+        .voice-message.user-voice .play-button:hover::before {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+        
+        .voice-message.bot-voice .play-button:hover {
+            background: #0284c7;
+            border-color: #0284c7;
+            transform: scale(1.12);
+            box-shadow: 0 6px 14px rgba(14, 165, 233, 0.4);
+        }
+        
+        .voice-message.bot-voice .play-button:hover::before {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+        
+        .play-button.playing {
+            animation: pulse 1.5s infinite;
         }
         
         .waveform {
@@ -308,35 +504,49 @@
             flex: 1;
         }
         
-        .waveform-bar {
-            width: 3px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 2px;
-            animation: wave 1s ease-in-out infinite;
+        .waveform {
+            flex: 1;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
         }
         
-        .voice-message.bot-voice .waveform-bar {
-            background: rgba(255, 255, 255, 0.8);
+        .waveform-bar {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 2px;
+            transition: all 0.3s ease;
         }
         
         .voice-message.user-voice .waveform-bar {
-            background: rgba(102, 126, 234, 0.6);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .voice-message.bot-voice .waveform-bar {
+            background: rgba(14, 165, 233, 0.3);
         }
         
         .waveform-bar.active {
-            background: rgba(255, 255, 255, 1) !important;
+            background: #0ea5e9;
+            animation: wave 0.5s ease-in-out infinite;
         }
         
         @keyframes wave {
-            0%, 100% { height: 20px; }
-            50% { height: 30px; }
+            0%, 100% { height: 20%; }
+            50% { height: 80%; }
         }
         
         .duration {
             font-size: 12px;
-            opacity: 0.8;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
             min-width: 40px;
+            text-align: center;
+        }
+        
+        .voice-message.bot-voice .duration {
+            color: rgba(0, 0, 0, 0.6);
         }
         
         @keyframes pulse {
@@ -348,16 +558,16 @@
             align-items: center;
             gap: 12px;
             background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 24px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
             padding: 8px 8px 8px 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
         }
         
         .input-wrapper:focus-within {
-            border-color: #f093fb;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
+            border-color: #0ea5e9;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
         
         #messageInput {
@@ -374,43 +584,45 @@
             color: #a0aec0;
         }
         
-        #voiceButton {
-            width: 44px;
-            height: 44px;
+        #mainVoiceButton {
+            width: 48px;
+            height: 48px;
             border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            border-radius: 12px;
+            background: #3b82f6;
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.15s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: none;
+            flex-shrink: 0;
         }
         
-        #voiceButton:hover:not(:disabled) {
+        #mainVoiceButton:hover:not(:disabled) {
+            background: #2563eb;
             transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
         
-        #voiceButton:active:not(:disabled) {
-            transform: scale(0.95);
+        #mainVoiceButton:active:not(:disabled) {
+            transform: scale(0.98);
         }
         
-        #voiceButton.recording {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            animation: recordPulse 1.5s ease-in-out infinite;
+        #mainVoiceButton.recording {
+            background: #dc2626;
+            animation: pulse 1.5s ease-in-out infinite;
         }
         
-        #voiceButton .mic-icon {
+        #mainVoiceButton .mic-icon {
             width: 20px;
             height: 20px;
             position: relative;
         }
         
-        #voiceButton .mic-icon::before {
+        #mainVoiceButton .mic-icon::before {
             content: '';
             position: absolute;
             width: 8px;
@@ -422,7 +634,7 @@
             transform: translate(-50%, -50%);
         }
         
-        #voiceButton .mic-icon::after {
+        #mainVoiceButton .mic-icon::after {
             content: '';
             position: absolute;
             width: 16px;
@@ -434,7 +646,7 @@
             transform: translate(-50%, -50%);
         }
         
-        #voiceButton.recording .mic-icon::after {
+        #mainVoiceButton.recording .mic-icon::after {
             animation: recordRipple 1.5s ease-in-out infinite;
         }
         
@@ -473,13 +685,14 @@
         }
         
         .completion-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 10px;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 16px;
+            border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
+            border: 1px solid #a7f3d0;
         }
         
         .duration {
@@ -596,10 +809,10 @@
         }
         
         .modal-actions .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            background: #0ea5e9;
+            color: #ffffff;
+            border: 1px solid #0ea5e9;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         
         .modal-actions .btn-primary:hover {
@@ -721,11 +934,11 @@
         }
         
         .intro-modal-header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 25px;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 28px;
             text-align: center;
-            border-radius: 20px 20px 0 0;
+            border-bottom: 1px solid #e5e7eb;
         }
         
         .intro-modal-header h2 {
@@ -785,13 +998,14 @@
         .intro-btn {
             width: 100%;
             font-size: 16px;
-            font-weight: 600;
-            padding: 16px 24px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border: none;
-            color: white;
+            font-weight: 500;
+            padding: 14px 28px;
+            border-radius: 6px;
+            background: #0ea5e9;
+            border: 1px solid #0ea5e9;
+            color: #ffffff;
             cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
             text-transform: uppercase;
@@ -806,6 +1020,273 @@
             transform: translateY(0);
         }
         
+        /* Conversation Review Styles */
+        .review-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .review-message.correct {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .review-message.incorrect {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+        }
+        
+        .review-message.neutral {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+        }
+        
+        .review-message.user-review {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            margin-left: 20px;
+        }
+        
+        .review-message.bot-review {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            margin-right: 20px;
+        }
+        
+        .review-message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .review-sender {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .review-timestamp {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .review-content {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-note {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .feedback-highlight {
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .feedback-highlight.correct {
+            background: #86efac;
+            color: #166534;
+        }
+        
+        .feedback-highlight.incorrect {
+            background: #fde047;
+            color: #854d0e;
+        }
+        
+        .feedback-highlight.english {
+            background: #fecaca;
+            color: #991b1b;
+        }
+        
+        .scaffolding-orange {
+            color: #ea580c;
+            font-style: italic;
+        }
+        
+        .scaffolding-orange .feedback-highlight {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+        
+        /* Simple Google Docs-style highlighting - REVERTED */
+        .vocab-highlight {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            border-bottom: 2px dotted #f59e0b;
+            font-style: normal;
+        }
+        
+        .vocab-highlight:hover {
+            background: #fde68a;
+        }
+        
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            margin-bottom: 5px;
+        }
+        
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #1f2937;
+        }
+        
+        .vocab-highlight:hover .tooltip {
+            opacity: 1;
+        }
+        
+        /* Processing Modal Styles */
+        .processing-animation {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .processing-spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 20px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .processing-animation p {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        .sticky-note {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            max-width: 300px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sticky-note::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #d1d5db;
+        }
+        
+        .sticky-note::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #ffffff;
+            z-index: 1;
+        }
+        
+        .feedback-note:hover .sticky-note {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sticky-note-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        
+        .sticky-note-content {
+            color: #4b5563;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .feedback-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        
+        .feedback-icon.correct {
+            color: #10b981;
+        }
+        
+        .feedback-icon.incorrect {
+            color: #f59e0b;
+        }
+
     </style>
 </head>
 <body>
@@ -816,35 +1297,36 @@
                     <h1 id="assignmentTitle">Loading Assignment...</h1>
                     <div class="assignment-meta">
                         <span class="level-badge" id="assignmentLevel">Loading...</span>
-                        <span class="duration" id="assignmentDuration">Loading...</span>
                     </div>
-                    <div id="assignmentDetailsHeader" style="margin-top: 12px; font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.4;">
-                        Loading...
+                    <div class="assignment-detail-row">
+                        <div class="assignment-detail-item">
+                            <span class="assignment-detail-label">Role:</span> <span id="assignmentRole">Loading...</span>
+                        </div>
+                        <div class="assignment-detail-item">
+                            <span class="assignment-detail-label">Scenario:</span> <span id="assignmentScenario">Loading...</span>
+                        </div>
                     </div>
-                    <div id="assignmentInstructionsHeader" style="margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.4;">
-                        Loading...
-                    </div>
-                    <div id="timer" style="margin-top: 16px; font-size: 18px; font-weight: 600; color: white; display: none;">
-                        ⏱️ <span id="timerDisplay">00:00</span> / <span id="totalTime">00:00</span>
+                    <div id="timer" style="margin-top: 16px; font-size: 18px; font-weight: 600; color: #0f172a; display: none;">
+                        <span id="timerDisplay">00:00</span> / <span id="totalTime">00:00</span>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Chat interface integrated into the same container -->
-        <div class="chat-container" id="assignmentContent" style="display: none; margin-top: 20px;">
-            <div class="chat-box" id="chatBox">
-                <!-- Messages will appear here -->
+        <div class="chat-container" id="assignmentContent" style="display: none;">
+            <div class="chat-box" id="chatBox"></div>
+            
+            <div class="input-area" id="mainInputWrapper">
+                <div class="input-wrapper">
+                    <input type="text" id="mainMessageInput" placeholder="Escribe tu mensaje..." disabled>
+                    <button id="mainVoiceButton" disabled>
+                        <div class="mic-icon"></div>
+                    </button>
+                </div>
             </div>
         </div>
-        
-        <!-- Input bar at the very bottom of the main container -->
-        <div class="main-input-wrapper" id="mainInputWrapper" style="display: none;">
-            <input type="text" id="mainMessageInput" placeholder="Escribe tu mensaje..." disabled>
-            <button id="mainVoiceButton" disabled>
-                <div class="mic-icon"></div>
-            </button>
-        </div>
+    </div>
             
             <!-- Beautiful intro modal -->
             <div id="introModal" class="intro-modal">
@@ -873,6 +1355,24 @@
             </div>
             
             <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <!-- Processing Modal -->
+    <div id="processingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Processing Conversation Review</h3>
+            </div>
+            <div class="modal-body">
+                <div class="processing-animation">
+                    <div class="processing-spinner"></div>
+                    <p>Analyzing your conversation and generating feedback...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -913,26 +1413,28 @@
                 <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
                     <button class="btn btn-primary" onclick="goToDashboard()" style="
                         font-size: 14px; 
-                        font-weight: 600; 
+                        font-weight: 500; 
                         padding: 12px 24px; 
-                        border-radius: 8px;
-                        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                        border: none;
-                        color: white;
+                        border-radius: 6px;
+                        background: #10b981;
+                        border: 1px solid #10b981;
+                        color: #ffffff;
                         cursor: pointer;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
                         transition: all 0.3s ease;
                     " onmouseover="this.style.transform='translateY(-1px)';" onmouseout="this.style.transform='translateY(0)';">
                         Back to Dashboard
                     </button>
                     <button class="btn btn-primary" onclick="goToPractice()" style="
                         font-size: 14px; 
-                        font-weight: 600; 
+                        font-weight: 500; 
                         padding: 12px 24px; 
-                        border-radius: 8px;
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        border: none;
-                        color: white;
+                        border-radius: 6px;
+                        background: #0ea5e9;
+                        border: 1px solid #0ea5e9;
+                        color: #ffffff;
                         cursor: pointer;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
                         transition: all 0.3s ease;
                     " onmouseover="this.style.transform='translateY(-1px)';" onmouseout="this.style.transform='translateY(0)';">
                         Practice More
@@ -942,10 +1444,55 @@
         </div>
     </div>
     
+    <!-- Conversation Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Conversation Review</h2>
+                <p>Review your conversation with instant feedback</p>
+            </div>
+            <div class="modal-body">
+                <div id="conversationReview" style="max-height: 500px; overflow-y: auto; padding: 20px; background: #f8f9fa; border-radius: 8px; margin: 15px 0;">
+                    <!-- Conversation transcript will be loaded here -->
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="tryAgain()" style="
+                        font-size: 14px; 
+                        font-weight: 500; 
+                        padding: 12px 24px; 
+                        border-radius: 6px;
+                        background: #0ea5e9;
+                        border: 1px solid #0ea5e9;
+                        color: #ffffff;
+                        cursor: pointer;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.transform='translateY(-1px)';" onmouseout="this.style.transform='translateY(0)';">
+                        Try Again
+                    </button>
+                    <button class="btn btn-secondary" onclick="goToDashboard()" style="
+                        font-size: 14px; 
+                        font-weight: 500; 
+                        padding: 12px 24px; 
+                        border-radius: 6px;
+                        background: #f8fafc;
+                        color: #4a5568;
+                        border: 2px solid #e2e8f0;
+                        cursor: pointer;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.transform='translateY(-1px)';" onmouseout="this.style.transform='translateY(0)';">
+                        Return to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         const chatBox = document.getElementById('chatBox');
-        const messageInput = document.getElementById('messageInput');
-        const voiceButton = document.getElementById('voiceButton');
+        const messageInput = document.getElementById('mainMessageInput');
+        const voiceButton = document.getElementById('mainVoiceButton');
         const studentForm = document.getElementById('studentForm');
         const chatContainer = document.getElementById('chatContainer');
         const timer = document.getElementById('timer');
@@ -1027,41 +1574,24 @@
                     throw new Error(data.detail || 'Failed to load assignment');
                 }
                 
-                assignment = data; // The API returns the assignment directly
-                currentAssignment = assignment; // Set currentAssignment for other functions
-                console.log('Assignment loaded:', assignment);
-                
-                // Update maxDuration based on assignment duration
-                maxDuration = assignment.duration * 60 * 1000; // Convert minutes to milliseconds
-                console.log('Max duration set to:', maxDuration, 'ms');
+                currentAssignment = data;
+                console.log('Assignment loaded:', currentAssignment);
                 
                 // Update UI with assignment details
-                console.log('Updating UI with assignment details...');
-                document.getElementById('assignmentTitle').textContent = assignment.title;
-                document.getElementById('assignmentLevel').textContent = assignment.level.charAt(0).toUpperCase() + assignment.level.slice(1);
-                document.getElementById('assignmentDuration').textContent = `${assignment.duration} min`;
+                document.getElementById('assignmentTitle').textContent = currentAssignment.title;
+                document.getElementById('assignmentLevel').textContent = currentAssignment.level.charAt(0).toUpperCase() + currentAssignment.level.slice(1);
+                document.getElementById('assignmentRole').textContent = currentAssignment.description || 'Spanish student';
+                document.getElementById('assignmentScenario').textContent = currentAssignment.instructions || 'Practice conversation';
                 
-                // Update assignment details in the header
-                document.getElementById('assignmentDetailsHeader').textContent = assignment.description;
-                document.getElementById('assignmentInstructionsHeader').textContent = assignment.instructions || 'Follow the conversation prompts and practice your Spanish!';
-                console.log('UI updated successfully');
-                
-                // Show assignment content directly
-                console.log('Showing assignment content...');
+                // Show assignment content
                 document.getElementById('assignmentContent').style.display = 'block';
-                console.log('Assignment content displayed');
                 
-                // Show the intro modal
-                console.log('Showing intro modal...');
-                document.getElementById('introModal').classList.add('active');
-                
-                // Update intro modal content
-                document.getElementById('introAssignmentTitle').textContent = assignment.title;
-                console.log('Intro modal displayed');
+                // Show intro modal instead of directly connecting
+                showAssignmentIntro();
                 
             } catch (error) {
                 console.error('Error loading assignment:', error);
-                showError('Error loading assignment. Please try again.');
+                showError('Failed to load assignment: ' + error.message);
             }
         }
         
@@ -1074,11 +1604,11 @@
         }
         
         function showAssignmentIntro() {
-            studentName = document.getElementById('studentName').value.trim();
-            const classNumber = document.getElementById('classNumber').value.trim();
+            // Use the already-set studentName from logged-in user
+            const classNumber = ''; // Not needed for logged-in users
             
             if (!studentName) {
-                alert('Please enter your name');
+                alert('Student name not found');
                 return;
             }
             
@@ -1086,8 +1616,7 @@
             sessionLog.studentName = studentName;
             sessionLog.classNumber = classNumber;
             
-            // Hide student form and show intro modal
-            studentForm.style.display = 'none';
+            // Show intro modal directly (no student form to hide)
             document.getElementById('introModal').classList.add('active');
         }
         
@@ -1114,14 +1643,20 @@
             
             // Show chat interface
             console.log('Chat interface ready');
-            const chatContainer = document.querySelector('.chat-container');
+            const chatContainer = document.getElementById('assignmentContent');
             if (chatContainer) {
-                chatContainer.classList.add('active');
+                chatContainer.style.display = 'flex';
                 console.log('Chat container activated');
             }
             
             // Show the main input wrapper
-            document.getElementById('mainInputWrapper').style.display = 'flex';
+            const inputWrapper = document.getElementById('mainInputWrapper');
+            if (inputWrapper) {
+                inputWrapper.classList.add('show');
+                console.log('Input wrapper show class added');
+            } else {
+                console.log('Input wrapper not found');
+            }
             
             // Start timers
             startSessionTimer();
@@ -1137,6 +1672,156 @@
             
             // Start the chat session
             startChatSession();
+        }
+        
+        function finishConversation() {
+            // Stop the conversation and show review
+            completeAssignment(false);
+            showConversationReview();
+        }
+        
+        async function showConversationReview() {
+            console.log('showConversationReview called!');
+            
+            try {
+                // Save the session first using the original working method
+                sessionLog.endTime = new Date().toISOString();
+                sessionLog.completed = true;
+                
+                console.log('Session log updated:', sessionLog);
+                
+                // Save log to localStorage (as backup) - original working method with quota management
+                try {
+                    const logs = JSON.parse(localStorage.getItem('logs') || '[]');
+                    logs.push(sessionLog);
+                    
+                    // Keep only the last 50 logs to prevent quota exceeded
+                    if (logs.length > 50) {
+                        logs.splice(0, logs.length - 50);
+                    }
+                    
+                    localStorage.setItem('logs', JSON.stringify(logs));
+                    console.log('Session saved to localStorage');
+                } catch (storageError) {
+                    console.warn('localStorage quota exceeded, clearing old logs:', storageError);
+                    // Clear old logs and try again
+                    localStorage.removeItem('logs');
+                    const logs = [sessionLog];
+                    localStorage.setItem('logs', JSON.stringify(logs));
+                    console.log('Session saved to localStorage after cleanup');
+                }
+                
+                // Also send to server using original method
+                sendLogToServer(sessionLog);
+                
+                console.log('Session sent to server');
+                
+                // Hide other modals
+                document.getElementById('timeUpModal').classList.remove('active');
+                
+                console.log('Time up modal hidden');
+                
+                // Generate conversation review with feedback
+                console.log('Starting to generate conversation review...');
+                
+                // Show processing modal
+                document.getElementById('processingModal').classList.add('active');
+                
+                const reviewContainer = document.getElementById('conversationReview');
+                const reviewHTML = await generateConversationReview();
+                console.log('Generated HTML:', reviewHTML);
+                reviewContainer.innerHTML = reviewHTML;
+                
+                // Hide processing modal
+                document.getElementById('processingModal').classList.remove('active');
+                
+                console.log('Conversation review generated');
+                
+                // Show the review modal
+                document.getElementById('reviewModal').classList.add('active');
+                
+                console.log('Review modal should be visible now');
+            } catch (error) {
+                console.error('Error in showConversationReview:', error);
+                alert('There was an error generating the review. Please try again.');
+            }
+        }
+        
+        async function generateConversationReview() {
+            let reviewHTML = '';
+            
+            for (const [index, message] of sessionLog.conversation.entries()) {
+                const isUser = message.sender === 'user';
+                const timestamp = new Date(message.timestamp).toLocaleTimeString();
+                
+                // Different colors for user vs bot messages
+                const reviewClass = isUser ? 'user-review' : 'bot-review';
+                
+                reviewHTML += `
+                    <div class="review-message ${reviewClass}">
+                        <div class="review-message-header">
+                            <span class="review-sender">${isUser ? 'You' : 'AI Tutor'}</span>
+                            <span class="review-timestamp">${timestamp}</span>
+                        </div>
+                        <div class="review-content">
+                            ${message.content}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return reviewHTML;
+        }
+        
+        function tryAgain() {
+            // Close review modal
+            document.getElementById('reviewModal').classList.remove('active');
+            
+            // Reset all state variables
+            sessionLog = {
+                assignmentId: null,
+                studentName: '',
+                classNumber: '',
+                startTime: null,
+                endTime: null,
+                level: '',
+                messageCount: 0,
+                voiceUsed: false,
+                transcriptUsed: false,
+                usedVocab: [],
+                conversation: []
+            };
+            
+            // Clear chat box
+            const chatBox = document.getElementById('chatBox');
+            if (chatBox) {
+                chatBox.innerHTML = '';
+            }
+            
+            // Reset timer display
+            document.getElementById('timerDisplay').textContent = '00:00';
+            
+            // Hide chat container and show assignment header
+            document.getElementById('assignmentContent').style.display = 'none';
+            document.getElementById('mainInputWrapper').classList.remove('show');
+            
+            // Show intro modal again
+            document.getElementById('introModal').classList.add('active');
+            
+            // Reset assignment completed flag
+            assignmentCompleted = false;
+            
+            // Clear any existing timers
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+            }
+            if (assignmentTimer) {
+                clearInterval(assignmentTimer);
+            }
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/student-dashboard';
         }
         
         function startSessionTimer() {
@@ -1223,8 +1908,8 @@
                 ws = null;
             }
             
-            // Show time up modal
-            document.getElementById('timeUpModal').classList.add('active');
+            // Show conversation review when time is up
+            showConversationReview();
         }
         
         function connect() {
@@ -1235,17 +1920,10 @@
             
             isConnecting = true;
             console.log(`Connecting to WebSocket with level: ${currentAssignment.level}`);
-            console.log(`WebSocket URL: ws://${window.location.host}/ws/${currentAssignment.level}`);
-            
-            // Show connection status
-            const chatBox = document.getElementById('chatBox');
-            // Only show connecting message if chat box is empty
-            if (chatBox.children.length === 0) {
-                chatBox.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><div style="font-size: 24px; margin-bottom: 16px;">🔄</div><div>Connecting to conversation server...</div>';
-            }
+            console.log(`WebSocket URL: ws://127.0.0.1:8000/ws/${currentAssignment.level}`);
             
             try {
-                ws = new WebSocket('ws://' + window.location.host + '/ws/' + currentAssignment.level);
+                ws = new WebSocket(`ws://127.0.0.1:8000/ws/${currentAssignment.level}`);
                 console.log('WebSocket object created:', ws);
             } catch (error) {
                 console.error('Error creating WebSocket:', error);
@@ -1291,17 +1969,25 @@
                 
                 try {
                     const data = JSON.parse(event.data);
+                    console.log('Parsed message data:', data);
                     
                     if (data.type === 'voice_response') {
+                        console.log('Handling voice response:', data);
                         handleVoiceResponse(data);
                     } else if (data.type === 'error') {
+                        console.log('Handling error message:', data.content);
                         addMessage(data.content, 'bot');
+                    } else {
+                        console.log('Unknown message type:', data.type);
                     }
                 } catch (e) {
                     // Handle legacy text format
                     const message = event.data;
+                    console.log('DEBUG: Raw message received:', message);
                     if (message.startsWith('bot:')) {
-                        addMessage(message.substring(4), 'bot');
+                        const botMessage = message.substring(4);
+                        console.log('DEBUG: Extracted bot message:', botMessage);
+                        addMessage(botMessage, 'bot');
                     } else if (message.startsWith('Error:')) {
                         addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'bot');
                     } else {
@@ -1370,49 +2056,24 @@
                 }
             });
             
-            console.log('Final used vocabulary (unique words only):', sessionLog.usedVocab);
-            console.log('Total unique vocabulary words used:', sessionLog.usedVocab.length);
-            console.log('=== VOCABULARY CHECK END ===');
         }
         
+        // Voice recording and playback functionality
+        
         function addMessage(content, sender, audioData = null, isVoiceTranscript = false) {
-            console.log('addMessage called with:', { content, sender, audioData: !!audioData });
-            
-            const chatBox = document.getElementById('chatBox');
-            console.log('Chat box element:', chatBox);
-            
-            if (!chatBox) {
-                console.error('Chat box element not found!');
-                return;
-            }
-            
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
             
-            // Add to conversation transcript
-            sessionLog.conversation.push({
-                sender: sender,
-                content: content,
-                timestamp: new Date().toISOString(),
-                audioData: audioData,
-                isVoiceTranscript: isVoiceTranscript
-            });
-            
-            // Update message count
-            if (sender === 'user') {
-                sessionLog.messageCount++;
-            }
-            
-            console.log('Creating message element...');
-            
             if (audioData && sender === 'bot') {
-                // Create voice message for bot responses
+                // Create voice message for bot responses (waveform only, text hidden)
                 messageDiv.className = `message bot-message`;
                 const messageId = 'bot-' + Date.now();
                 messageDiv.innerHTML = `
                     <div class="voice-message bot-voice" id="${messageId}">
                         <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
-                            ▶️
+                            <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </button>
                         <div class="waveform">
                             ${generateWaveformBars()}
@@ -1421,28 +2082,32 @@
                     </div>
                     <button class="transcript-btn" onclick="toggleTranscript(this)" style="
                         margin-top: 8px;
-                        padding: 4px 8px;
-                        background: rgba(102, 126, 234, 0.1);
-                        border: 1px solid rgba(102, 126, 234, 0.3);
-                        border-radius: 12px;
-                        color: #667eea;
-                        font-size: 12px;
+                        padding: 6px 10px;
+                        background: #ffffff;
+                        border: 1px solid #d1d5db;
+                        border-radius: 2px;
+                        color: #374151;
+                        font-size: 11px;
                         cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">📝 Mostrar transcripción</button>
-                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(102, 126, 234, 0.05); border-radius: 8px; font-size: 13px; color: #666; font-style: italic;">${content}</div>
+                        transition: all 0.15s ease;
+                        font-weight: 500;
+                    ">Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 10px; background: #f9fafb; border-radius: 2px; font-size: 13px; color: #6b7280; border: 1px solid #e5e7eb;">${content}</div>
                 `;
                 
+                // Pre-load audio to get duration immediately
                 preloadAudioDuration(audioData, messageId);
                 
             } else if (audioData && sender === 'user') {
-                // Create voice message for user
+                // Create voice message for user (waveform only, text hidden)
                 messageDiv.className = `message user-message`;
                 const messageId = 'user-' + Date.now();
                 messageDiv.innerHTML = `
                     <div class="voice-message user-voice" id="${messageId}">
                         <button class="play-button" onclick="toggleVoicePlayback(this, '${audioData}')">
-                            ▶️
+                            <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </button>
                         <div class="waveform">
                             ${generateWaveformBars()}
@@ -1451,18 +2116,20 @@
                     </div>
                     <button class="transcript-btn" onclick="toggleTranscript(this)" style="
                         margin-top: 8px;
-                        padding: 4px 8px;
-                        background: rgba(255, 255, 255, 0.2);
+                        padding: 6px 10px;
+                        background: rgba(255, 255, 255, 0.15);
                         border: 1px solid rgba(255, 255, 255, 0.3);
-                        border-radius: 12px;
-                        color: white;
-                        font-size: 12px;
+                        border-radius: 2px;
+                        color: #ffffff;
+                        font-size: 11px;
                         cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">📝 Mostrar transcripción</button>
-                    <div class="transcript" style="display: none; margin-top: 8px; padding: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 13px; color: rgba(255, 255, 255, 0.9); font-style: italic;">${content}</div>
+                        transition: all 0.15s ease;
+                        font-weight: 500;
+                    ">Mostrar transcripción</button>
+                    <div class="transcript" style="display: none; margin-top: 8px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; font-size: 13px; color: rgba(255, 255, 255, 0.95); border: 1px solid rgba(255, 255, 255, 0.2);">${content}</div>
                 `;
                 
+                // Pre-load audio to get duration immediately
                 preloadAudioDuration(audioData, messageId);
                 
             } else {
@@ -1470,13 +2137,10 @@
                 messageDiv.textContent = content;
             }
             
-            console.log('Appending message to chat box...');
             chatBox.appendChild(messageDiv);
-            console.log('Message appended, scrolling to bottom...');
             chatBox.scrollTop = chatBox.scrollHeight;
-            console.log('Message display complete!');
-        }
         
+        // Pre-load audio duration without playing
         function preloadAudioDuration(audioBase64, messageId) {
             try {
                 const audioBytes = atob(audioBase64);
@@ -1497,6 +2161,7 @@
                         const seconds = Math.floor(tempAudio.duration % 60);
                         durationElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
                     }
+                    // Clean up the temporary audio and URL
                     URL.revokeObjectURL(audioUrl);
                 });
                 
@@ -1516,25 +2181,41 @@
             }
         }
         
-        function toggleTranscript(button) {
-            // This function only shows/hides the transcript display
-            // It doesn't mean the student used speech-to-text
-            
-            const transcriptDiv = button.nextElementSibling;
-            const isHidden = transcriptDiv.style.display === 'none';
-            
-            if (isHidden) {
-                transcriptDiv.style.display = 'block';
-                button.textContent = '📝 Ocultar transcripción';
-                button.style.background = 'rgba(102, 126, 234, 0.2)';
-            } else {
-                transcriptDiv.style.display = 'none';
-                button.textContent = '📝 Mostrar transcripción';
-                button.style.background = 'rgba(102, 126, 234, 0.1)';
-            }
-        }
+        // Save to session log (student-specific)
+        const message = {
+            content: content,
+            sender: sender,
+            timestamp: new Date().toISOString(),
+            audioData: audioData,
+            isVoiceTranscript: isVoiceTranscript
+        };
         
-        function generateWaveformBars() {
+        sessionLog.conversation.push(message);
+        sessionLog.messageCount++;
+        
+        // Check for vocabulary usage (only for user messages)
+        if (sender === 'user' && currentAssignment && currentAssignment.vocabulary) {
+            checkVocabularyUsage(content);
+        }
+    }
+    
+    // Toggle transcript visibility
+    function toggleTranscript(button) {
+        const transcriptDiv = button.nextElementSibling;
+        const isHidden = transcriptDiv.style.display === 'none';
+        
+        if (isHidden) {
+            // Show transcript
+            transcriptDiv.style.display = 'block';
+            button.textContent = 'Ocultar transcripción';
+        } else {
+            // Hide transcript
+            transcriptDiv.style.display = 'none';
+            button.textContent = 'Mostrar transcripción';
+        }
+    }
+        
+    function generateWaveformBars() {
             let bars = '';
             for (let i = 0; i < 20; i++) {
                 const height = Math.random() * 60 + 20;
@@ -1553,7 +2234,7 @@
             if (currentAudio && !currentAudio.paused) {
                 currentAudio.pause();
                 currentAudio = null;
-                button.textContent = '▶️';
+                button.innerHTML = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
                 button.classList.remove('playing');
                 waveformBars.forEach(bar => bar.classList.remove('active'));
                 return;
@@ -1561,7 +2242,7 @@
             
             if (button.textContent === '⏸️') {
                 currentAudio.pause();
-                button.textContent = '▶️';
+                button.innerHTML = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
                 button.classList.remove('playing');
                 waveformBars.forEach(bar => bar.classList.remove('active'));
                 return;
@@ -1604,7 +2285,7 @@
                 });
                 
                 currentAudio.addEventListener('ended', () => {
-                    button.textContent = '▶️';
+                    button.innerHTML = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5L11 7L1 12.5V1.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
                     button.classList.remove('playing');
                     waveformBars.forEach(bar => bar.classList.remove('active'));
                     currentAudio = null;
@@ -1616,7 +2297,7 @@
                 });
                 
                 currentAudio.play().then(() => {
-                    button.textContent = '⏸️';
+                    button.innerHTML = '<svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="2.5" height="12" fill="currentColor" stroke="currentColor" stroke-width="0.5"/><rect x="6.5" y="1" width="2.5" height="12" fill="currentColor" stroke="currentColor" stroke-width="0.5"/></svg>';
                     button.classList.add('playing');
                     
                     const animateWaveform = () => {
@@ -1736,8 +2417,11 @@
         }
         
         function handleVoiceResponse(data) {
+            console.log('handleVoiceResponse called with:', data);
+            
             // Show user voice message with waveform and hidden transcript
             if (data.transcription) {
+                console.log('Adding user message with transcription:', data.transcription);
                 addMessage(data.transcription, 'user', data.audio);
                 // Check vocabulary in student's transcribed voice message
                 checkVocabulary(data.transcription, 'student');
@@ -1745,8 +2429,10 @@
             
             // Show bot's response with voice message and hidden transcript
             if (data.audio) {
+                console.log('Adding bot message with audio:', data.text);
                 addMessage(data.text, 'bot', data.audio);
             } else {
+                console.log('Adding bot message without audio:', data.text);
                 addMessage(data.text, 'bot');
             }
         }
