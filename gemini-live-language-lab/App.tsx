@@ -523,6 +523,22 @@ const App: React.FC = () => {
       {(stage === 'active' || stage === 'calling') && renderActive()}
       {stage === 'summary' && renderSummary()}
 
+      {/* Mobile Transcription Indicator */}
+      {(stage === 'active' || stage === 'calling') && (
+        <div className="md:hidden fixed bottom-4 left-4 right-4 z-50">
+          {(currentInputText || currentOutputText) && (
+            <div className="bg-white/90 backdrop-blur-3xl border border-slate-200 rounded-2xl p-3 shadow-2xl">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#0ea5e9] animate-pulse" />
+                <span className="text-xs font-black text-slate-600 uppercase tracking-widest">
+                  {currentInputText ? 'Listening...' : 'Responding...'}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Transcription Sidebar */}
       <aside className={`h-full bg-white/95 backdrop-blur-3xl border-l border-slate-200 flex flex-col z-30 transition-all duration-1000 sidebar-transcription ${stage === 'active' ? 'w-[380px] md:w-[440px]' : 'w-[440px] md:w-[520px]'}`}>
         <div className="p-6 md:p-8 lg:p-12 border-b border-slate-200 flex items-center justify-between">
