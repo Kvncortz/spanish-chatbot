@@ -1,1 +1,1 @@
-{"buildCommand": "cd gemini-live-language-lab && npm run build", "outputDirectory": "gemini-live-language-lab/dist", "installCommand": "cd gemini-live-language-lab && npm install", "framework": "vite"}
+{"buildCommand": "npm run build", "outputDirectory": "dist", "installCommand": "npm install", "framework": "vite", "rootDirectory": "gemini-live-language-lab"}
