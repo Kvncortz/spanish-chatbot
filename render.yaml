@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python simple_server.py"
+    startCommand: "uvicorn simple_server:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
@@ -17,4 +17,8 @@ services:
       - key: ELEVENLABS_API_KEY
         sync: false
       - key: TTS_SERVICE
-        value: openai
+        value: elevenlabs
+      - key: VERTEX_AI_API_KEY
+        sync: false
+      - key: GOOGLE_CLOUD_PROJECT_ID
+        sync: false
