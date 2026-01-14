@@ -230,7 +230,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+      const mobile = window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      console.log('Mobile detection:', mobile, 'Width:', window.innerWidth, 'UserAgent:', navigator.userAgent);
+      setIsMobile(mobile);
     };
     
     checkMobile();
