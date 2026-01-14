@@ -1,0 +1,8 @@
+
+{
+  "name": "Gemini Live Language Lab",
+  "description": "A high-performance real-time language learning chatbot powered by Gemini 2.5 Flash Live API, featuring a premium FaceTime-inspired voice interface.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
