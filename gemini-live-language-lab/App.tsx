@@ -302,7 +302,7 @@ const App: React.FC = () => {
           
           <div className="space-y-6">
              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Studio Parameters</h3>
-             <div className="bg-slate-50 rounded-3xl p-8 space-y-8 border border-slate-200">
+             <div className="bg-slate-50 rounded-3xl p-6 md:p-8 space-y-6 md:space-y-8 border border-slate-200 studio-params">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-slate-600">Voice Engine</span>
                   <div className="custom-dropdown" style={{position: 'relative', width: '200px'}}>
@@ -359,7 +359,7 @@ const App: React.FC = () => {
 
         <button 
           onClick={startSession}
-          className="w-full py-5 md:py-6 lg:py-7 rounded-[24px] md:rounded-[28px] lg:rounded-[32px] bg-[#10b981] hover:bg-[#059669] text-white text-base md:text-lg font-black tracking-widest transition-all shadow-[0_25px_50px_rgba(16,185,129,0.25)] active:scale-[0.98] flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-5 md:py-6 lg:py-7 rounded-[24px] md:rounded-[28px] lg:rounded-[32px] bg-[#10b981] hover:bg-[#059669] text-white text-base md:text-lg font-black tracking-widest transition-all shadow-[0_25px_50px_rgba(16,185,129,0.25)] active:scale-[0.98] flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed enter-btn"
           disabled={status.isConnecting}
         >
           <div className="w-2 h-2 rounded-full bg-white animate-ping" />
