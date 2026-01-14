@@ -519,9 +519,83 @@ const App: React.FC = () => {
         <div className="absolute bottom-0 left-0 w-[1000px] h-[1000px] bg-[#10b981]/5 rounded-full blur-[250px]" />
       </div>
 
-      {stage === 'setup' && renderSetup()}
-      {(stage === 'active' || stage === 'calling') && renderActive()}
-      {stage === 'summary' && renderSummary()}
+      {/* Mobile Layout - Full Screen Content */}
+      <div className="flex-1 flex flex-col md:hidden">
+        {stage === 'setup' && renderSetup()}
+        {(stage === 'active' || stage === 'calling') && renderActive()}
+        {stage === 'summary' && renderSummary()}
+      </div>
+
+      {/* Desktop/Tablet Layout - Sidebar */}
+      <div className="hidden md:flex flex-1">
+        <div className="flex-1 flex flex-col">
+          {stage === 'setup' && renderSetup()}
+          {(stage === 'active' || stage === 'calling') && renderActive()}
+          {stage === 'summary' && renderSummary()}
+        </div>
+
+        {/* Transcription Sidebar - Desktop/Tablet Only */}
+        <aside className={`h-full bg-white/95 backdrop-blur-3xl border-l border-slate-200 flex flex-col z-30 transition-all duration-1000 ${stage === 'active' ? 'w-[380px] lg:w-[440px]' : 'w-[440px] lg:w-[520px]'}`}>
+          <div className="p-6 lg:p-12 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500 mb-2">Metadata Stream</h3>
+              <p className="text-base font-black text-slate-700">Transcription Log</p>
+            </div>
+            <div className="flex gap-1.5">
+               <div className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]/40" />
+               <div className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]/20" />
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-6 lg:p-12 space-y-8 lg:space-y-12 custom-scrollbar">
+            {history.length === 0 && !currentInputText && !currentOutputText && (
+              <div className="h-full flex flex-col items-center justify-center text-center opacity-10 px-6 lg:px-8">
+                <div className="w-16 h-16 lg:w-20 lg:h-20 mb-6 lg:mb-8 border border-slate-300 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 lg:w-8 lg:h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                </div>
+                <p className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.4em] text-slate-400">Awaiting Input Stream</p>
+              </div>
+            )}
+
+            {history.map((entry, i) => (
+              <div key={i} className={`flex flex-col ${entry.role === 'user' ? 'items-end' : 'items-start'} animate-in slide-in-from-bottom-4 duration-500`}>
+                <div className={`max-w-[95%] px-4 lg:px-7 py-4 lg:py-6 rounded-[20px] lg:rounded-[32px] text-[12px] lg:text-[14px] leading-[1.6] lg:leading-[1.7] transition-all font-medium ${entry.role === 'user' ? 'bg-[#0ea5e9]/10 text-[#0ea5e9] border border-[#0ea5e9]/20 rounded-tr-none' : 'bg-slate-50 text-slate-700 border border-slate-200 rounded-tl-none'}`}>
+                  <span className="block text-[8px] lg:text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-2 lg:mb-3">{entry.role === 'user' ? 'Student' : 'Coach'}</span>
+                  {entry.text}
+                </div>
+              </div>
+            ))}
+
+            {(currentInputText || currentOutputText) && (
+               <div className="space-y-6 lg:space-y-8 pt-6 lg:pt-8 border-t border-white/5">
+                  {currentInputText && (
+                    <div className="flex flex-col items-end">
+                      <div className="max-w-[95%] px-4 lg:px-7 py-4 lg:py-6 rounded-[20px] lg:rounded-[32px] text-[12px] lg:text-[14px] bg-[#0ea5e9]/5 text-[#0ea5e9] border border-[#0ea5e9]/10 rounded-tr-none animate-pulse">
+                        <span className="block text-[8px] lg:text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-2">Analyzing...</span>
+                        {currentInputText}
+                      </div>
+                    </div>
+                  )}
+                  {currentOutputText && (
+                    <div className="flex flex-col items-start">
+                      <div className="max-w-[95%] px-4 lg:px-7 py-4 lg:py-6 rounded-[20px] lg:rounded-[32px] text-[12px] lg:text-[14px] bg-slate-50 text-slate-500 border border-slate-200 rounded-tl-none animate-pulse">
+                        <span className="block text-[8px] lg:text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-2">Generating...</span>
+                        {currentOutputText}
+                      </div>
+                    </div>
+                  )}
+               </div>
+            )}
+            <div ref={historyEndRef} />
+          </div>
+
+          <div className="p-6 lg:p-12 bg-slate-50 border-t border-slate-200">
+             <div className="flex justify-center items-center text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">
+               <span>VocaFlow Studio Platform</span>
+             </div>
+          </div>
+        </aside>
+      </div>
 
       {/* Mobile Transcription Indicator */}
       {(stage === 'active' || stage === 'calling') && (
@@ -538,68 +612,6 @@ const App: React.FC = () => {
           )}
         </div>
       )}
-
-      {/* Transcription Sidebar */}
-      <aside className={`h-full bg-white/95 backdrop-blur-3xl border-l border-slate-200 flex flex-col z-30 transition-all duration-1000 sidebar-transcription ${stage === 'active' ? 'w-[380px] md:w-[440px]' : 'w-[440px] md:w-[520px]'}`}>
-        <div className="p-6 md:p-8 lg:p-12 border-b border-slate-200 flex items-center justify-between">
-          <div>
-            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-500 mb-2">Metadata Stream</h3>
-            <p className="text-base font-black text-slate-700">Transcription Log</p>
-          </div>
-          <div className="flex gap-1.5">
-             <div className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]/40" />
-             <div className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9]/20" />
-          </div>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-12 space-y-8 md:space-y-10 lg:space-y-12 custom-scrollbar">
-          {history.length === 0 && !currentInputText && !currentOutputText && (
-            <div className="h-full flex flex-col items-center justify-center text-center opacity-10 px-6 md:px-8">
-              <div className="w-16 h-16 md:w-20 md:h-20 mb-6 md:mb-8 border border-slate-300 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 md:w-8 md:h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-              </div>
-              <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] text-slate-400">Awaiting Input Stream</p>
-            </div>
-          )}
-
-          {history.map((entry, i) => (
-            <div key={i} className={`flex flex-col ${entry.role === 'user' ? 'items-end' : 'items-start'} animate-in slide-in-from-bottom-4 duration-500`}>
-              <div className={`max-w-[95%] px-4 md:px-6 lg:px-7 py-4 md:py-5 lg:py-6 rounded-[20px] md:rounded-[24px] lg:rounded-[32px] text-[12px] md:text-[14px] leading-[1.6] md:leading-[1.7] transition-all font-medium ${entry.role === 'user' ? 'bg-[#0ea5e9]/10 text-[#0ea5e9] border border-[#0ea5e9]/20 rounded-tr-none' : 'bg-slate-50 text-slate-700 border border-slate-200 rounded-tl-none'}`}>
-                <span className="block text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-2 md:mb-3">{entry.role === 'user' ? 'Student' : 'Coach'}</span>
-                {entry.text}
-              </div>
-            </div>
-          ))}
-
-          {(currentInputText || currentOutputText) && (
-             <div className="space-y-6 md:space-y-8 pt-6 md:pt-8 border-t border-white/5">
-                {currentInputText && (
-                  <div className="flex flex-col items-end">
-                    <div className="max-w-[95%] px-4 md:px-6 lg:px-7 py-4 md:py-5 lg:py-6 rounded-[20px] md:rounded-[24px] lg:rounded-[32px] text-[12px] md:text-[14px] bg-[#0ea5e9]/5 text-[#0ea5e9] border border-[#0ea5e9]/10 rounded-tr-none animate-pulse">
-                      <span className="block text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-2">Analyzing...</span>
-                      {currentInputText}
-                    </div>
-                  </div>
-                )}
-                {currentOutputText && (
-                  <div className="flex flex-col items-start">
-                    <div className="max-w-[95%] px-4 md:px-6 lg:px-7 py-4 md:py-5 lg:py-6 rounded-[20px] md:rounded-[24px] lg:rounded-[32px] text-[12px] md:text-[14px] bg-slate-50 text-slate-500 border border-slate-200 rounded-tl-none animate-pulse">
-                      <span className="block text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-2">Generating...</span>
-                      {currentOutputText}
-                    </div>
-                  </div>
-                )}
-             </div>
-          )}
-          <div ref={historyEndRef} />
-        </div>
-
-        <div className="p-6 md:p-8 lg:p-12 bg-slate-50 border-t border-slate-200">
-           <div className="flex justify-center items-center text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">
-             <span>VocaFlow Studio Platform</span>
-           </div>
-        </div>
-      </aside>
     </div>
   );
 };
