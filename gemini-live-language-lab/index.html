@@ -3,8 +3,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voca Flow Labs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Gemini Live Language Lab - Build: {new Date().toISOString()}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -25,6 +25,143 @@
     }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
+    }
+    
+    /* Responsive breakpoints */
+    @media (max-width: 1024px) {
+      .sidebar-transcription {
+        width: 400px !important;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      aside.sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+      }
+      
+      .sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+      }
+      
+      .main-content {
+        padding: 1rem !important;
+        width: 100% !important;
+      }
+      
+      .floating-context {
+        top: 1rem !important;
+        right: 1rem !important;
+        width: 280px !important;
+      }
+      
+      .status-hub {
+        top: 1rem !important;
+        left: 1rem !important;
+      }
+      
+      .profile-info {
+        bottom: 1rem !important;
+        left: 1rem !important;
+      }
+      
+      .profile-info h2 {
+        font-size: 2.5rem !important;
+      }
+      
+      .profile-info p {
+        font-size: 1rem !important;
+      }
+      
+      .control-bar {
+        padding: 1rem !important;
+        gap: 1rem !important;
+        flex-direction: column !important;
+      }
+    }
+    
+    /* iPhone specific */
+    @media (max-width: 480px) {
+      aside.sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+        /* Even more aggressive hiding */
+        transform: translateX(100%) !important;
+        pointer-events: none !important;
+        max-width: 0 !important;
+        min-width: 0 !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body {
+        overflow-x: hidden !important;
+      }
+      
+      .sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+        /* Even more aggressive hiding */
+        transform: translateX(100%) !important;
+        pointer-events: none !important;
+        max-width: 0 !important;
+        min-width: 0 !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body {
+        overflow-x: hidden !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .floating-context {
+        width: 240px !important;
+        padding: 1rem !important;
+      }
+      
+      .setup-container {
+        padding: 1.5rem !important;
+        margin: 1rem !important;
+      }
+      
+      .setup-header h1 {
+        font-size: 2.5rem !important;
+      }
+      
+      .setup-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+      }
+      
+      .level-selector {
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+      }
+      
+      .level-btn {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        font-size: 0.625rem !important;
+      }
     }
   </style>
 <script type="importmap">
