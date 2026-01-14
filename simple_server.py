@@ -3,18 +3,20 @@ import json
 import base64
 import sqlite3
 import requests
+import time
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, HTTPException, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from openai import OpenAI
-import google.generativeai as genai
+import google.genai as genai
 import asyncio
 from dotenv import load_dotenv
 from datetime import datetime
 import uuid
 from pydantic import BaseModel
 from typing import List, Optional
+import google.genai as genai_client
 
 # Import database models
 from database import db
@@ -25,6 +27,7 @@ load_dotenv()
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/gemini", StaticFiles(directory="gemini-live-language-lab/dist", html=True), name="gemini")
 templates = Jinja2Templates(directory="templates")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -96,6 +99,11 @@ async def student_dashboard(request: Request):
 @app.get("/practice", response_class=HTMLResponse)
 async def practice_mode(request: Request):
     return templates.TemplateResponse("simple.html", {"request": request})
+
+@app.get("/language-lab", response_class=HTMLResponse)
+async def language_lab(request: Request):
+    """Serve the Gemini Live Language Lab"""
+    return RedirectResponse(url="/gemini/")
 
 # Pydantic models for API requests
 class TeacherCreate(BaseModel):
@@ -935,7 +943,7 @@ async def get_classroom_analytics(classroom_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Helper function to get AI response (LearnLM or OpenAI fallback)
-async def get_ai_response(conversation_history: list, level: str = "intermediate") -> str:
+async def get_ai_response(conversation_history: list, level: str = "intermediate", assignment_data: dict = None) -> str:
     """Get response from LearnLM or fallback to OpenAI"""
     try:
         # Try LearnLM first if available
@@ -957,47 +965,32 @@ async def get_ai_response(conversation_history: list, level: str = "intermediate
                 "advanced": "Use complex vocabulary and nuanced expressions. Challenge with sophisticated grammar and cultural context."
             }
             
-            system_prompt = f"""You are an expert Spanish language learning tutor following learning science principles.
+            # Use assignment context if available, otherwise use generic prompt
+            if assignment_data:
+                system_prompt_template = build_parts_prompt(assignment_data, level)
+                # Replace the placeholder with actual conversation history
+                system_prompt = system_prompt_template.replace("{conversation_history}", " ".join(formatted_history))
+            else:
+                system_prompt = f"""You are a Spanish conversation partner.
 
 PARTS FRAMEWORK:
-- P: Persona - Adopt the specified avatar role (doctor, waiter, travel agent, etc.) with the given characteristics (patient, encouraging, professional, etc.)
-- A: Act - Guide students to accomplish the specific learning objective through scaffolded conversation
-- R: Recipient - Adapt to the student's proficiency level based on the specified standard (ACTFL/CEFR) and level (Novice/Intermediate/Advanced)
-- T: Theme - Focus on the conversational context and vocabulary relevant to the avatar role
-- S: Structure - Use appropriate speech patterns, vocabulary complexity, and grammatical structures for the student level
-
-LEARNING PRINCIPLES:
-- Stimulate curiosity through engaging scenarios
-- Provide scaffolding and guided questioning
-- Facilitate productive struggle without giving answers directly
-- Offer immediate, constructive feedback
-- Encourage active participation and authentic communication
-- Manage cognitive load with appropriate complexity
-- Adapt responses based on student performance
-
-VOICE CHARACTERISTICS:
-- Speak slowly and clearly when requested
-- Adjust speech rate and complexity based on student comprehension
-- Use appropriate intonation and pacing for the avatar role
-
-Always maintain the avatar persona while providing pedagogical support. Balance authentic communication with language learning objectives.
+- P: Persona - Friendly, encouraging conversation partner
+- A: Act - Help students practice Spanish through natural conversation
+- R: Recipient - {level} level student
+- T: Theme - Everyday conversations and personal interests
+- S: Structure - Natural flow with appropriate vocabulary and grammar
 
 {level_guidance.get(level, "")}
 
 Current conversation:
 {' '.join(formatted_history)}
 
-Provide a natural, educational response in Spanish that:
-1. Matches the {level} proficiency level
-2. Is pedagogically sound
-3. Encourages continued learning
-4. Maintains the conversation flow
-5. Uses appropriate vocabulary and grammar
+Respond naturally in Spanish. Keep it conversational and appropriate for {level} level. No English translations.
 
 Response:"""
             
             response = learnlm_client.models.generate_content(
-                model='models/gemini-flash-latest',
+                model='models/gemini-2.5-flash-native-audio-latest',
                 contents=system_prompt
             )
             bot_response = response.text
@@ -1036,89 +1029,236 @@ Response:"""
         print(f"OpenAI fallback also failed: {e}")
         return "Lo siento, estoy teniendo problemas técnicos. ¿Puedes repetir eso?"
 
+async def get_scaffolding_response(spanish_text: str, level: str = "intermediate") -> str:
+    """Generate scaffolding with English translations for review section only"""
+    try:
+        if learnlm_client:
+            print("Generating scaffolding for review section")
+            
+            level_guidance = {
+                "beginner": "Provide simple English translations and basic explanations.",
+                "intermediate": "Provide English translations and grammar explanations.",
+                "advanced": "Provide nuanced English translations and cultural context."
+            }
+            
+            scaffolding_prompt = f"""You are a Spanish language tutor providing educational scaffolding.
+
+For the given Spanish text, provide helpful scaffolding by:
+1. Identifying 3-5 key vocabulary words to highlight
+2. For each highlighted word, provide: <span class="vocab-highlight">spanish_word</span><span class="tooltip">english_translation</span>
+3. Add brief grammar explanations after the text
+4. Add cultural context when relevant
+
+Format:
+Spanish text with individual word highlights, followed by grammar explanations.
+
+Example:
+Me gusta la <span class="vocab-highlight">lechuga</span><span class="tooltip">lettuce</span> y los <span class="vocab-highlight">tomates</span><span class="tooltip">tomatoes</span> porque son <span class="vocab-highlight">saludables</span><span class="tooltip">healthy</span>.
+
+Grammar note: "Me gusta" is used to express likes/dislikes.
+
+Cultural note: Fresh vegetables are important in Spanish cuisine.
+
+Spanish text: {spanish_text}
+
+Level: {level}
+{level_guidance.get(level, "")}
+
+Enhanced text:"""
+            
+            try:
+                response = learnlm_client.models.generate_content(
+                    model='models/gemini-2.5-flash-native-audio-latest',
+                    contents=scaffolding_prompt
+                )
+                scaffolding_response = response.text.strip()
+                # Remove any surrounding quotes (handle various quote types)
+                if (scaffolding_response.startswith('"') and scaffolding_response.endswith('"')) or \
+                   (scaffolding_response.startswith('"') and scaffolding_response.endswith('"')):
+                    scaffolding_response = scaffolding_response[1:-1]
+                # Also remove any leading/trailing quotes that might be left
+                scaffolding_response = scaffolding_response.strip('"').strip('"')
+                print(f"Scaffolding response: '{scaffolding_response}'")
+                return scaffolding_response
+            except Exception as gemini_error:
+                print(f"Gemini scaffolding failed: {gemini_error}")
+                # Fallback to OpenAI
+                pass
+            
+        # OpenAI fallback for scaffolding
+        print("Falling back to OpenAI for scaffolding")
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        
+        level_guidance = {
+            "beginner": "Provide simple English translations and basic explanations.",
+            "intermediate": "Provide English translations and grammar explanations.",
+            "advanced": "Provide nuanced English translations and cultural context."
+        }
+        
+        scaffolding_prompt = f"""You are a Spanish language tutor providing educational scaffolding.
+
+For the given Spanish text, provide helpful scaffolding by:
+1. Identifying 3-5 key vocabulary words to highlight
+2. For each highlighted word, provide: <span class="vocab-highlight">spanish_word</span><span class="tooltip">english_translation</span>
+3. Add brief grammar explanations after the text
+4. Add cultural context when relevant
+
+Format:
+Spanish text with individual word highlights, followed by grammar explanations.
+
+Example:
+Me gusta la <span class="vocab-highlight">lechuga</span><span class="tooltip">lettuce</span> y los <span class="vocab-highlight">tomates</span><span class="tooltip">tomatoes</span> porque son <span class="vocab-highlight">saludables</span><span class="tooltip">healthy</span>.
+
+Grammar note: "Me gusta" is used to express likes/dislikes.
+
+Cultural note: Fresh vegetables are important in Spanish cuisine.
+
+Spanish text: {spanish_text}
+
+Level: {level}
+{level_guidance.get(level, "")}
+
+Enhanced text:"""
+        
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": scaffolding_prompt},
+                {"role": "user", "content": "Generate the enhanced text:"}
+            ],
+            max_tokens=200,
+            temperature=0.7
+        )
+        
+        scaffolding_response = response.choices[0].message.content.strip()
+        # Remove any surrounding quotes (handle various quote types)
+        if (scaffolding_response.startswith('"') and scaffolding_response.endswith('"')) or \
+           (scaffolding_response.startswith('"') and scaffolding_response.endswith('"')):
+            scaffolding_response = scaffolding_response[1:-1]
+        # Also remove any leading/trailing quotes that might be left
+        scaffolding_response = scaffolding_response.strip('"').strip('"')
+        print(f"OpenAI scaffolding response: '{scaffolding_response}'")
+        return scaffolding_response
+            
+    except Exception as e:
+        print(f"Scaffolding generation failed: {e}")
+        return spanish_text  # Fallback to original text
+
+@app.post("/api/save-session")
+async def save_session(request: dict):
+    """Save a completed session to database"""
+    try:
+        session_data = request
+        
+        # Create session record using existing method
+        session_id = db.create_assignment_session(
+            assignment_id=session_data.get("assignmentId", ""),
+            student_id=session_data.get("studentName", ""),
+            start_time=session_data.get("startTime"),
+            end_time=session_data.get("endTime"),
+            completed=session_data.get("completed", False),
+            message_count=session_data.get("messageCount", 0),
+            voice_used=session_data.get("voiceUsed", False),
+            transcript_used=session_data.get("transcriptUsed", False)
+        )
+        
+        # Insert conversation logs directly
+        with sqlite3.connect("vocafow.db") as conn:
+            cursor = conn.cursor()
+            for msg in session_data.get("conversation", []):
+                log_id = str(uuid.uuid4())
+                # Map sender to message_type
+                message_type = "user" if msg.get("sender") == "user" else "bot"
+                
+                cursor.execute("""
+                    INSERT INTO conversation_logs 
+                    (id, session_id, message_type, content, timestamp)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (
+                    log_id,
+                    session_id,
+                    message_type,
+                    msg.get("content", ""),
+                    msg.get("timestamp")
+                ))
+            conn.commit()
+        
+        return {"success": True, "session_id": session_id}
+        
+    except Exception as e:
+        print(f"Error saving session: {e}")
+        return {"success": False, "error": str(e)}
+
+@app.post("/api/generate-scaffolding")
+async def generate_scaffolding(request: dict):
+    """Generate scaffolding for review section"""
+    try:
+        text = request.get("text", "")
+        level = request.get("level", "intermediate")
+        
+        if not text:
+            return {"error": "No text provided"}
+        
+        scaffolding = await get_scaffolding_response(text, level)
+        return {"scaffolding": scaffolding}
+        
+    except Exception as e:
+        print(f"Error generating scaffolding: {e}")
+        return {"error": str(e), "scaffolding": text}
+
 # Helper function to build PARTS framework prompt
 def build_parts_prompt(assignment_data: dict, level: str) -> str:
-    """Build a structured prompt using Google's PARTS framework from teacher input"""
+    """Build a structured PARTS framework prompt for Spanish conversation"""
     
     # Extract PARTS elements from assignment data
     persona = assignment_data.get('avatar_role', 'friendly conversation partner')
     characteristics = assignment_data.get('avatar_characteristics', [])
     student_objective = assignment_data.get('student_objective', 'practice Spanish conversation')
     recipient_level = assignment_data.get('level', level)
-    recipient_standard = assignment_data.get('level_standard', 'ACTFL')
-    description = assignment_data.get('description', '')
     theme = assignment_data.get('theme', assignment_data.get('title', 'Spanish conversation'))
     instructions = assignment_data.get('instructions', '')
     vocab_list = assignment_data.get('vocab', [])
-    voice_settings = {
-        'speak_slowly': assignment_data.get('speak_slowly', False),
-        'voice_speed': assignment_data.get('voice_speed', 1.0)
-    }
     
     # Build Persona section
-    persona_traits = f" with {', '.join(characteristics)} traits" if characteristics else ""
-    persona_section = f"P: Persona - You are a {persona}{persona_traits} in a Spanish conversation setting."
+    persona_traits = f" who is {', '.join(characteristics)}" if characteristics else ""
+    persona_section = f"P: Persona - You are a {persona}{persona_traits}"
     
     # Build Act section  
     act_section = f"A: Act - Guide the student to {student_objective}. {instructions}"
     
     # Build Recipient section
-    recipient_section = f"R: Recipient - {recipient_level} level Spanish student ({recipient_standard} standard). {description}"
+    recipient_section = f"R: Recipient - {recipient_level} level Spanish student"
     
     # Build Theme section
     theme_section = f"T: Theme - {theme}"
     if vocab_list:
-        theme_section += f". Key vocabulary to incorporate: {', '.join(vocab_list)}"
+        theme_section += f". Key vocabulary: {', '.join(vocab_list)}"
     
     # Build Structure section
-    structure_elements = []
-    if voice_settings['speak_slowly']:
-        structure_elements.append("speak slowly and clearly")
-    if voice_settings['voice_speed'] != 1.0:
-        structure_elements.append(f"adjust speech rate to {voice_settings['voice_speed']}x normal speed")
+    structure_section = f"S: Structure - Natural conversation flow with appropriate vocabulary and grammar for {recipient_level} level"
     
-    structure_section = f"S: Structure - Use natural conversation flow"
-    if structure_elements:
-        structure_section += f" with {', '.join(structure_elements)}"
-    
-    # Combine all PARTS into a comprehensive prompt
-    parts_prompt = f"""You are an expert Spanish language learning tutor following learning science principles.
+    # Combine PARTS into a concise, conversation-focused prompt
+    parts_prompt = f"""You are a Spanish language tutor using the PARTS framework.
 
-PARTS FRAMEWORK:
 {persona_section}
-{act_section}  
+{act_section}
 {recipient_section}
 {theme_section}
 {structure_section}
 
-LEARNING PRINCIPLES:
-- Stimulate curiosity through engaging scenarios
-- Provide scaffolding and guided questioning
-- Facilitate productive struggle without giving answers directly
-- Offer immediate, constructive feedback
-- Encourage active participation and authentic communication
-- Manage cognitive load with appropriate complexity
-- Adapt responses based on student performance
-
-VOICE CHARACTERISTICS:
-- Speak slowly and clearly when requested
-- Adjust speech rate and complexity based on student comprehension
-- Use appropriate intonation and pacing for the avatar role
-
-CONTENT GUIDELINES:
-- Maintain the persona throughout the conversation
-- Focus on helping students achieve their objective
+CONVERSATION GUIDELINES:
+- Maintain natural, authentic conversation flow
 - Use vocabulary and grammar appropriate for {recipient_level} level
-- Incorporate key vocabulary naturally when relevant
-- Provide scaffolded support and encouragement
+- Provide gentle guidance and encouragement
+- No English translations or explanations
+- Focus on communication practice
 
-SAFETY GUIDELINES:
-- Keep all content appropriate for educational settings
-- No references to alcohol, drugs, violence, or inappropriate topics
-- Redirect inappropriate questions to suitable alternatives
-- Maintain professional and supportive tone
+Current conversation:
+{{conversation_history}}
 
-Always maintain the avatar persona while providing pedagogical support. Balance authentic communication with language learning objectives."""
+Respond naturally in Spanish as the {persona}. Keep it conversational and engaging.
+
+Response:"""
     
     return parts_prompt
 
@@ -1127,6 +1267,9 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
     await websocket.accept()
     connection_id = id(websocket)  # Unique ID for this connection
     print(f"WebSocket connection {connection_id} established with level: {level}")
+    
+    # Initialize assignment data at connection level
+    assignment_data = None
     
     if not OPENAI_API_KEY:
         print("Error: OPENAI_API_KEY not set")
@@ -1310,7 +1453,6 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
         icebreaker = random.choice(config["icebreakers"])
         
         # Wait for assignment setup message (with timeout)
-        assignment_data = None
         try:
             # Wait for setup message with a short timeout
             setup_data = await asyncio.wait_for(websocket.receive_text(), timeout=1.0)
@@ -1330,7 +1472,7 @@ async def websocket_endpoint(websocket: WebSocket, level: str = "intermediate"):
                 assignment_prompt = build_parts_prompt(assignment_data, level)
                 print(f"Using PARTS framework prompt")
                 
-                # Generate contextual icebreaker using Gemini 3 with PARTS prompt
+                # Generate contextual icebreaker using Gemini 3 with PARTS prompt, fallback to OpenAI
                 try:
                     # Use the assignment's persona and objective to generate opening
                     icebreaker_prompt = f"""Based on this assignment setup, generate a natural Spanish opening line that starts the conversation:
@@ -1353,21 +1495,48 @@ Opening line:"""
 
                     if learnlm_client:
                         response = learnlm_client.models.generate_content(
-                            model='models/gemini-flash-latest',
+                            model='models/gemini-2.5-flash-native-audio-latest',
                             contents=icebreaker_prompt
                         )
                         icebreaker = response.text.strip()
                         print(f"Generated icebreaker with Gemini Flash: {icebreaker}")
                     else:
-                        # Fallback to default icebreaker
+                        # Use OpenAI with same PARTS framework
+                        client = OpenAI(api_key=OPENAI_API_KEY)
+                        response = client.chat.completions.create(
+                            model="gpt-4",
+                            messages=[
+                                {"role": "system", "content": icebreaker_prompt},
+                                {"role": "user", "content": "Generate the opening line:"}
+                            ],
+                            max_tokens=50,
+                            temperature=0.7
+                        )
+                        icebreaker = response.choices[0].message.content.strip()
+                        print(f"Generated icebreaker with OpenAI: {icebreaker}")
+                        
+                except Exception as e:
+                    print(f"Error generating icebreaker with Gemini: {e}")
+                    # Fallback to OpenAI with same PARTS framework
+                    try:
+                        client = OpenAI(api_key=OPENAI_API_KEY)
+                        response = client.chat.completions.create(
+                            model="gpt-4",
+                            messages=[
+                                {"role": "system", "content": icebreaker_prompt},
+                                {"role": "user", "content": "Generate the opening line:"}
+                            ],
+                            max_tokens=50,
+                            temperature=0.7
+                        )
+                        icebreaker = response.choices[0].message.content.strip()
+                        print(f"Generated icebreaker with OpenAI fallback: {icebreaker}")
+                    except Exception as openai_error:
+                        print(f"OpenAI fallback also failed: {openai_error}")
+                        # Final fallback to default icebreaker
                         import random
                         icebreaker = random.choice(config["icebreakers"])
                         print(f"Using fallback icebreaker: {icebreaker}")
-                        
-                except Exception as e:
-                    print(f"Error generating icebreaker: {e}")
-                    import random
-                    icebreaker = random.choice(config["icebreakers"])
                 
                 # Continue with assignment mode
                 is_assignment = True
@@ -1444,7 +1613,7 @@ Opening line:"""
                     conversation_history.append({"role": "user", "content": user_message})
                     
                     # Get response from LearnLM (with OpenAI fallback)
-                    bot_response = await get_ai_response(conversation_history, level)
+                    bot_response = await get_ai_response(conversation_history, level, assignment_data)
                     print(f"Generated bot response: '{bot_response}'")
                     
                     # Content filtering - check for prohibited content
@@ -1465,6 +1634,7 @@ Opening line:"""
                         conversation_history = [conversation_history[0]] + conversation_history[-20:]
                     
                     await websocket.send_text(f"bot:{bot_response}")
+                    print(f"DEBUG: Sent bot message: {bot_response[:100]}...")  # Debug log
                     
                 elif message_data.get("type") == "voice":
                     # Handle voice input - speech to text
@@ -1484,7 +1654,7 @@ Opening line:"""
                         conversation_history.append({"role": "user", "content": user_message})
                         
                         # Get response from LearnLM (with OpenAI fallback)
-                        bot_response = await get_ai_response(conversation_history, level)
+                        bot_response = await get_ai_response(conversation_history, level, assignment_data)
                         print(f"Sending response: {bot_response}")
                         
                         # Content filtering - check for prohibited content

@@ -15,97 +15,147 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #fefefe;
             min-height: 100vh;
         }
         
         .dashboard-container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 25px;
+            padding: 28px;
         }
         
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ea580c 0%, #0ea5e9 100%);
         }
         
         .header h1 {
-            color: #667eea;
+            color: #0f172a;
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 10px;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.03em;
         }
         
         .header p {
-            color: #666;
-            font-size: 16px;
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.5;
         }
         
         .nav-tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 8px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            gap: 12px;
+            margin-bottom: 24px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
         }
         
         .nav-tab {
-            padding: 12px 24px;
-            background: transparent;
-            border: none;
-            border-radius: 12px;
+            padding: 10px 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
+            font-weight: 500;
+            color: #4b5563;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: -0.025em;
+            letter-spacing: -0.01em;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ea580c;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .nav-tab:hover {
-            background: rgba(102, 126, 234, 0.08);
-            color: #667eea;
-            transform: translateY(-1px);
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #1f2937;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .nav-tab:hover::before {
+            transform: scaleX(1);
         }
         
         .nav-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
-            transform: translateY(-1px);
+            background: #ea580c;
+            color: #ffffff;
+            border-color: #ea580c;
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+            transform: translateY(0);
+        }
+        
+        .nav-tab.active::before {
+            transform: scaleX(0);
         }
         
         .tab-content {
             display: none;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            min-height: 400px;
         }
         
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .assignment-form {
             display: grid;
             gap: 24px;
-            background: white;
+            background: #ffffff;
             padding: 32px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
         }
         
         .form-group {
@@ -115,38 +165,38 @@
         }
         
         .form-group label {
-            font-weight: 600;
-            color: #2d3748;
+            font-weight: 500;
+            color: #374151;
             font-size: 14px;
-            letter-spacing: -0.025em;
+            letter-spacing: 0;
         }
         
         .form-group input,
         .form-group textarea,
         .form-group select {
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 11px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
             font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             font-family: inherit;
-            background: #f8fafc;
-            color: #2d3748;
+            background: #ffffff;
+            color: #1f2937;
         }
         
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
+            border-color: #ea580c;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+            transform: translateY(0);
         }
         
         .form-group input::placeholder,
         .form-group textarea::placeholder {
-            color: #a0aec0;
+            color: #9ca3af;
         }
         
         .form-group textarea {
@@ -164,87 +214,153 @@
         .form-section {
             padding: 24px;
             background: #f8fafc;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
         }
         
         .form-section-title {
             font-size: 16px;
             font-weight: 600;
-            color: #2d3748;
+            color: #0f172a;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
+            letter-spacing: -0.01em;
         }
         
         .form-section-title::before {
             content: '';
-            width: 4px;
-            height: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 3px;
+            height: 18px;
+            background: #ea580c;
             border-radius: 2px;
         }
         
         .btn {
-            padding: 14px 28px;
+            padding: 10px 18px;
             border: none;
-            border-radius: 12px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: -0.025em;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            letter-spacing: -0.01em;
             position: relative;
             overflow: hidden;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+            background: #ea580c;
+            color: #ffffff;
+            border: 1px solid #ea580c;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-primary:hover {
+            background: #dc2626;
+            border-color: #dc2626;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 12px rgba(234, 88, 12, 0.3);
         }
         
         .btn-primary:active {
             transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(234, 88, 12, 0.2);
         }
         
         .btn-secondary {
-            background: #f8fafc;
-            color: #4a5568;
-            border: 2px solid #e2e8f0;
+            background: #ffffff;
+            color: #374151;
+            border: 1px solid #e5e7eb;
         }
         
         .btn-secondary:hover {
-            background: white;
-            border-color: #cbd5e0;
+            background: #f8fafc;
+            border-color: #cbd5e1;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
         .assignments-list {
             display: grid;
-            gap: 20px;
+            gap: 24px;
         }
         
         .assignment-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .assignment-card:nth-child(1) { animation-delay: 0.05s; }
+        .assignment-card:nth-child(2) { animation-delay: 0.1s; }
+        .assignment-card:nth-child(3) { animation-delay: 0.15s; }
+        .assignment-card:nth-child(4) { animation-delay: 0.2s; }
+        .assignment-card:nth-child(5) { animation-delay: 0.25s; }
+        .assignment-card:nth-child(6) { animation-delay: 0.3s; }
+        
+        .assignment-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ea580c;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 8px 0 0 8px;
         }
         
         .assignment-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: #ea580c;
+        }
+        
+        .assignment-card:hover::before {
+            transform: scaleY(1);
         }
         
         .assignment-checkbox {
@@ -312,26 +428,26 @@
         }
         
         input[type="checkbox"].assignment-checkbox:checked {
-            background-color: #667eea !important;
-            border-color: #667eea !important;
+            background-color: #ea580c !important;
+            border-color: #ea580c !important;
         }
         
         input[type="checkbox"].assignment-checkbox:hover {
-            border-color: #667eea !important;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3) !important;
+            border-color: #ea580c !important;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2) !important;
         }
         
         input[type="checkbox"].assignment-checkbox:focus {
-            outline: 2px solid #667eea !important;
+            outline: 2px solid #ea580c !important;
             outline-offset: 2px !important;
         }
         
         .assignment-card h3 {
-            color: #2d3748;
+            color: #0f172a;
             margin-bottom: 8px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.02em;
         }
         
         .assignment-meta {
@@ -348,6 +464,7 @@
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 16px;
+            flex: 1;
         }
         
         .assignment-actions {
@@ -357,59 +474,84 @@
         }
         
         .btn-small {
-            padding: 8px 16px;
+            padding: 7px 14px;
             font-size: 13px;
-            border-radius: 10px;
+            border-radius: 5px;
         }
         
         .btn-xs {
-            padding: 2px 6px;
+            padding: 3px 8px;
             font-size: 11px;
-            border-radius: 6px;
+            border-radius: 4px;
             font-weight: 500;
         }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 35px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
         }
         
         .stat-card {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 15px;
-            padding: 30px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 28px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #ea580c;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: #ea580c;
+        }
+        
+        .stat-card:hover::after {
+            transform: scaleX(1);
         }
         
         .stat-number {
             font-size: 32px;
             font-weight: 700;
-            color: #667eea;
-            margin-bottom: 5px;
+            color: #0f172a;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
         
         .stat-label {
-            font-size: 14px;
-            color: #666;
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
         }
         
         .logs-table {
             width: 100%;
-            background: white;
-            border-radius: 16px;
+            background: #ffffff;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
         }
         
         .logs-table table {
@@ -418,30 +560,33 @@
         }
         
         .logs-table th {
-            background: #f8f9fa;
-            padding: 20px 18px;
+            background: #f8fafc;
+            padding: 14px 16px;
             text-align: left;
             font-weight: 600;
-            font-size: 14px;
-            border-bottom: 2px solid #e2e8f0;
+            font-size: 13px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
         }
         
         .logs-table td {
-            padding: 18px;
+            padding: 14px 16px;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: top;
+            font-size: 14px;
+            color: #1f2937;
         }
         
         .logs-table tr:hover {
-            background: #f8f9fa;
+            background: #f8fafc;
         }
         
         .level-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
             font-size: 11px;
             font-weight: 600;
-            text-transform: capitalize;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-left: auto;
             flex-shrink: 0;
@@ -728,47 +873,239 @@
             border-color: rgba(255, 255, 255, 0.4);
         }
         
-        .logout-btn-absolute {
+        .menu-toggle-btn {
             position: absolute;
             top: 24px;
-            right: 24px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
+            left: 28px;
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            z-index: 10;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
-        .logout-btn-absolute:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+        .menu-toggle-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
             transform: translateY(-1px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-toggle-btn span {
+            width: 20px;
+            height: 2px;
+            background: #374151;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .menu-toggle-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .menu-toggle-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -400px;
+            width: 400px;
+            height: 100vh;
+            background: #ffffff;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+.sidebar-menu {
+    position: fixed;
+    top: 0;
+    left: -400px;
+    width: 400px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+        
+.sidebar-menu.active {
+    left: 0;
+}
+        
+.sidebar-header {
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+        }
+        
+        .sidebar-header h3 {
+            color: #0f172a;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .modal-header {
+            padding: 24px 48px 24px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .menu-section {
+            margin-bottom: 32px;
+        }
+        
+        .menu-section h4 {
+            color: #6b7280;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+        
+        .menu-item:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        
+        .menu-item-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .account-status {
+            background: linear-gradient(135deg, #fef3f2 0%, #fef9f3 100%);
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .account-status h4 {
+            color: #ea580c;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .account-status p {
+            color: #6b7280;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+        
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .logout-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #dc2626;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .logout-btn:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
         
         .classrooms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 28px;
         }
         
         .classroom-card {
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 16px;
-            padding: 24px;
+            padding: 28px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             text-align: left;
             overflow: hidden;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
         }
         
         .classroom-card::before {
@@ -989,14 +1326,16 @@
         }
         
         .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 32px;
-            max-width: 600px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px 32px 32px 32px;
+            max-width: 700px;
             width: 90%;
-            overflow: visible;
-            position: relative;
+            max-height: 98vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             z-index: 10000;
+            border: 1px solid #e5e7eb;
         }
         
         /* Fix spacing for classroom creation modal */
@@ -1026,48 +1365,48 @@
         .classroom-modal {
             max-width: 700px;
             width: 90%;
-            border-radius: 20px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e5e7eb;
         }
         
         .classroom-modal .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ea580c;
             color: white;
-            padding: 32px;
+            padding: 28px 32px;
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
             position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .modal-icon {
-            font-size: 48px;
-            background: rgba(255, 255, 255, 0.25);
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
+            font-size: 32px;
+            background: rgba(255, 255, 255, 0.15);
+            width: 56px;
+            height: 56px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
             flex-shrink: 0;
         }
         
         .modal-title-section h2 {
             margin: 0 0 6px 0;
-            font-size: 26px;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
         }
         
         .modal-title-section p {
             margin: 0;
-            opacity: 0.95;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
+            opacity: 0.9;
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 400;
         }
         
         .modal-close-btn {
@@ -1099,35 +1438,34 @@
         #conversationModal .modal-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #e2e8f0;
         }
         
-        #conversationModal .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #666;
+        #conversationModal .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-close {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            font-size: 18px;
             cursor: pointer;
-            padding: 0;
-            margin-left: 20px;
+            color: #64748b;
+            transition: all 0.2s ease;
             width: 32px;
             height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            border-radius: 6px;
+            position: absolute;
+            top: 16px;
+            right: 16px;
         }
         
-        #conversationModal .modal-close:hover {
-            background: #f1f5f9;
-            color: #333;
-        }
-        
-        #conversationModal .modal-body {
-            padding: 24px;
+        .modal-close:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+            transform: translateY(-1px);
         }
         
         .classroom-modal .modal-form {
@@ -1172,21 +1510,20 @@
         .classroom-modal .form-group input,
         .classroom-modal .form-group textarea {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 11px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
             font-size: 15px;
-            transition: all 0.3s ease;
-            background: #f8fafc;
+            transition: all 0.2s ease;
             box-sizing: border-box;
         }
         
         .classroom-modal .form-group input:focus,
         .classroom-modal .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #ea580c;
             background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
         }
         
         .classroom-modal .form-group small {
@@ -1273,37 +1610,42 @@
         }
         
         .classroom-modal .btn {
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            border: none;
+            padding: 11px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
         }
         
         .classroom-modal .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
+            background: #ffffff;
+            color: #374151;
+            border: 1px solid #e5e7eb;
         }
         
         .classroom-modal .btn-secondary:hover {
-            background: #cbd5e1;
-            transform: translateY(-2px);
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
         }
         
         .classroom-modal .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ea580c;
             color: white;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border: 1px solid #ea580c;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         
         .classroom-modal .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: #dc2626;
+            border-color: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(234, 88, 12, 0.2);
         }
         
         .btn-icon {
@@ -1740,6 +2082,49 @@
 
         .wizard-navigation .btn {
             min-width: 120px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #fef3f2 0%, #fef9f3 100%);
+            border-radius: 12px;
+            padding: 24px 32px;
+            margin-bottom: 32px;
+            border: 1px solid #fed7aa;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ea580c 0%, #f97316 100%);
+        }
+        
+        .welcome-section h2 {
+            color: #0f172a;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        
+        .welcome-section p {
+            color: #475569;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0;
         }
 
         /* Improved Date Picker Styles */
@@ -2755,14 +3140,22 @@
             </div>
         </div>
         
-        <button class="logout-btn-absolute" onclick="logout()">Logout</button>
+        <div class="welcome-section">
+            <h2>Welcome Back, <span id="teacherName">Teacher</span>!</h2>
+            <p>Here's your teaching dashboard. Create assignments, monitor student progress, and manage your classrooms.</p>
+        </div>
+        
+        <button class="menu-toggle-btn" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="classrooms" onclick="switchTab('classrooms')">Classroom Management</button>
             <button class="nav-tab" data-tab="create" onclick="switchTab('create')">Create Assignment</button>
             <button class="nav-tab" data-tab="assignments" onclick="switchTab('assignments')">My Assignments</button>
             <button class="nav-tab" data-tab="analytics" onclick="switchTab('analytics')">Analytics</button>
-            <button class="nav-tab" data-tab="profile" onclick="switchTab('profile')">Teacher Profile</button>
         </div>
         
         <!-- Classroom Management Tab -->
@@ -3366,6 +3759,79 @@
         </div>
     </div>
     
+    <!-- Sidebar Menu -->
+    <div class="menu-overlay" onclick="closeMenu()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="menu-section">
+                <h4>Quick Actions</h4>
+                <a href="#" class="menu-item" onclick="switchTab('create'); closeMenu();">
+                    <div class="menu-item-icon">+</div>
+                    <span>Create Assignment</span>
+                </a>
+                <a href="#" class="menu-item" onclick="switchTab('classrooms'); closeMenu();">
+                    <div class="menu-item-icon">◆</div>
+                    <span>Classroom Management</span>
+                </a>
+                <a href="#" class="menu-item" onclick="switchTab('analytics'); closeMenu();">
+                    <div class="menu-item-icon">◈</div>
+                    <span>View Analytics</span>
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <h4>Account Status</h4>
+                <div class="account-status">
+                    <h4>FREE TRIAL (FULL ACCESS)</h4>
+                    <p>Expires: December 31, 2024</p>
+                    <p>Students: <span id="menuStudentCount">0</span></p>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <h4>Navigation</h4>
+                <a href="/" class="menu-item">
+                    <div class="menu-item-icon">⌂</div>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="menu-item" onclick="openProfileModal(); closeMenu();">
+                    <div class="menu-item-icon">○</div>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span>←</span>
+                <span>Sign Out</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Teacher Profile</h2>
+                <span class="modal-close" onclick="closeProfileModal()">×</span>
+            </div>
+            <div class="modal-body">
+                <div id="profileContent">
+                    <!-- Profile content will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeProfileModal()">Cancel</button>
+                <button class="btn btn-primary" type="submit" form="profileForm">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Share Assignment Modal -->
     <div id="shareModal" class="modal">
         <div class="modal-content">
@@ -3523,6 +3989,39 @@
         // Wizard State Management
         let currentStep = 1;
         const totalSteps = 6;
+        
+        // Toggle menu functions
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.querySelector('.menu-overlay');
+            const toggleBtn = document.querySelector('.menu-toggle-btn');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            toggleBtn.classList.toggle('active');
+        }
+        
+        function closeMenu() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.querySelector('.menu-overlay');
+            const toggleBtn = document.querySelector('.menu-toggle-btn');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            toggleBtn.classList.remove('active');
+        }
+        
+        // Profile modal functions
+        function openProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.add('active');
+            loadTeacherProfile();
+        }
+        
+        function closeProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.remove('active');
+        }
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -4523,7 +5022,7 @@
         // Load active tab from localStorage
         function loadActiveTab() {
             const savedTab = localStorage.getItem('activeTab');
-            if (savedTab && ['classrooms', 'create', 'assignments', 'analytics', 'profile'].includes(savedTab)) {
+            if (savedTab && ['classrooms', 'create', 'assignments', 'analytics'].includes(savedTab)) {
                 // Remove active class from all tabs and contents
                 document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -4539,8 +5038,6 @@
                     loadAssignments();
                 } else if (savedTab === 'analytics') {
                     loadAnalytics();
-                } else if (savedTab === 'profile') {
-                    loadTeacherProfile();
                 }
             }
         }
@@ -4591,14 +5088,64 @@
                 const data = await response.json();
                 const teacher = data.teacher;
                 
-                // Fill form fields
-                document.getElementById('teacherName').value = teacher.name || '';
-                document.getElementById('teacherEmail').value = teacher.email || '';
-                document.getElementById('teacherSchool').value = teacher.school || '';
-                document.getElementById('teacherTitle').value = teacher.title || '';
-                document.getElementById('teacherBio').value = teacher.bio || '';
+                // Populate modal content
+                const profileContent = document.getElementById('profileContent');
+                profileContent.innerHTML = `
+                    <form id="profileForm" onsubmit="updateTeacherProfile(event)" style="display: grid; gap: 24px;">
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #fef3f2 0%, #fef9f3 100%); border-radius: 12px; border: 1px solid #fed7aa;">
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #ea580c; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Name</label>
+                                <input type="text" name="name" value="${teacher.name || ''}" style="width: 100%; max-width: 300px; padding: 10px 14px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 18px; font-weight: 600; color: #0f172a; text-align: center; background: white; transition: all 0.2s ease;" placeholder="Your Name">
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #ea580c; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Title</label>
+                                <input type="text" name="title" value="${teacher.title || ''}" style="width: 100%; max-width: 300px; padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; color: #6b7280; text-align: center; background: white; transition: all 0.2s ease;" placeholder="Teacher">
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #ea580c; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">School</label>
+                                <input type="text" name="school" value="${teacher.school || ''}" style="width: 100%; max-width: 300px; padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; color: #6b7280; text-align: center; background: white; transition: all 0.2s ease;" placeholder="School Name">
+                            </div>
+                            <div>
+                                <label style="display: block; color: #ea580c; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Email</label>
+                                <input type="email" name="email" value="${teacher.email || ''}" readonly style="width: 100%; max-width: 300px; padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; color: #374151; text-align: center; background: #f8fafc; cursor: not-allowed; transition: all 0.2s ease;" placeholder="email@example.com">
+                                <p style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 4px; font-style: italic;">Email cannot be changed - contact support if needed</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: #0f172a; margin-bottom: 12px; font-size: 16px; font-weight: 600;">About</h4>
+                            <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                <textarea name="bio" style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; color: #4a5568; line-height: 1.6; background: white; resize: vertical; transition: all 0.2s ease;" placeholder="Tell us about yourself...">${teacher.bio || ''}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: #0f172a; margin-bottom: 12px; font-size: 16px; font-weight: 600;">Account Information</h4>
+                            <div style="display: grid; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                    <span style="color: #6b7280; font-size: 14px; font-weight: 500;">Account Type</span>
+                                    <span style="color: #ea580c; font-weight: 600;">Free Trial</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                    <span style="color: #6b7280; font-size: 14px; font-weight: 500;">Member Since</span>
+                                    <span style="color: #374151; font-weight: 500;">${new Date(teacher.created_at || Date.now()).toLocaleDateString()}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                    <span style="color: #6b7280; font-size: 14px; font-weight: 500;">Total Students</span>
+                                    <span style="color: #374151; font-weight: 500;">${classrooms.reduce((total, classroom) => total + (classroom.students ? classroom.students.length : 0), 0)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                `;
             } catch (error) {
                 console.error('Error loading teacher profile:', error);
+                const profileContent = document.getElementById('profileContent');
+                profileContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #6b7280;">
+                        <p>Error loading profile information. Please try again.</p>
+                    </div>
+                `;
             }
         }
         

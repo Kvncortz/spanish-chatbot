@@ -1577,6 +1577,12 @@
                 currentAssignment = data;
                 console.log('Assignment loaded:', currentAssignment);
                 
+                // Update maxDuration from assignment data (duration is in minutes)
+                if (currentAssignment.duration) {
+                    maxDuration = currentAssignment.duration * 60 * 1000; // Convert minutes to milliseconds
+                    console.log('Assignment duration set to:', currentAssignment.duration, 'minutes');
+                }
+                
                 // Update UI with assignment details
                 document.getElementById('assignmentTitle').textContent = currentAssignment.title;
                 document.getElementById('assignmentLevel').textContent = currentAssignment.level.charAt(0).toUpperCase() + currentAssignment.level.slice(1);
@@ -1858,7 +1864,9 @@
         }
         
         function startAssignmentTimer() {
+            console.log('Starting assignment timer with duration:', maxDuration / 1000 / 60, 'minutes');
             assignmentTimer = setTimeout(() => {
+                console.log('Assignment timer expired - completing assignment');
                 completeAssignment(true);
             }, maxDuration);
             
@@ -1875,6 +1883,7 @@
         }
         
         function completeAssignment(timeExpired = false) {
+            console.log('completeAssignment called with timeExpired:', timeExpired);
             // Set assignment completed flag
             assignmentCompleted = true;
             

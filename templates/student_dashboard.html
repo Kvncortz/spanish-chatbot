@@ -15,23 +15,35 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #fefefe;
             min-height: 100vh;
         }
         
         .dashboard-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
         
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
         }
         
         .header-content {
@@ -42,17 +54,53 @@
             gap: 20px;
         }
         
+        .welcome-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 12px;
+            padding: 24px 32px;
+            margin-bottom: 32px;
+            border: 1px solid #bae6fd;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
+        }
+        
+        .welcome-section h2 {
+            color: #0f172a;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        
+        .welcome-section p {
+            color: #475569;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
         .header h1 {
-            color: #667eea;
+            color: #0f172a;
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 5px;
-            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+            letter-spacing: -0.03em;
         }
         
         .header p {
-            color: #666;
-            font-size: 16px;
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.5;
         }
         
         .user-info {
@@ -73,79 +121,160 @@
         
         .nav-tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 8px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            gap: 12px;
+            margin-bottom: 24px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
         }
         
         .nav-tab {
-            padding: 12px 24px;
-            background: transparent;
-            border: none;
-            border-radius: 12px;
+            padding: 10px 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
+            font-weight: 500;
+            color: #4b5563;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            letter-spacing: -0.025em;
+            letter-spacing: -0.01em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #0ea5e9;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .nav-tab:hover {
-            background: rgba(240, 147, 251, 0.08);
-            color: #f093fb;
-            transform: translateY(-1px);
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #1f2937;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .nav-tab:hover::before {
+            transform: scaleX(1);
         }
         
         .nav-tab.active {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(240, 147, 251, 0.3);
-            transform: translateY(-1px);
+            background: #0ea5e9;
+            color: #ffffff;
+            border-color: #0ea5e9;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+            transform: translateY(0);
+        }
+        
+        .nav-tab.active::before {
+            transform: scaleX(0);
         }
         
         .tab-content {
             display: none;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            min-height: 400px;
         }
         
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .classrooms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 28px;
         }
         
         .classroom-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .classroom-card:nth-child(1) { animation-delay: 0.05s; }
+        .classroom-card:nth-child(2) { animation-delay: 0.1s; }
+        .classroom-card:nth-child(3) { animation-delay: 0.15s; }
+        .classroom-card:nth-child(4) { animation-delay: 0.2s; }
+        .classroom-card:nth-child(5) { animation-delay: 0.25s; }
+        .classroom-card:nth-child(6) { animation-delay: 0.3s; }
+        
+        .classroom-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #0ea5e9;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            border-radius: 8px 0 0 8px;
         }
         
         .classroom-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: #0ea5e9;
+        }
+        
+        .classroom-card:hover::before {
+            transform: scaleY(1);
         }
         
         .classroom-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 8px;
+            color: #0f172a;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
         }
         
         .classroom-meta {
@@ -162,6 +291,7 @@
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 20px;
+            flex: 1;
         }
         
         .assignments-list {
@@ -170,23 +300,43 @@
         
         .assignment-item {
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 18px;
             margin-bottom: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .assignment-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #0ea5e9;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .assignment-item:hover {
             background: #f1f5f9;
-            transform: translateY(-1px);
+            border-color: #0ea5e9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .assignment-item:hover::after {
+            transform: scaleX(1);
         }
         
         .assignment-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            color: #2d3748;
+            color: #0f172a;
             margin-bottom: 8px;
+            letter-spacing: -0.01em;
         }
         
         .assignment-meta {
@@ -205,90 +355,183 @@
         }
         
         .btn {
-            padding: 10px 20px;
+            padding: 10px 18px;
             border: none;
-            border-radius: 10px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            transition: all 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            letter-spacing: -0.01em;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+            background: #0ea5e9;
+            color: #ffffff;
+            border: 1px solid #0ea5e9;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-primary:hover {
+            background: #0284c7;
+            border-color: #0284c7;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+            background: #10b981;
+            color: #ffffff;
+            border: 1px solid #10b981;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-success:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-success:hover {
+            background: #059669;
+            border-color: #059669;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
         }
         
         .btn-secondary {
-            background: #f8fafc;
-            color: #4a5568;
-            border: 2px solid #e2e8f0;
+            background: #ffffff;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .btn-secondary:hover {
-            background: white;
-            border-color: #cbd5e0;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary:active {
+            transform: translateY(0);
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            box-shadow: 0 4px 14px rgba(220, 53, 69, 0.3);
+            background: #dc2626;
+            color: #ffffff;
+            border: 1px solid #dc2626;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-danger::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-danger:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-danger:hover {
+            background: #b91c1c;
+            border-color: #b91c1c;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+            box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
+        }
+        
+        .btn-danger:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
         }
         
         .btn-small {
-            padding: 8px 16px;
+            padding: 7px 14px;
             font-size: 13px;
-            border-radius: 8px;
+            border-radius: 5px;
         }
         
         .level-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .level-beginner {
-            background: #d4edda;
-            color: #155724;
+            background: #dbeafe;
+            color: #1e40af;
         }
         
         .level-intermediate {
-            background: #fff3cd;
-            color: #856404;
+            background: #fef3c7;
+            color: #92400e;
         }
         
         .level-advanced {
-            color: #666;
+            background: #f3e8ff;
+            color: #6b21a8;
         }
         
         .empty-state h3 {
@@ -589,25 +832,24 @@
             position: absolute;
             top: 24px;
             right: 24px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
+            padding: 9px 18px;
+            background: #ffffff;
+            color: #374151;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
             z-index: 10;
         }
         
         .logout-btn-absolute:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: #f8fafc;
+            color: #1f2937;
             transform: translateY(-1px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
         }
         
         @media (max-width: 768px) {
@@ -643,6 +885,11 @@
                     <div class="user-details" id="userDetails">Loading...</div>
                 </div>
             </div>
+        </div>
+        
+        <div class="welcome-section">
+            <h2>Welcome Back, <span id="welcomeUserName">Student</span>!</h2>
+            <p>Here's a quick overview of your learning journey. Continue practicing Spanish to improve your skills.</p>
         </div>
         
         <button class="logout-btn-absolute" onclick="logout()">Logout</button>
@@ -695,23 +942,19 @@
         
         <!-- Join New Class Tab -->
         <div id="enroll-tab" class="tab-content">
-            <div style="text-align: center; padding: 60px 40px; background: linear-gradient(135deg, rgba(240, 147, 251, 0.05), rgba(245, 87, 108, 0.05)); border-radius: 20px; border: 2px dashed rgba(240, 147, 251, 0.3); max-width: 600px; margin: 0 auto;">
-                <div style="margin-bottom: 30px;">
-                    <div style="width: 80px; height: 80px; margin: 0 auto 20px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px;">
-                        🔑
-                    </div>
-                    <h3 style="color: #f093fb; font-size: 24px; font-weight: 600; margin-bottom: 12px;">Join a New Classroom</h3>
-                    <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin-bottom: 8px;">Enter your teacher's join code to access new assignments</p>
-                    <p style="color: #94a3b8; font-size: 14px;">Get started with new Spanish lessons and practice!</p>
+            <div style="max-width: 500px; margin: 0 auto;">
+                <div style="margin-bottom: 32px; text-align: center;">
+                    <h3 style="color: #0f172a; font-size: 24px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em;">Join a New Classroom</h3>
+                    <p style="color: #6b7280; font-size: 15px; line-height: 1.6;">Enter your teacher's join code to access new assignments</p>
                 </div>
                 
-                <div style="background: rgba(255, 255, 255, 0.8); padding: 30px; border-radius: 16px; border: 1px solid rgba(240, 147, 251, 0.2); margin-bottom: 20px;">
+                <div style="background: #f8fafc; padding: 32px; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label for="joinCodeInput" style="display: block; color: #f093fb; font-weight: 600; margin-bottom: 8px; font-size: 16px;">Classroom Join Code</label>
-                        <input type="text" id="joinCodeInput" placeholder="Enter 6-digit code" maxlength="6" style="width: 100%; padding: 16px; border: 2px solid rgba(240, 147, 251, 0.3); border-radius: 12px; font-size: 18px; text-align: center; text-transform: uppercase; letter-spacing: 3px; background: white; color: #2d3748; transition: all 0.3s ease;">
+                        <label for="joinCodeInput" style="display: block; color: #374151; font-weight: 500; margin-bottom: 8px; font-size: 14px;">Classroom Join Code</label>
+                        <input type="text" id="joinCodeInput" placeholder="Enter 6-digit code" maxlength="6" style="width: 100%; padding: 14px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 16px; text-align: center; text-transform: uppercase; letter-spacing: 3px; background: white; color: #1f2937; transition: all 0.2s ease; font-family: 'Inter', sans-serif;">
                     </div>
-                    <button class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #f093fb, #f5576c); border: none; padding: 16px; font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.3s ease;" onclick="joinClassroomFromDashboard()">
-                        <span style="margin-right: 8px;">➕</span> Join Classroom
+                    <button class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 15px; border-radius: 6px;" onclick="joinClassroomFromDashboard()">
+                        Join Classroom
                     </button>
                 </div>
                 
@@ -721,28 +964,29 @@
         
         <!-- Practice Mode Tab -->
         <div id="practice-tab" class="tab-content">
-            <div style="text-align: center; padding: 40px;">
-                <h3 style="margin-bottom: 20px;">Practice Mode</h3>
-                <p style="color: #666; margin-bottom: 30px;">Practice Spanish conversations with AI-powered scenarios</p>
-                <div style="max-width: 600px; margin: 0 auto;">
-                    <div style="background: rgba(240, 147, 251, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-                        <h4 style="color: #f093fb; margin-bottom: 10px;">Quick Practice Options:</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
-                            <a href="/practice" class="btn btn-primary">Start Practice</a>
-                            <button class="btn btn-secondary" onclick="showPracticeInfo()">Learn More</button>
-                        </div>
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div style="margin-bottom: 32px; text-align: center;">
+                    <h3 style="color: #0f172a; font-size: 24px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em;">Practice Mode</h3>
+                    <p style="color: #6b7280; font-size: 15px; line-height: 1.6;">Practice Spanish conversations with interactive scenarios</p>
+                </div>
+                <div style="background: #f8fafc; border-radius: 8px; padding: 24px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
+                    <h4 style="color: #0f172a; font-size: 16px; font-weight: 600; margin-bottom: 16px;">Practice Options</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px;">
+                        <a href="/practice" class="btn btn-primary">Start Practice</a>
+                        <a href="/language-lab" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">🤖 Gemini Lab</a>
+                        <button class="btn btn-secondary" onclick="showPracticeInfo()">Learn More</button>
                     </div>
-                    <div id="practiceInfo" style="display: none; text-align: left; background: #f8fafc; padding: 20px; border-radius: 12px; margin-top: 20px;">
-                        <h4 style="color: #f093fb; margin-bottom: 15px;">What you can practice:</h4>
-                        <ul style="color: #4a5568; line-height: 1.6;">
-                            <li><strong>Speaking Practice</strong> - Real conversations in Spanish</li>
-                            <li><strong>Listening Skills</strong> - Understand different accents</li>
-                            <li><strong>Vocabulary Building</strong> - Learn new words in context</li>
-                            <li><strong>Role-playing</strong> - Practice real-world scenarios</li>
-                            <li><strong>Voice Recognition</strong> - Practice pronunciation</li>
-                        </ul>
-                        <button class="btn btn-primary" style="margin-top: 15px;" onclick="hidePracticeInfo()">Start Practicing</button>
-                    </div>
+                </div>
+                <div id="practiceInfo" style="display: none; text-align: left; background: #f8fafc; padding: 24px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px;">
+                    <h4 style="color: #0f172a; font-size: 16px; font-weight: 600; margin-bottom: 16px;">What you can practice:</h4>
+                    <ul style="color: #4b5563; line-height: 1.8; padding-left: 20px;">
+                        <li><strong>Speaking Practice</strong> - Real conversations in Spanish</li>
+                        <li><strong>Listening Skills</strong> - Understand different accents</li>
+                        <li><strong>Vocabulary Building</strong> - Learn new words in context</li>
+                        <li><strong>Role-playing</strong> - Practice real-world scenarios</li>
+                        <li><strong>Voice Recognition</strong> - Practice pronunciation</li>
+                    </ul>
+                    <button class="btn btn-primary" style="margin-top: 16px;" onclick="hidePracticeInfo()">Start Practicing</button>
                 </div>
             </div>
         </div>
@@ -968,40 +1212,34 @@
             
             if (classrooms.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; background: linear-gradient(135deg, rgba(240, 147, 251, 0.05), rgba(245, 87, 108, 0.05)); border-radius: 20px; border: 2px dashed rgba(240, 147, 251, 0.3);">
-                        <div style="margin-bottom: 30px;">
-                            <div style="width: 80px; height: 80px; margin: 0 auto 20px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px;">
-                                📚
-                            </div>
-                            <h3 style="color: #f093fb; font-size: 24px; font-weight: 600; margin-bottom: 12px;">No Classrooms Yet</h3>
-                            <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin-bottom: 8px;">Join a classroom using a join code from your teacher</p>
-                            <p style="color: #94a3b8; font-size: 14px;">Get started with Spanish lessons and practice conversations!</p>
+                    <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; background: #f8fafc; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="margin-bottom: 32px;">
+                            <h3 style="color: #0f172a; font-size: 22px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em;">No Classrooms Yet</h3>
+                            <p style="color: #6b7280; font-size: 15px; line-height: 1.6; margin-bottom: 8px;">Join a classroom using a join code from your teacher</p>
+                            <p style="color: #9ca3af; font-size: 14px;">Get started with Spanish lessons and practice conversations</p>
                         </div>
-                        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                            <button class="btn btn-primary" style="background: linear-gradient(135deg, #f093fb, #f5576c); border: none; padding: 14px 28px; font-size: 16px;" onclick="switchTab('enroll')">
-                                <span style="margin-right: 8px;">➕</span> Join Classroom
+                        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                            <button class="btn btn-primary" style="padding: 12px 24px; font-size: 15px;" onclick="switchTab('enroll')">
+                                Join Classroom
                             </button>
-                            <button class="btn btn-secondary" style="background: rgba(240, 147, 251, 0.1); color: #f093fb; border: 2px solid rgba(240, 147, 251, 0.3); padding: 14px 28px; font-size: 16px;" onclick="switchTab('practice')">
-                                <span style="margin-right: 8px;">🎯</span> Practice Mode
+                            <button class="btn btn-secondary" style="padding: 12px 24px; font-size: 15px;" onclick="switchTab('practice')">
+                                Practice Mode
                             </button>
                         </div>
-                        <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(240, 147, 251, 0.2);">
-                            <h4 style="color: #f093fb; font-size: 16px; font-weight: 600; margin-bottom: 12px;">Quick Start Guide:</h4>
+                        <div style="margin-top: 32px; padding-top: 32px; border-top: 1px solid #e5e7eb;">
+                            <h4 style="color: #0f172a; font-size: 15px; font-weight: 600; margin-bottom: 16px;">Quick Start Guide</h4>
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; text-align: left;">
-                                <div style="background: rgba(255, 255, 255, 0.7); padding: 16px; border-radius: 12px; border: 1px solid rgba(240, 147, 251, 0.2);">
-                                    <div style="font-size: 24px; margin-bottom: 8px;">🔑</div>
-                                    <strong style="color: #f093fb;">Get Join Code</strong>
-                                    <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Ask your teacher for the classroom code</p>
+                                <div style="background: #ffffff; padding: 18px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                    <strong style="color: #0f172a; display: block; margin-bottom: 6px;">Get Join Code</strong>
+                                    <p style="color: #6b7280; font-size: 13px; margin: 0; line-height: 1.5;">Ask your teacher for the classroom code</p>
                                 </div>
-                                <div style="background: rgba(255, 255, 255, 0.7); padding: 16px; border-radius: 12px; border: 1px solid rgba(240, 147, 251, 0.2);">
-                                    <div style="font-size: 24px; margin-bottom: 8px;">➕</div>
-                                    <strong style="color: #f093fb;">Join Class</strong>
-                                    <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Enter code in "Join New Class" tab</p>
+                                <div style="background: #ffffff; padding: 18px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                    <strong style="color: #0f172a; display: block; margin-bottom: 6px;">Join Class</strong>
+                                    <p style="color: #6b7280; font-size: 13px; margin: 0; line-height: 1.5;">Enter code in "Join New Class" tab</p>
                                 </div>
-                                <div style="background: rgba(255, 255, 255, 0.7); padding: 16px; border-radius: 12px; border: 1px solid rgba(240, 147, 251, 0.2);">
-                                    <div style="font-size: 24px; margin-bottom: 8px;">📝</div>
-                                    <strong style="color: #f093fb;">Start Learning</strong>
-                                    <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Access assignments and practice</p>
+                                <div style="background: #ffffff; padding: 18px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                                    <strong style="color: #0f172a; display: block; margin-bottom: 6px;">Start Learning</strong>
+                                    <p style="color: #6b7280; font-size: 13px; margin: 0; line-height: 1.5;">Access assignments and practice</p>
                                 </div>
                             </div>
                         </div>
