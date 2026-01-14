@@ -94,6 +94,19 @@
         width: 0 !important;
         position: absolute !important;
         left: -9999px !important;
+        /* Even more aggressive hiding */
+        transform: translateX(100%) !important;
+        pointer-events: none !important;
+        max-width: 0 !important;
+        min-width: 0 !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body {
+        overflow-x: hidden !important;
       }
       
       .sidebar-transcription {
@@ -103,6 +116,19 @@
         width: 0 !important;
         position: absolute !important;
         left: -9999px !important;
+        /* Even more aggressive hiding */
+        transform: translateX(100%) !important;
+        pointer-events: none !important;
+        max-width: 0 !important;
+        min-width: 0 !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body {
+        overflow-x: hidden !important;
       }
     }
     
@@ -138,6 +164,30 @@
       }
     }
   </style>
+<script>
+  // Force hide transcription sidebar on mobile devices
+  function hideSidebarOnMobile() {
+    const sidebar = document.querySelector('.sidebar-transcription');
+    if (sidebar && window.innerWidth <= 768) {
+      sidebar.style.display = 'none';
+      sidebar.style.visibility = 'hidden';
+      sidebar.style.opacity = '0';
+      sidebar.style.width = '0';
+      sidebar.style.position = 'absolute';
+      sidebar.style.left = '-9999px';
+      sidebar.style.transform = 'translateX(100%)';
+      sidebar.style.pointerEvents = 'none';
+      sidebar.remove(); // Remove from DOM completely
+    }
+  }
+  
+  // Check on load and resize
+  document.addEventListener('DOMContentLoaded', hideSidebarOnMobile);
+  window.addEventListener('resize', hideSidebarOnMobile);
+  
+  // Also check periodically for safety
+  setInterval(hideSidebarOnMobile, 1000);
+</script>
 <script type="importmap">
 {
   "imports": {
