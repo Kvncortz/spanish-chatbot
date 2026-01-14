@@ -83,6 +83,12 @@ const App: React.FC = () => {
   }, []);
 
   const startSession = async () => {
+    // Validate required fields
+    if (!scenario.persona.trim() || !scenario.theme.trim()) {
+      setStatus({ isConnected: false, isConnecting: false, error: "Please fill in both Target Persona and Learning Theme fields before starting." });
+      return;
+    }
+
     setStage('calling');
     setStatus({ isConnected: false, isConnecting: true, error: null });
 
@@ -228,11 +234,11 @@ const App: React.FC = () => {
             <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#0ea5e9]/80">Instructional Framework</h3>
             <div className="space-y-5">
               <div className="group">
-                <label className="block text-[10px] uppercase font-black text-slate-500 mb-2 tracking-widest group-focus-within:text-[#0ea5e9] transition-colors">Target Persona</label>
+                <label className="block text-[10px] uppercase font-black text-slate-500 mb-2 tracking-widest group-focus-within:text-[#0ea5e9] transition-colors">Target Persona *</label>
                 <input value={scenario.persona} onChange={e => setScenario({...scenario, persona: e.target.value})} className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#0ea5e9]/50 focus:bg-slate-50 transition-all" placeholder="e.g. A store clerk..." />
               </div>
               <div className="group">
-                <label className="block text-[10px] uppercase font-black text-slate-500 mb-2 tracking-widest group-focus-within:text-[#0ea5e9] transition-colors">Learning Theme</label>
+                <label className="block text-[10px] uppercase font-black text-slate-500 mb-2 tracking-widest group-focus-within:text-[#0ea5e9] transition-colors">Learning Theme *</label>
                 <input value={scenario.theme} onChange={e => setScenario({...scenario, theme: e.target.value})} className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#0ea5e9]/50 focus:bg-slate-50 transition-all" placeholder="e.g. Daily routines..." />
               </div>
             </div>
@@ -302,6 +308,12 @@ const App: React.FC = () => {
           <div className="w-2 h-2 rounded-full bg-white animate-ping" />
           ENTER IMMERSIVE STUDIO
         </button>
+
+        {status.error && (
+          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
+            {status.error}
+          </div>
+        )}
       </div>
     </div>
   );
