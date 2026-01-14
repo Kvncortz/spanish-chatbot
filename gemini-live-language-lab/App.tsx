@@ -408,15 +408,28 @@ const App: React.FC = () => {
 
         {/* Floating Context Hub */}
         <div className="absolute top-8 md:top-10 lg:top-12 right-8 md:right-10 lg:right-12 flex flex-col items-end gap-4 animate-in slide-in-from-right-8 duration-1000 floating-context">
-           <div className="p-4 md:p-5 lg:p-7 bg-white/90 backdrop-blur-3xl border border-slate-200 rounded-[24px] md:rounded-[30px] lg:rounded-[36px] w-64 md:w-72 lg:w-80 shadow-2xl">
-              <h4 className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] text-[#0ea5e9] mb-3">Pedagogical Framework</h4>
-              <p className="text-xs md:text-sm font-bold text-slate-800 leading-relaxed mb-3 md:mb-5">{scenario.act}</p>
-              <div className="flex flex-wrap items-center gap-2 md:gap-3 pt-3 md:pt-4 border-t border-slate-200">
-                <span className="px-2 py-1 bg-[#10b981]/10 text-[#10b981] text-[8px] md:text-[10px] font-black rounded-lg border border-[#10b981]/20">{level}</span>
-                <span className="px-2 py-1 bg-[#0ea5e9]/10 text-[#0ea5e9] text-[8px] md:text-[10px] font-black rounded-lg border border-[#0ea5e9]/20">
-                  {getLanguageByCode(language)?.flag} {getLanguageByCode(language)?.nativeName}
-                </span>
-                <span className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase tracking-widest">{scenario.theme}</span>
+           <div className="p-3 md:p-5 lg:p-7 bg-white/90 backdrop-blur-3xl border border-slate-200 rounded-[20px] md:rounded-[30px] lg:rounded-[36px] w-56 md:w-72 lg:w-80 shadow-2xl">
+              {/* Mobile: Only show level and language */}
+              <div className="md:hidden">
+                <div className="flex flex-wrap items-center gap-2 justify-center">
+                  <span className="px-2 py-1 bg-[#10b981]/10 text-[#10b981] text-[8px] font-black rounded-lg border border-[#10b981]/20">{level}</span>
+                  <span className="px-2 py-1 bg-[#0ea5e9]/10 text-[#0ea5e9] text-[8px] font-black rounded-lg border border-[#0ea5e9]/20">
+                    {getLanguageByCode(language)?.flag} {getLanguageByCode(language)?.nativeName}
+                  </span>
+                </div>
+              </div>
+              
+              {/* Desktop/Tablet: Show full framework */}
+              <div className="hidden md:block">
+                <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#0ea5e9] mb-3">Pedagogical Framework</h4>
+                <p className="text-sm font-bold text-slate-800 leading-relaxed mb-5">{scenario.act}</p>
+                <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-200">
+                  <span className="px-3 py-1 bg-[#10b981]/10 text-[#10b981] text-[10px] font-black rounded-lg border border-[#10b981]/20">{level}</span>
+                  <span className="px-3 py-1 bg-[#0ea5e9]/10 text-[#0ea5e9] text-[10px] font-black rounded-lg border border-[#0ea5e9]/20">
+                    {getLanguageByCode(language)?.flag} {getLanguageByCode(language)?.nativeName}
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{scenario.theme}</span>
+                </div>
               </div>
            </div>
         </div>
@@ -615,7 +628,7 @@ const App: React.FC = () => {
 
       {/* Mobile Transcription Indicator */}
       {isMobile && (stage === 'active' || stage === 'calling') && (
-        <div className="fixed bottom-4 left-4 right-4 z-50">
+        <div className="fixed bottom-20 left-4 right-4 z-50">
           {(currentInputText || currentOutputText) && (
             <div className="bg-white/90 backdrop-blur-3xl border border-slate-200 rounded-2xl p-3 shadow-2xl">
               <div className="flex items-center gap-2">

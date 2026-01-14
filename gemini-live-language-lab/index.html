@@ -228,6 +228,46 @@
         background: #10b981 !important;
         z-index: 10 !important;
       }
+      
+      /* Immersive Studio Mobile Fixes */
+      .main-content {
+        padding: max(env(safe-area-inset-top), 0.5rem) 0.5rem 0.5rem 0.5rem !important;
+      }
+      
+      .floating-context {
+        top: max(env(safe-area-inset-top), 2rem) !important;
+        right: 0.5rem !important;
+        width: auto !important;
+        max-width: 200px !important;
+      }
+      
+      .status-hub {
+        top: max(env(safe-area-inset-top), 2rem) !important;
+        left: 0.5rem !important;
+      }
+      
+      .profile-info {
+        bottom: 6rem !important;
+        left: 0.5rem !important;
+      }
+      
+      .profile-info h2 {
+        font-size: 2rem !important;
+      }
+      
+      .profile-info p {
+        font-size: 0.875rem !important;
+      }
+      
+      .control-bar {
+        padding: 0.75rem !important;
+        gap: 0.75rem !important;
+        flex-direction: column !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 1rem 1rem 0 0 !important;
+      }
     }
   </style>
 <script type="importmap">
