@@ -626,23 +626,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Mobile Transcription Indicator */}
-      {isMobile && (stage === 'active' || stage === 'calling') && (
-        <div className="fixed bottom-20 left-4 right-4 z-50">
-          {(currentInputText || currentOutputText) && (
-            <div className="bg-white/90 backdrop-blur-3xl border border-slate-200 rounded-2xl p-3 shadow-2xl">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#0ea5e9] animate-pulse" />
-                <span className="text-xs font-black text-slate-600 uppercase tracking-widest">
-                  {currentInputText ? 'Listening...' : 'Responding...'}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+      </div>
   );
-};
 
 export default App;
