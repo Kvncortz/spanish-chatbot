@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: spanish-chatbot
+    name: voca-flow-labs
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"
