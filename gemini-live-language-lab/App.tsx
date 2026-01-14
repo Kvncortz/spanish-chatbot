@@ -24,8 +24,8 @@ const App: React.FC = () => {
   const [scaffoldingEnabled, setScaffoldingEnabled] = useState(false);
   const [scenario, setScenario] = useState<ScenarioPARTS>({
     persona: "",
-    act: "Ordering breakfast and asking for directions",
-    recipient: "A hungry traveler (the student)",
+    act: "Engaging in conversation based on the persona and theme",
+    recipient: "A language learning student",
     theme: "",
     structure: "Start by greeting the student warmly. If they make a mistake, gently correct them after their full sentence."
   });
@@ -35,6 +35,8 @@ const App: React.FC = () => {
   const [history, setHistory] = useState<TranscriptionEntry[]>([]);
   const [currentInputText, setCurrentInputText] = useState('');
   const [currentOutputText, setCurrentOutputText] = useState('');
+  const currentInputRef = useRef('');
+  const currentOutputRef = useRef('');
   const [isMuted, setIsMuted] = useState(false);
   const [isGeminiSpeaking, setIsGeminiSpeaking] = useState(false);
 
@@ -84,8 +86,11 @@ const App: React.FC = () => {
 
   const startSession = async () => {
     // Validate required fields
-    if (!scenario.persona.trim() || !scenario.theme.trim()) {
-      setStatus({ isConnected: false, isConnecting: false, error: "Please fill in both Target Persona and Learning Theme fields before starting." });
+    const personaValid = scenario.persona.trim().length > 0;
+    const themeValid = scenario.theme.trim().length > 0;
+    
+    if (!personaValid || !themeValid) {
+      setStatus({ isConnected: false, isConnecting: false, error: "⚠️ Please fill in both Target Persona and Learning Theme fields before starting." });
       return;
     }
 
@@ -94,7 +99,7 @@ const App: React.FC = () => {
 
     try {
       createAudioContexts();
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       const systemInstruction = `
@@ -102,17 +107,22 @@ const App: React.FC = () => {
         PEDAGOGICAL LEVEL: ${level} (CEFR). Speak at a speed and vocabulary complexity appropriate for this level.
         LANGUAGE: Respond in ${getLanguageByCode(language)?.name || 'Spanish'}. Use authentic, natural ${getLanguageByCode(language)?.nativeName || 'Español'} expressions and cultural context.
         
+        CRITICAL: You must fully embody the persona and focus on the theme throughout the conversation.
+        
         SESSION SCENARIO (PARTS):
-        - PERSONA: ${scenario.persona}
+        - PERSONA: ${scenario.persona} (You MUST act as this character)
         - ACTING AS: ${scenario.act}
         - RECIPIENT: ${scenario.recipient}
-        - THEME: ${scenario.theme}
+        - THEME: ${scenario.theme} (All conversation should revolve around this topic)
         - STRUCTURE: ${scenario.structure}
+
+        EXAMPLE: If persona is "hotel concierge" and theme is "check in", you should greet them as a hotel concierge and help them with the check-in process.
 
         GENERAL RULES:
         1. Keep responses concise (under 30 words) to mimic a real conversation.
         2. ${scaffoldingEnabled ? 'Correct the user\'s grammar GENTLY but only after they finish their thought.' : 'Do NOT correct the user\'s grammar - focus on natural conversation flow.'}
         3. Use your voice naturally, expressing warmth and encouragement.
+        4. ALWAYS stay in character as the specified persona.
       `;
       
       const sessionPromise = ai.live.connect({
@@ -140,24 +150,34 @@ const App: React.FC = () => {
           },
           onmessage: async (message: LiveServerMessage) => {
             if (message.serverContent?.outputTranscription) {
-              setCurrentOutputText(prev => prev + message.serverContent!.outputTranscription!.text);
+              const newText = message.serverContent!.outputTranscription!.text;
+              setCurrentOutputText(prev => prev + newText);
+              currentOutputRef.current = currentOutputRef.current + newText;
             } else if (message.serverContent?.inputTranscription) {
-              setCurrentInputText(prev => prev + message.serverContent!.inputTranscription!.text);
+              const newText = message.serverContent!.inputTranscription!.text;
+              setCurrentInputText(prev => prev + newText);
+              currentInputRef.current = currentInputRef.current + newText;
             }
 
             if (message.serverContent?.turnComplete) {
-              // Use functional setState to get the most recent values
-              setCurrentInputText(currentInput => {
-                setCurrentOutputText(currentOutput => {
-                  setHistory(prev => [
-                    ...prev,
-                    { role: 'user', text: currentInput, timestamp: Date.now() },
-                    { role: 'model', text: currentOutput, timestamp: Date.now() }
-                  ]);
-                  return '';
-                });
-                return '';
-              });
+              // Use refs to get the actual current values
+              const finalInput = currentInputRef.current;
+              const finalOutput = currentOutputRef.current;
+              
+              // Add both messages to history if there's content
+              if (finalInput.trim() || finalOutput.trim()) {
+                setHistory(prev => [
+                  ...prev,
+                  { role: 'user', text: finalInput, timestamp: Date.now() },
+                  { role: 'model', text: finalOutput, timestamp: Date.now() }
+                ]);
+              }
+              
+              // Clear current texts and refs
+              setCurrentInputText('');
+              setCurrentOutputText('');
+              currentInputRef.current = '';
+              currentOutputRef.current = '';
             }
 
             const audioData = message.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
@@ -235,11 +255,33 @@ const App: React.FC = () => {
             <div className="space-y-5">
               <div className="group">
                 <label className="block text-[10px] uppercase font-black text-slate-500 mb-2 tracking-widest group-focus-within:text-[#0ea5e9] transition-colors">Target Persona *</label>
-                <input value={scenario.persona} onChange={e => setScenario({...scenario, persona: e.target.value})} className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#0ea5e9]/50 focus:bg-slate-50 transition-all" placeholder="e.g. A store clerk..." />
+                <input 
+                  value={scenario.persona} 
+                  onChange={e => {
+                    setScenario({...scenario, persona: e.target.value});
+                    // Clear error when user starts typing
+                    if (status.error) {
+                      setStatus({...status, error: null});
+                    }
+                  }} 
+                  className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#0ea5e9]/50 focus:bg-slate-50 transition-all" 
+                  placeholder="e.g. A store clerk..." 
+                />
               </div>
               <div className="group">
                 <label className="block text-[10px] uppercase font-black text-slate-500 mb-2 tracking-widest group-focus-within:text-[#0ea5e9] transition-colors">Learning Theme *</label>
-                <input value={scenario.theme} onChange={e => setScenario({...scenario, theme: e.target.value})} className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#0ea5e9]/50 focus:bg-slate-50 transition-all" placeholder="e.g. Daily routines..." />
+                <input 
+                  value={scenario.theme} 
+                  onChange={e => {
+                    setScenario({...scenario, theme: e.target.value});
+                    // Clear error when user starts typing
+                    if (status.error) {
+                      setStatus({...status, error: null});
+                    }
+                  }} 
+                  className="w-full bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#0ea5e9]/50 focus:bg-slate-50 transition-all" 
+                  placeholder="e.g. Daily routines..." 
+                />
               </div>
             </div>
           </div>
@@ -303,15 +345,21 @@ const App: React.FC = () => {
 
         <button 
           onClick={startSession}
-          className="w-full py-7 rounded-[32px] bg-[#10b981] hover:bg-[#059669] text-white text-lg font-black tracking-widest transition-all shadow-[0_25px_50px_rgba(16,185,129,0.25)] active:scale-[0.98] flex items-center justify-center gap-4"
+          className="w-full py-7 rounded-[32px] bg-[#10b981] hover:bg-[#059669] text-white text-lg font-black tracking-widest transition-all shadow-[0_25px_50px_rgba(16,185,129,0.25)] active:scale-[0.98] flex items-center justify-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={status.isConnecting}
         >
           <div className="w-2 h-2 rounded-full bg-white animate-ping" />
-          ENTER IMMERSIVE STUDIO
+          {status.isConnecting ? 'CONNECTING...' : 'ENTER IMMERSIVE STUDIO'}
         </button>
 
         {status.error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
-            {status.error}
+          <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-700 text-sm font-medium animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              {status.error}
+            </div>
           </div>
         )}
       </div>
