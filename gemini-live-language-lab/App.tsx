@@ -85,6 +85,10 @@ const App: React.FC = () => {
   const startSession = async () => {
     setStage('calling');
     setStatus({ isConnected: false, isConnecting: true, error: null });
+    // Clear all transcription state for a fresh session
+    setHistory([]);
+    setCurrentInputText('');
+    setCurrentOutputText('');
 
     try {
       createAudioContexts();
@@ -440,7 +444,7 @@ const App: React.FC = () => {
               </svg>
               Back to VocaFlow Home
             </button>
-            <button onClick={() => { setStage('setup'); setHistory([]); }} className="flex-1 py-6 rounded-3xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm uppercase tracking-[0.4em] transition-all border-2 border-slate-200 active:scale-[0.98]">
+            <button onClick={() => { setStage('setup'); setHistory([]); setCurrentInputText(''); setCurrentOutputText(''); }} className="flex-1 py-6 rounded-3xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm uppercase tracking-[0.4em] transition-all border-2 border-slate-200 active:scale-[0.98]">
                Start New Session
             </button>
           </div>
