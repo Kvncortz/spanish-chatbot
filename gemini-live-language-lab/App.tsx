@@ -8,7 +8,7 @@ import { AudioVisualizer } from './components/AudioVisualizer';
 const MODEL_NAME = 'gemini-2.5-flash-native-audio-preview-12-2025';
 
 const PERSONA = {
-  name: "Elena",
+  name: "Elli",
   role: "Language Coach",
   images: {
     photorealistic: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200&h=1600"
@@ -21,12 +21,12 @@ const App: React.FC = () => {
   const [level, setLevel] = useState<CEFRLevel>('A2');
   const [voice, setVoice] = useState<VoiceName>(VoiceName.ZEPHYR);
   const [language, setLanguage] = useState<Language>(Language.SPANISH_SPAIN);
-  const [scaffoldingEnabled, setScaffoldingEnabled] = useState(true);
+  const [scaffoldingEnabled, setScaffoldingEnabled] = useState(false);
   const [scenario, setScenario] = useState<ScenarioPARTS>({
-    persona: "A friendly cafe owner in Madrid",
+    persona: "",
     act: "Ordering breakfast and asking for directions",
     recipient: "A hungry traveler (the student)",
-    theme: "Food, Local Geography, and Social Niceties",
+    theme: "",
     structure: "Start by greeting the student warmly. If they make a mistake, gently correct them after their full sentence."
   });
 
@@ -92,7 +92,7 @@ const App: React.FC = () => {
       const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       const systemInstruction = `
-        You are Elena, a professional Language Coach.
+        You are Elli, a professional Language Coach.
         PEDAGOGICAL LEVEL: ${level} (CEFR). Speak at a speed and vocabulary complexity appropriate for this level.
         LANGUAGE: Respond in ${getLanguageByCode(language)?.name || 'Spanish'}. Use authentic, natural ${getLanguageByCode(language)?.nativeName || 'Español'} expressions and cultural context.
         
@@ -140,13 +140,18 @@ const App: React.FC = () => {
             }
 
             if (message.serverContent?.turnComplete) {
-              setHistory(prev => [
-                ...prev,
-                { role: 'user', text: currentInputText, timestamp: Date.now() },
-                { role: 'model', text: currentOutputText, timestamp: Date.now() }
-              ]);
-              setCurrentInputText('');
-              setCurrentOutputText('');
+              // Use functional setState to get the most recent values
+              setCurrentInputText(currentInput => {
+                setCurrentOutputText(currentOutput => {
+                  setHistory(prev => [
+                    ...prev,
+                    { role: 'user', text: currentInput, timestamp: Date.now() },
+                    { role: 'model', text: currentOutput, timestamp: Date.now() }
+                  ]);
+                  return '';
+                });
+                return '';
+              });
             }
 
             const audioData = message.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
@@ -320,6 +325,13 @@ const App: React.FC = () => {
            <div className="absolute bottom-0 left-0 right-0 h-[60%] bg-[#10b981]/10 blur-[120px]" />
         </div>
 
+        {/* Waveform Visualization */}
+        {isGeminiSpeaking && outputAnalyzerRef.current && (
+          <div className="absolute inset-0 pointer-events-none">
+            <AudioVisualizer analyzer={outputAnalyzerRef.current} color="#0ea5e9" />
+          </div>
+        )}
+
         {/* Floating Context Hub */}
         <div className="absolute top-12 right-12 flex flex-col items-end gap-4 animate-in slide-in-from-right-8 duration-1000">
            <div className="p-7 bg-white/90 backdrop-blur-3xl border border-slate-200 rounded-[36px] w-80 shadow-2xl">
@@ -345,7 +357,7 @@ const App: React.FC = () => {
            </div>
         </div>
 
-        {/* Elena Profile Info */}
+        {/* Elli Profile Info */}
         <div className="absolute bottom-20 left-16 text-slate-800 z-10 pointer-events-none">
            <h2 className="text-7xl font-black tracking-tighter mb-2 drop-shadow-[0_10px_10px_rgba(255,255,255,0.8)]">{PERSONA.name}</h2>
            <div className="flex items-center gap-5">
@@ -428,7 +440,7 @@ const App: React.FC = () => {
               </svg>
               Back to VocaFlow Home
             </button>
-            <button onClick={() => setStage('setup')} className="flex-1 py-6 rounded-3xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm uppercase tracking-[0.4em] transition-all border-2 border-slate-200 active:scale-[0.98]">
+            <button onClick={() => { setStage('setup'); setHistory([]); }} className="flex-1 py-6 rounded-3xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm uppercase tracking-[0.4em] transition-all border-2 border-slate-200 active:scale-[0.98]">
                Start New Session
             </button>
           </div>
@@ -504,9 +516,8 @@ const App: React.FC = () => {
         </div>
 
         <div className="p-12 bg-slate-50 border-t border-slate-200">
-           <div className="flex justify-between items-center text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">
+           <div className="flex justify-center items-center text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">
              <span>VocaFlow Studio Platform</span>
-             <span>Flash 2.5 Multi</span>
            </div>
         </div>
       </aside>

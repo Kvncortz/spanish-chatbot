@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 interface AudioVisualizerProps {
@@ -6,7 +5,7 @@ interface AudioVisualizerProps {
   color?: string;
 }
 
-export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyzer, color = '#3b82f6' }) => {
+export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyzer, color = '#06b6d4' }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -18,11 +17,14 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyzer, colo
 
     // Set canvas size
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     };
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    
+    const resizeObserver = new ResizeObserver(resizeCanvas);
+    resizeObserver.observe(canvas);
 
     const bufferLength = analyzer.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
@@ -33,34 +35,37 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyzer, colo
       animationId = requestAnimationFrame(draw);
       analyzer.getByteFrequencyData(dataArray);
 
-      // Create gradient background
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.9)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas with transparency
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw waveform bars
-      const barWidth = (canvas.width / bufferLength) * 4;
+      // Draw waveform bars in the center
+      const barWidth = (canvas.width / bufferLength) * 2.5;
+      const centerY = canvas.height / 2;
+      const maxBarHeight = canvas.height * 0.3;
+      
       let x = 0;
 
       for (let i = 0; i < bufferLength; i++) {
-        const barHeight = (dataArray[i] / 255) * canvas.height * 0.7;
+        const barHeight = (dataArray[i] / 255) * maxBarHeight;
         
         // Create gradient for bars
-        const barGradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
-        barGradient.addColorStop(0, color);
-        barGradient.addColorStop(0.5, '#8b5cf6');
-        barGradient.addColorStop(1, '#ec4899');
+        const gradient = ctx.createLinearGradient(0, centerY - barHeight/2, 0, centerY + barHeight/2);
+        gradient.addColorStop(0, color + '40');
+        gradient.addColorStop(0.5, color + '80');
+        gradient.addColorStop(1, color + '40');
         
-        ctx.fillStyle = barGradient;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight);
+        ctx.fillStyle = gradient;
         
-        // Add glow effect
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = color;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth - 2, 2);
-        ctx.shadowBlur = 0;
+        // Draw centered bars
+        ctx.fillRect(x, centerY - barHeight/2, barWidth - 1, barHeight);
+        
+        // Add glow effect for louder frequencies
+        if (dataArray[i] > 200) {
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = color;
+          ctx.fillRect(x, centerY - barHeight/2, barWidth - 1, 2);
+          ctx.shadowBlur = 0;
+        }
 
         x += barWidth;
       }
@@ -70,14 +75,14 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyzer, colo
     
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resizeCanvas);
+      resizeObserver.disconnect();
     };
   }, [analyzer, color]);
 
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute inset-0 w-full h-full"
+      className="absolute inset-0 w-full h-full opacity-80"
     />
   );
 };
