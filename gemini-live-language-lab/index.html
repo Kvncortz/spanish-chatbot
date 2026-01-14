@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gemini Live Language Lab</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -35,8 +35,18 @@
     }
     
     @media (max-width: 768px) {
+      aside.sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+      }
+      
       .sidebar-transcription {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
       }
       
       .main-content {
@@ -72,6 +82,27 @@
         padding: 1rem !important;
         gap: 1rem !important;
         flex-direction: column !important;
+      }
+    }
+    
+    /* iPhone specific */
+    @media (max-width: 480px) {
+      aside.sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+      }
+      
+      .sidebar-transcription {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
       }
     }
     
