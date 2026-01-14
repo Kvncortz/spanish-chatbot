@@ -350,7 +350,7 @@ const App: React.FC = () => {
                     />
                   </button>
                 </div>
-                <div className="pt-4 border-t border-slate-200 text-[10px] text-slate-500 font-bold leading-relaxed">
+                <div className="pt-4 border-t border-slate-200 text-[10px] text-slate-500 font-bold leading-relaxed hidden md:block">
                   Real-time pedagogical feedback enabled. Mic access required for live interaction.
                 </div>
              </div>
